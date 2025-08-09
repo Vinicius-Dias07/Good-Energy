@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GoodEnergy — Login</title>
+  <link rel="icon" href="./raio.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="login-page">
+  <main class="login-wrapper" role="main">
+    <a href="index.html" class="back-link" aria-label="Voltar para a tela inicial">← Voltar</a>
+    <section class="login-card" aria-labelledby="login-heading">
+      <img src="./raio.png" alt="GoodEnergi logo" class="login-logo" />
+      <h2 id="login-heading">Faça login</h2>
+      <p class="login-sub">Acesse seu painel de geração e consumo</p>
+      <form class="login-form" action="#" method="post" autocomplete="on" novalidate>
+        <label for="email" class="label">Email</label>
+        <input id="email" name="email" type="email" placeholder="seu@exemplo.com" required>
+        <label for="password" class="label">Senha</label>
+        <input id="password" name="password" type="password" placeholder="••••••••" required>
+        <label class="checkbox">
+          <input type="checkbox" name="remember" />
+          Manter-me conectado
+        </label>
+        <a href="dashboard.html" type="submit" class="cta">Entrar</a>
+      </form>
+      <p class="forgot">
+        <a href="#" aria-label="Esqueci minha senha">Esqueci minha senha</a>
+      </p>
+    </section>
+  </main>
+</body>
+</html>
