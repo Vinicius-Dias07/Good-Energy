@@ -1,0 +1,162 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #f9f9f9;
+  color: #222;
+  padding-bottom: 80px;
+}
+
+header {
+  background: #e53935;
+  color: #fff;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  height: 40px;
+}
+
+.menu {
+  font-size: 28px;
+}
+
+.status {
+  background: #fff;
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.status .online {
+  color: #43a047;
+  font-weight: bold;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 10px;
+  gap: 10px;
+}
+
+.card {
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  width: 30%;
+  min-width: 110px;
+  text-align: center;
+}
+
+.card .value {
+  font-size: 1.4em;
+  font-weight: bold;
+  color: #e53935;
+}
+
+.grafico {
+  padding: 20px;
+  background: #fff;
+  margin-top: 10px;
+}
+
+.grafico-fake {
+  height: 180px;
+  background: linear-gradient(45deg, #eee, #ddd);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  font-weight: bold;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+
+.botoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px;
+}
+
+.botoes button {
+  padding: 12px 16px;
+  background: #e53935;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  min-width: 130px;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #222;
+}
+
+footer nav {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+}
+
+footer nav a {
+  color: #fff;
+  font-size: 22px;
+  text-decoration: none;
+}
+
+@media screen and (min-width: 768px) {
+  .cards {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .grafico {
+    max-width: 800px;
+    margin: 10px auto;
+  }
+
+  .botoes {
+    max-width: 800px;
+    margin: 30px auto;
+  }
+}
+
+
+.botoes button:hover {
+  background: #c62828;
+  transform: scale(1.05);
+  transition: 0.2s ease-in-out;
+}
+
+.grafico-fake {
+  height: 200px;
+  background: repeating-linear-gradient(
+    to right,
+    #e0e0e0,
+    #e0e0e0 10px,
+    #f5f5f5 10px,
+    #f5f5f5 20px
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 1.1em;
+  border-radius: 8px;
+}
