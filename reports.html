@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-active="reports">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Relatórios — GoodEnergy</title>
+  <link rel="icon" type="image/png" href="raio2.png">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body data-active="reports">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><img src="raio2.png"><h1>GoodEnergy</h1></div>
+      <nav class="nav"></nav>
+      <div class="foot">Olá, <span id="userName">Usuário</span></div>
+    </aside>
+
+    <main>
+      <div class="topbar">
+        <div class="search"><input placeholder="Buscar relatório"></div>
+        <div class="actions"><a class="icon-btn" href="#" onclick="window.print( )">Exportar PDF</a></div>
+      </div>
+      <div class="content">
+        <div class="card">
+          <div class="grid-3">
+            <div>
+              <label>Período</label>
+              <select id="reportPeriod">
+                <option value="today">Hoje</option>
+                <option value="7d">Últimos 7 dias</option>
+                <option value="12m">Últimos 12 meses</option>
+              </select>
+            </div>
+            <div>
+              <label>Tipo de Relatório</label>
+              <select id="reportType">
+                <option value="generation">Geração</option>
+                <option value="consumption">Consumo</option>
+                <option value="savings">Economia</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+            <h3>Visualização do Relatório</h3>
+            <div style="height: 350px;">
+              <canvas id="reportChart"></canvas>
+            </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
