@@ -12,7 +12,7 @@ body {
 }
 
 header {
-  background: #e53935;
+  background: #f06102;
   color: #fff;
   padding: 20px;
   display: flex;
@@ -61,7 +61,7 @@ header {
 .card .value {
   font-size: 1.4em;
   font-weight: bold;
-  color: #e53935;
+  color: #d4660b;
 }
 
 .grafico {
@@ -139,7 +139,7 @@ footer nav a {
 
 
 .botoes button:hover {
-  background: #c62828;
+  background: #d4660b;
   transform: scale(1.05);
   transition: 0.2s ease-in-out;
 }
@@ -159,4 +159,145 @@ footer nav a {
   color: #999;
   font-size: 1.1em;
   border-radius: 8px;
+}
+
+.botoes button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #35312e;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  min-width: 150px;
+  justify-content: center;
+  transition: 0.2s ease-in-out;
+}
+
+.botoes button img {
+  width: 22px;
+  height: 22px;
+}
+
+.botoes button:hover {
+  background: #d4660b;
+  transform: scale(1.05);
+}
+
+
+.botoes button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* espaço entre ícone e texto */
+  padding: 10px 18px;
+  background: #35312e;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  width: 180px; /* largura fixa para alinhar todos */
+  height: 48px; /* altura fixa para padronizar */
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.botoes button img {
+  width: 22px;
+  height: 22px;
+  padding: 3px; /* espaço interno no ícone */
+  background: rgba(255, 255, 255, 0.1); /* fundo suave atrás do ícone */
+  border-radius: 6px;
+}
+
+/* Ícone do Monitoramento maior */
+.botoes button:nth-child(1) img {
+  width: 26px;
+  height: 26px;
+}
+
+/* Efeito hover */
+.botoes button:hover {
+  background: #d4660b;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+footer nav {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  background: #222;
+}
+
+footer nav img {
+  width: 45px;
+  height: 45px;
+  padding: 6px;
+  background: rgb(161, 156, 156); /* fundo suave */
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+/* Efeito ao passar o mouse */
+footer nav img:hover {
+  background: #d4660b;
+  transform: translateY(-2px) scale(1.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #222;
+}
+
+footer nav {
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 0;
+}
+
+footer nav a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: #fff;
+  font-size: 12px;
+  transition: all 0.2s ease-in-out;
+}
+
+footer nav img {
+  width: 45px;
+  height: 45px;
+  padding: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  margin-bottom: 4px;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Hover no conjunto */
+footer nav a:hover img {
+  background: #d4660b;
+  transform: translateY(-2px) scale(1.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+footer nav a:hover span {
+  color: #d4660b;
+}
+
+
+.economia {
+  color: #4CAF50; 
+  font-weight: bold; 
 }
