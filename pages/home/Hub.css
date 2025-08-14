@@ -238,7 +238,7 @@ footer nav img {
   width: 45px;
   height: 45px;
   padding: 6px;
-  background: rgb(161, 156, 156); /* fundo suave */
+  background: rgb(29, 29, 29); /* fundo suave */
   border-radius: 8px;
   transition: all 0.2s ease-in-out;
   cursor: pointer;
@@ -285,7 +285,7 @@ footer nav img {
   transition: all 0.2s ease-in-out;
 }
 
-/* Hover no conjunto */
+
 footer nav a:hover img {
   background: #d4660b;
   transform: translateY(-2px) scale(1.1);
@@ -297,7 +297,13 @@ footer nav a:hover span {
 }
 
 
-.economia {
-  color: #4CAF50; 
-  font-weight: bold; 
+.card .economia-valor {
+  color: #4CAF50 !important; 
+  font-weight: bold;
+}
+
+
+.consumo-valor {
+  color: #F44336 !important; /* vermelho */
+  font-weight: bold !important;
 }
