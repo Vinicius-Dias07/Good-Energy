@@ -268,7 +268,7 @@ footer nav img {
   width: 45px;
   height: 45px;
   padding: 6px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgb(204, 188, 188);
   border-radius: 8px;
   margin-bottom: 4px;
   transition: all 0.2s ease-in-out;
@@ -327,4 +327,33 @@ footer nav a:hover span {
 footer {
   background: #222;
   position: static; /* ou remover position: fixed */
+}
+
+.contador-alertas {
+  background-color: red;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 4px 7px;
+  margin-left: 6px;
+}
+
+.botoes a {
+  display: inline-block;
+  background: #222;
+  color: white;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 8px;
+  text-decoration: none;
+  text-align: center;
+  font-weight: bold;
+}
+
+.botoes a img {
+  width: 24px;
+  height: 24px;
+  display: block;
+  margin: 0 auto 5px;
 }
