@@ -5,10 +5,18 @@
 }
 
 body {
-  font-family: 'Inter', sans-serif;
-  background: #f9f9f9;
-  color: #222;
-  padding-bottom: 80px;
+  background-image: url('https://github.com/Vinicius-Dias07/Good-Energy/blob/master/pages/home/background/background-Good-Energy.jpg?raw=true');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  color: #f5f3f3; /* cor clara */
+}
+
+/* Cor + sombra em textos para contraste */
+h1, h2, h3, p, span, li, a {
+  color: #f5f3f3;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8); /* sombra sutil */
 }
 
 header {
@@ -29,7 +37,7 @@ header {
 }
 
 .status {
-  background: #fff;
+  background: #2c2c2c;
   padding: 20px;
   text-align: center;
   border-bottom: 1px solid #eee;
@@ -161,32 +169,13 @@ footer nav a {
   border-radius: 8px;
 }
 
-.botoes button {
+.botoes {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
-  background: #35312e;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  min-width: 150px;
+  gap: 12px;
   justify-content: center;
-  transition: 0.2s ease-in-out;
+  flex-wrap: wrap;
+  margin-top: 20px;
 }
-
-.botoes button img {
-  width: 22px;
-  height: 22px;
-}
-
-.botoes button:hover {
-  background: #d4660b;
-  transform: scale(1.05);
-}
-
 
 .botoes button {
   display: flex;
@@ -194,14 +183,14 @@ footer nav a {
   justify-content: center;
   gap: 10px; /* espaço entre ícone e texto */
   padding: 10px 18px;
-  background: #35312e;
+  background: #35312e; /* cor do botão */
   color: #fff;
   border: none;
   border-radius: 8px;
   font-weight: 500;
   cursor: pointer;
-  width: 180px; /* largura fixa para alinhar todos */
-  height: 48px; /* altura fixa para padronizar */
+  width: 180px; /* largura fixa */
+  height: 48px; /* altura fixa */
   transition: all 0.2s ease-in-out;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
@@ -209,8 +198,8 @@ footer nav a {
 .botoes button img {
   width: 22px;
   height: 22px;
-  padding: 3px; /* espaço interno no ícone */
-  background: rgba(255, 255, 255, 0.1); /* fundo suave atrás do ícone */
+  padding: 3px; /* espaço interno do ícone */
+  background: rgba(255, 255, 255, 0.1); /* fundo suave no ícone */
   border-radius: 6px;
 }
 
@@ -220,7 +209,7 @@ footer nav a {
   height: 26px;
 }
 
-/* Efeito hover */
+/* Hover */
 .botoes button:hover {
   background: #d4660b;
   transform: translateY(-2px) scale(1.05);
@@ -306,4 +295,36 @@ footer nav a:hover span {
 .consumo-valor {
   color: #F44336 !important; /* vermelho */
   font-weight: bold !important;
+}
+
+
+
+/* Cards de informações */
+.card {
+  background-color: #3a3a3a; /* cinza médio */
+  color: #f5f5f5; /* texto claro */
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); /* sombra para destacar */
+}
+
+/* Ajuste para textos importantes nos cards */
+.card h3, .card span {
+  color: #eee8e2; /* laranja da Good-Energy */
+}
+
+
+
+.botoes {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  margin-bottom: 80px; /* espaço para não ficar atrás do footer */
+}
+
+footer {
+  background: #222;
+  position: static; /* ou remover position: fixed */
 }
