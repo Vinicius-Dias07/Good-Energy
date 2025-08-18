@@ -1,21 +1,2 @@
 
 
-.btn-alertas {
-    position: relative; /* Necessário para que o contador seja posicionado em relação ao botão */
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.contador-alertas {
-    position: absolute;
-    top: -8px; /* Sobe a bolinha */
-    right: -8px; /* Move para a direita */
-    background: red;
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-    padding: 3px 6px;
-    border-radius: 50%;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
-}
