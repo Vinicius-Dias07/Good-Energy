@@ -4,40 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Alertas - GOOD-ENERGY</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #1b1b1b;
-      color: white;
-      text-align: center;
-      padding: 40px;
-    }
-    .alerta {
-      background-color: #2e2e2e;
-      padding: 20px;
-      border-radius: 8px;
-      margin-top: 20px;
-      box-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
-    }
-    a {
-      color: orange;
-      text-decoration: none;
-      display: inline-block;
-      margin-top: 20px;
-      font-weight: bold;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-  </style>
+  <link rel="stylesheet" href="alertas.css">
 </head>
 <body>
-  <h1>📢 Alertas</h1>
-  <div class="alerta">
-    ✅ Login efetuado com sucesso!
-  </div>
-  <a href="../home/main-page.html" class="btn-voltar">
-  ⬅ Voltar ao Dashboard
-</a>
+  <header>
+    <h1>📢 Alertas</h1>
+    <a href="../home/main-page.html" class="btn-voltar">⬅ Voltar ao Dashboard</a>
+  </header>
+
+  <main class="alertas-container">
+    <div class="alerta novo">
+      ✅ Login efetuado com sucesso!
+      <span class="hora">Hoje - 17:20</span>
+    </div>
+  </main>
 </body>
 </html>
