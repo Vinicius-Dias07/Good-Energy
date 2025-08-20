@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-active="dashboard">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard — GoodEnergy</title>
+  <link rel="icon" type="image/png" href="/assets/logo.png">
+  <link rel="stylesheet" href="/styles/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body data-active="dashboard">
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><img src="/assets/logo.png"><h1>GoodEnergy</h1></div>
+      <nav class="nav"></nav>
+      <div class="foot">Olá, <span id="userName">Usuário</span></div>
+    </aside>
+
+    <main>
+      <div class="topbar">
+        <div class="search">
+          <input placeholder="Buscar dispositivos, relatórios, dicas...">
+        </div>
+        <div class="actions">
+          <div style="position: relative;">
+            <button class="icon-btn" id="notificationsBtn" title="Notificações">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+              <span class="badge">3</span>
+            </button>
+            <div class="notifications-popup hide" id="notificationsPopup">
+              <div class="list" id="popupAlerts"></div>
+            </div>
+          </div>
+          <button class="icon-btn" id="zenModeBtn" title="Modo Zen">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 12a1 1 0 100-2 1 1 0 000 2z"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="kpis">
+          <div class="card" style="animation-delay: 0.1s;">
+            <h3>Geração hoje</h3>
+            <div class="value" id="kpiGen">--</div>
+            <div class="sub">Média +8% vs. ontem <span class="trend up">▲</span></div>
+          </div>
+          <div class="card" style="animation-delay: 0.2s;">
+            <h3>Consumo da casa</h3>
+            <div class="value" id="kpiUse">--</div>
+            <div class="sub">Uso atual 3.1 kW</div>
+          </div>
+          <div class="card" style="animation-delay: 0.3s;">
+            <h3>Bateria</h3>
+            <div class="value" id="kpiBatt">--</div>
+            <div class="progress mt12"><span style="width:0%"></span></div>
+          </div>
+          <div class="card" style="animation-delay: 0.4s;">
+            <h3>Economia estimada</h3>
+            <div class="value" id="kpiSaving">--</div>
+            <div class="sub">CO₂ evitado: 9.2 kg</div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card" style="animation-delay: 0.5s;">
+            <h3>Geração x Consumo (24h )</h3>
+            <canvas id="chartEnergy" height="120"></canvas>
+          </div>
+          <div class="card" style="animation-delay: 0.6s;">
+            <h3>Carga da Bateria</h3>
+            <div class="center"><canvas id="chartBattery" width="220" height="220"></canvas></div>
+            <div class="row"><span>Status da rede</span><span class="tag">Sem importação</span></div>
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <div class="card" style="animation-delay: 0.7s;">
+            <h3>Alertas</h3>
+            <div id="alertList" class="list"></div>
+          </div>
+          <div class="card" style="animation-delay: 0.8s;">
+            <h3>Dispositivos mais intensivos</h3>
+            <div class="list">
+              <div class="row"><span>Ar-Condicionado Sala</span><span>900 W</span></div>
+              <div class="row"><span>Tomada EV</span><span>2.3 kW</span></div>
+              <div class="row"><span>Aquecedor de Água</span><span>1.2 kW</span></div>
+            </div>
+          </div>
+          <div class="card" style="animation-delay: 0.9s;">
+            <h3>Próximos horários bons</h3>
+            <div class="list">
+              <div class="row"><span>11h–13h</span><span class="tag success">Alta geração</span></div>
+              <div class="row"><span>13h–15h</span><span class="tag success">Alta geração</span></div>
+              <div class="row"><span>18h–20h</span><span class="tag warn">Uso de bateria</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="zen-mode-overlay hide" id="zenModeOverlay">
+    <h2>Sistema operando normalmente.</h2>
+    <p>Aproveite a tranquilidade.</p>
+  </div>
+
+<div id="loader-overlay" class="loader-overlay hide"><div class="loader"></div></div>
+    <div id="toast-container"></div>
+
+    <script src="/js/app.js"></script>
+  </body>
+</html>
