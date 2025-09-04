@@ -79,8 +79,8 @@ button { cursor: pointer; }
   display: flex; align-items: center; gap: 10px;
   padding: 10px 8px; margin-bottom: 18px;
 }
-.brand img { width: 28px; height: 28px; }
-.brand h1 { font-size: 1.1rem; letter-spacing: .3px; margin: 0; font-weight: 700; }
+.brand img { width: 50px; height: 50px; }
+.brand h1 { font-size: 1.6rem; letter-spacing: .3px; margin: 0; font-weight: 700; }
 
 .nav { display: flex; flex-direction: column; gap: 6px; }
 .nav a {
@@ -372,4 +372,69 @@ input.invalid {
   margin-top: 6px;
   display: none; 
 }
+
+
+/* ==== Ajuste global do tamanho da logo ==== */
+:root {
+  --logo-size-sm: 75px;   /* logo menor (sidebar) */
+  --logo-font-sm: 1.6rem;
+
+  --logo-size-lg: 135px;   /* logo maior (hero/login) */
+  --logo-font-lg: 2rem;
+}
+
+/* Sidebar */
+.brand img {
+  width: var(--logo-size-sm);
+  height: var(--logo-size-sm);
+}
+
+.brand h1 {
+  font-size: var(--logo-font-sm);
+}
+
+/* Hero / Login */
+.brand-lg img {
+  width: var(--logo-size-lg);
+  height: var(--logo-size-lg);
+}
+
+.brand-lg h1 {
+  font-size: var(--logo-font-lg);
+}
+
+/* ==== Responsividade ==== */
+@media (max-width: 768px) {
+  :root {
+    --logo-size-sm: 36px;   /* menor no mobile */
+    --logo-font-sm: 1.2rem;
+
+    --logo-size-lg: 50px;   /* menor no mobile */
+    --logo-font-lg: 1.4rem;
+  }
+}
+
+/* Centralizar logo + texto */
+.brand {
+  display: flex;
+  align-items: center;  /* alinha ícone e texto no meio */
+  gap: 0px;             /* reduz o espaço entre eles */
+  padding: 0;           /* remove espaço interno */
+  margin-bottom: 18px;
+}
+
+.brand img {
+  display: block;
+}
+
+.brand h1 {
+  margin: 0;
+  padding: 0;
+  line-height: 1;       /* tira altura extra da linha */
+  font-size: var(--logo-font-sm);
+  display: flex;
+  align-items: center;  /* garante alinhamento vertical */
+}
+
+
 
