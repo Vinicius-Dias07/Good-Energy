@@ -46,12 +46,12 @@
 
       <div class="content">
         <div class="kpis">
-          <div class="card" style="animation-delay: 0.1s;">
+          <div class="card" style="animation-delay: 0.6s;">
             <h3>Geração hoje</h3>
             <div class="value" id="kpiGen">--</div>
             <div class="sub">Média +8% vs. ontem <span class="trend up">▲</span></div>
           </div>
-          <div class="card" style="animation-delay: 0.2s;">
+          <div class="card" style="animation-delay: 0.5s;">
             <h3>Consumo da casa</h3>
             <div class="value" id="kpiUse">--</div>
             <div class="sub">Uso atual 3.1 kW</div>
@@ -69,7 +69,7 @@
         </div>
 
         <div class="grid">
-          <div class="card" style="animation-delay: 0.5s;">
+          <div class="card" style="animation-delay: 0.8s;">
             <h3>Geração x Consumo (24h )</h3>
             <canvas id="chartEnergy" height="120"></canvas>
           </div>
@@ -81,7 +81,7 @@
         </div>
 
         <div class="grid-3">
-          <div class="card" style="animation-delay: 0.7s;">
+          <div class="card" style="animation-delay: 2.2s;">
             <h3>Alertas</h3>
             <div id="alertList" class="list"></div>
           </div>
@@ -114,6 +114,8 @@
 <div id="loader-overlay" class="loader-overlay hide"><div class="loader"></div></div>
     <div id="toast-container"></div>
 
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../js/app.js"></script>
   </body>
 </html>
