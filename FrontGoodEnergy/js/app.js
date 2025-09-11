@@ -166,40 +166,105 @@ async function renderDevices() {
         tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 20px;">Não foi possível carregar os dispositivos.</td></tr>`;
     }
 }
-//Parte dos gráficos:
+
+
+
+function getBatteryColor(level) {
+    if (level <= 20) return '#ef4444'; // vermelho
+    if (level <= 60) return '#facc15'; // amarelo
+    return '#229231ff'; // azul (ou verde se preferir)
+}
+
+
+
+
 let energyChart, batteryChart;
+
 function charts(history, battery) {
-  if (typeof Chart === 'undefined') return;
-  Chart.defaults.color = '#cdd7ee';
-  Chart.defaults.borderColor = 'rgba(255,255,255,0.1)';
+    if (typeof Chart === 'undefined') return;
 
-  const ctx = el('chartEnergy');
-  if (ctx) {
-    energyChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: history.map(h => h.h + 'h'),
-            datasets: [
-                { label: 'Geração (kW)', data: history.map(h => Math.max(0, +h.gen.toFixed(2))), fill: true, tension: .35, backgroundColor: 'rgba(34, 197, 94, 0.2)', borderColor: '#22c55e' },
-                { label: 'Consumo (kW)', data: history.map(h => +h.use.toFixed(2)), fill: true, tension: .35, backgroundColor: 'rgba(239, 68, 68, 0.2)', borderColor: '#ef4444' }
-            ]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-    });
-  }
+    Chart.defaults.color = '#cdd7ee';
+    Chart.defaults.borderColor = 'rgba(255,255,255,0.1)';
 
-  //Parte dos gráficos: 
-  const btx = el('chartBattery');
-  if (btx) {
-    batteryChart = new Chart(btx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Carga', 'Livre'],
-            datasets: [{ data: [battery.batteryPct, 100 - battery.batteryPct], backgroundColor: ['#3b82f6', '#1f2937'], borderWidth: 0 }]
-        },
-        options: { cutout: '70%', plugins: { legend: { display: false } } }
-    });
-  }
+    // ----------------------------
+    // Gráfico de energia (linha)
+    // ----------------------------
+    const energyCtx = el('chartEnergy');
+    if (energyCtx) {
+        energyChart?.destroy();
+        energyChart = new Chart(energyCtx, {
+            type: 'line',
+            data: {
+                labels: history.map(h => h.h + 'h'),
+                datasets: [
+                    { 
+                        label: 'Geração (kW)', 
+                        data: history.map(h => Math.max(0, +h.gen.toFixed(2))), 
+                        fill: true, 
+                        tension: 0.35, 
+                        backgroundColor: 'rgba(34, 197, 94, 0.2)', 
+                        borderColor: '#22c55e' 
+                    },
+                    { 
+                        label: 'Consumo (kW)', 
+                        data: history.map(h => +h.use.toFixed(2)), 
+                        fill: true, 
+                        tension: 0.35, 
+                        backgroundColor: 'rgba(239, 68, 68, 0.2)', 
+                        borderColor: '#ef4444' 
+                    }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    }
+
+    // ----------------------------
+    // Gráfico da bateria (rosquinha)
+    // ----------------------------
+    const btx = el('chartBattery');
+    if (btx) {
+        batteryChart?.destroy();
+
+        const color = getBatteryColor(battery.batteryPct);
+
+        // Plugin para desenhar o número no centro
+        const centerTextPlugin = {
+            id: 'centerText',
+            beforeDraw(chart) {
+                const { ctx, width, height } = chart;
+                ctx.save();
+                const fontSize = height / 4; // ajusta tamanho proporcional
+                ctx.font = `bold ${fontSize}px sans-serif`;
+                ctx.textBaseline = 'middle';
+                ctx.textAlign = 'center';
+                ctx.fillStyle = '#fff';
+                ctx.fillText(battery.batteryPct + '%', width / 2, height / 2);
+                ctx.restore();
+            }
+        };
+
+        batteryChart = new Chart(btx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Carga', 'Livre'],
+                datasets: [{
+                    data: [battery.batteryPct, 100 - battery.batteryPct],
+                    backgroundColor: [color, '#1f2937'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                cutout: '70%',
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: false },
+                }
+            },
+            plugins: [centerTextPlugin]
+        });
+    }
 }
 
 function loginInit(){

@@ -70,23 +70,34 @@
         
 
 
-        <div class="card" style="animation-delay: 0.8s;">
-          <h3>Geração x Consumo (24h )</h3>
-          <div class="grafico-container">
-          <canvas id="chartEnergy"></canvas>
-          </div>
-        </div>
+      <!-- Gráfico em destaque -->
+<div class="grid-destaque">
+  <div class="card" style="animation-delay: 0.8s;">
+    <h3>Geração x Consumo (24h)</h3>
+    <canvas id="chartEnergy"></canvas>
+  </div>
+</div>
 
+<!-- Gráfico rosquinha + complemento lado a lado -->
+<div class="grid-2">
+  <div class="card" style="animation-delay: 0.6s;">
+    <h3>Carga da Bateria</h3>
+    <div class="grafico-rosquinha">
+      <canvas id="chartBattery"></canvas>
+    </div>
+    <div class="row"><span>Status da rede</span><span class="tag">Sem importação</span></div>
+  </div>
 
-        <div class="card" style="animation-delay: 0.6s;">
-          <h3>Carga da Bateria</h3>
-          <div class="grafico-rosquinha">
-          <canvas id="chartBattery"></canvas>
-          </div>
-          <div class="row"><span>Status da rede</span><span class="tag">Sem importação</span></div>
-        </div>
-
-
+  <div class="card" style="animation-delay: 0.6s;">
+    <h3>Resumo da Bateria</h3>
+    <ul class="list">
+      <li><strong>Capacidade total:</strong> 13.5 kWh</li>
+      <li><strong>Carregada:</strong> 68%</li>
+      <li><strong>Autonomia estimada:</strong> 6h 40min</li>
+      <li><strong>Saúde da bateria:</strong> Boa</li>
+    </ul>
+  </div>
+</div>
 
         
         <div class="grid-3">
