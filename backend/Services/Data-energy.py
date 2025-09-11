@@ -7,27 +7,6 @@ from datetime import datetime
 app = Flask(__name__)
 CORS(app)
 
-# @app.route('/api/load_data_week', methods=['GET'])
-# def load_data_week():
-#     df = pd.read_csv("Historical Data Export-20250908015049.csv", skiprows= 2,
-#                     encoding='latin1',
-#                     sep= ';')
-
-#     # Converte a coluna 'Time' para datetime e define como índice
-#     df['Time'] = pd.to_datetime(df['Time'], format='%d.%m.%Y %H:%M:%S')
-#     df.set_index('Time', inplace=True)
-
-#     geracao_max_diaria = df['Total Generation(kWh)'].resample('D').max()
-#     geracao_min_diaria = df['Total Generation(kWh)'].resample('D').min()
-
-# # Calcula a geração diária (diferença entre máximo e mínimo de cada dia)
-#     geracao_diaria = geracao_max_diaria - geracao_min_diaria
-
-# # Remove valores negativos (que podem ocorrer por reset do contador)
-#     geracao_diaria = geracao_diaria[geracao_diaria >= 0]
-
-#     return geracao_diaria.to_dict(orient='records')
-
 def calculate_daily_generation():
     """
     Calcula a geração diária de energia a partir do arquivo CSV
@@ -51,6 +30,26 @@ def calculate_daily_generation():
         return geracao_diaria
     except Exception as e:
         print(f"Erro ao calcular geração diária: {e}")
+        return None
+
+def calculate_monthly_generation():
+    # Carrega os dados para a variavel df
+    try:
+        df = pd.read_csv("2025_Plant_20250911213350.csv", skiprows=20,
+                encoding='latin1',
+                sep=';')
+
+        df['Date'] = pd.to_datetime(df['Date'], format='%m.%Y', errors='coerce')
+
+        monthly_generation = df[['Date', 'Generation(kWh)']]
+        monthly_generation['Date'] = monthly_generation['Date'].dt.strftime('%m.%Y')
+
+        return monthly_generation.to_dict(orient="records")
+
+
+
+    except Exception as e:
+        print(f"Erro ao calcular geração mensal: {e}")
         return None
 
 @app.route('/api/daily-generation', methods=['GET'])
@@ -118,6 +117,46 @@ def get_daily_generation():
             "success": False,
             "error": f"Erro interno: {str(e)}"
         }), 500
+
+@app.route('/api/monthly-generation', methods=['GET'])
+def get_monthly_generation():
+    """
+    Retorna a geração mensal de energia em formato JSON
+    """
+    try:
+        monthly_generation = calculate_monthly_generation()  # lista de dicts: [{ 'Date': 'mm.YYYY', 'Generation(kWh)': ... }, ...]
+        if monthly_generation is None:
+            return jsonify({
+                "success": False,
+                "error": "Erro ao processar dados"
+            }), 500
+        
+        monthly_data = []
+        for item in monthly_generation:
+            monthly_data.append({
+                "month": item['Date'],
+                "generation_kwh": item['Generation(kWh)']
+            })
+        
+
+        response = {
+            "success": True,
+            "data": {
+                "monthly_generation": monthly_data,
+            },
+            "timestamp": datetime.now().isoformat()
+        }
+        return jsonify(response)
+
+
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Erro interno: {str(e)}"
+        }), 500
+
+
+
 
 
 app.run()
