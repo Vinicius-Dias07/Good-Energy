@@ -471,3 +471,62 @@ input.invalid {
   gap: 20px; /* espaçamento entre os gráficos */
   align-items: stretch; /* deixa ambos alinhados na vertical */
 }
+
+
+/* destaque do gráfico grande */
+.grid-destaque {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-bottom: 20px;
+}
+
+.grid-destaque .card {
+  width: 100%;
+}
+
+/* grid com duas colunas (lado a lado) */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* centralizar e ajustar rosquinha */
+.grafico-rosquinha {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 350px;
+}
+
+.grafico-rosquinha canvas {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 300px;
+  max-height: 300px;
+}
+
+/* lista bonita */
+.card ul.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.card ul.list li {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+/* Gráfico de linha (Geração x Consumo) */
+#chartEnergy {
+  width: 100% !important;
+  height: 400px !important; /* altura fixa para evitar loop infinito */
+  display: block; /* força o canvas a respeitar os limites */
+}
+
+.grid-destaque .card {
+  width: 100%;
+  max-height: 500px; /* garante limite no card */
+  overflow: hidden;  /* impede crescimento infinito */
+}
