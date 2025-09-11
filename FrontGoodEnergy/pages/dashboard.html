@@ -67,21 +67,30 @@
             <div class="sub">CO₂ evitado: 9.2 kg</div>
           </div>
         </div>
+        
 
-        <div class="grid">
-          <div class="card" style="animation-delay: 0.8s;">
-            <h3>Geração x Consumo (24h )</h3>
-            <canvas id="chartEnergy" height="120"></canvas>
-          </div>
-          <div class="card" style="animation-delay: 0.6s;">
-            <h3>Carga da Bateria</h3>
-            <div class="center"><canvas id="chartBattery" width="220" height="220"></canvas></div>
-            <div class="row"><span>Status da rede</span><span class="tag">Sem importação</span></div>
+
+        <div class="card" style="animation-delay: 0.8s;">
+          <h3>Geração x Consumo (24h )</h3>
+          <div class="grafico-container">
+          <canvas id="chartEnergy"></canvas>
           </div>
         </div>
 
+
+        <div class="card" style="animation-delay: 0.6s;">
+          <h3>Carga da Bateria</h3>
+          <div class="grafico-rosquinha">
+          <canvas id="chartBattery"></canvas>
+          </div>
+          <div class="row"><span>Status da rede</span><span class="tag">Sem importação</span></div>
+        </div>
+
+
+
+        
         <div class="grid-3">
-          <div class="card" style="animation-delay: 2.2s;">
+          <div class="card" style="animation-delay: 0.8s;">
             <h3>Alertas</h3>
             <div id="alertList" class="list"></div>
           </div>
@@ -93,7 +102,7 @@
               <div class="row"><span>Aquecedor de Água</span><span>1.2 kW</span></div>
             </div>
           </div>
-          <div class="card" style="animation-delay: 0.9s;">
+          <div class="card" style="animation-delay: 0.8s;">
             <h3>Próximos horários bons</h3>
             <div class="list">
               <div class="row"><span>11h–13h</span><span class="tag success">Alta geração</span></div>
