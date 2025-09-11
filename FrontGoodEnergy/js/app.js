@@ -166,7 +166,7 @@ async function renderDevices() {
         tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 20px;">Não foi possível carregar os dispositivos.</td></tr>`;
     }
 }
-
+//Parte dos gráficos:
 let energyChart, batteryChart;
 function charts(history, battery) {
   if (typeof Chart === 'undefined') return;
@@ -184,9 +184,11 @@ function charts(history, battery) {
                 { label: 'Consumo (kW)', data: history.map(h => +h.use.toFixed(2)), fill: true, tension: .35, backgroundColor: 'rgba(239, 68, 68, 0.2)', borderColor: '#ef4444' }
             ]
         },
-        options: { responsive: true, maintainAspectRatio: true }
+        options: { responsive: true, maintainAspectRatio: false }
     });
   }
+
+  //Parte dos gráficos: 
   const btx = el('chartBattery');
   if (btx) {
     batteryChart = new Chart(btx, {
@@ -312,7 +314,7 @@ function reportsInit() {
     typeSelect.addEventListener('change', generateReportChart);
     generateReportChart();
 }
-
+//Inicialização do Dashboard (importante para carregar os gráficos e KPIs)
 async function dashboardInit() {
     const notifBtn = el('notificationsBtn'), notifPopup = el('notificationsPopup');
     if (notifBtn && notifPopup) {
@@ -323,7 +325,7 @@ async function dashboardInit() {
         document.addEventListener('click', () => notifPopup.classList.add('hide'));
         notifPopup.addEventListener('click', e => e.stopPropagation());
     }
-
+//Inicialização do Dashboard (importante para carregar os gráficos e KPIs)
     const zenBtn = el('zenModeBtn'), zenOverlay = el('zenModeOverlay');
     if (zenBtn && zenOverlay) {
         zenBtn.addEventListener('click', () => zenOverlay.classList.remove('hide'));
@@ -331,7 +333,7 @@ async function dashboardInit() {
     }
 
     try {
-        const dashData = await simulateApiCall(state);
+        const dashData = await simulateApiCall(state); // Simula chamada API(TROCAR DEPOIS)
         kpiFill(dashData);
         charts(dashData.history, { batteryPct: dashData.batteryPct });
         renderAlerts('alertList', dashData.alerts);
@@ -376,3 +378,5 @@ document.addEventListener('DOMContentLoaded', ()=>{
   if (activePage === 'reports') reportsInit();
   if (activePage === 'settings') settingsInit();
 });
+
+
