@@ -530,3 +530,10 @@ input.invalid {
   max-height: 500px; /* garante limite no card */
   overflow: hidden;  /* impede crescimento infinito */
 }
+
+#alertList .row {
+  display: flex;
+  align-items: center;
+  gap: 12px; /*  leve espaçada entre o .tag e o texto */
+}
+
