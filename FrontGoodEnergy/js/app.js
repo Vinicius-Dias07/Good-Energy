@@ -172,7 +172,7 @@ async function renderDevices() {
 function getBatteryColor(level) {
     if (level <= 20) return '#ef4444'; // vermelho
     if (level <= 60) return '#facc15'; // amarelo
-    return '#229231ff'; // azul (ou verde se preferir)
+    return '#08ad47e1'; // azul (ou verde se preferir)
 }
 
 
@@ -443,5 +443,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   if (activePage === 'reports') reportsInit();
   if (activePage === 'settings') settingsInit();
 });
+
+
 
 
