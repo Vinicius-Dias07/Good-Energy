@@ -1,0 +1,34 @@
+﻿;;;;;
+;;;;;
+;;;;;
+;;;;;
+;;;;;
+;;;;;
+;;;;;
+;;;;;
+;;;;;
+;;;;;
+;;;;;
+;;;;;
+;;;;;
+;;;;;
+;;;;;
+;;;;;
+;;;;;
+;;;;;
+;;;;;
+;;;;;
+Date;Plant;Classification;Capacity(kW);Generation(kWh);Income(EUR)
+01.2025;Grid-Tied PV Inverter;Residential;3;77.8;245070
+02.2025;Grid-Tied PV Inverter;Residential;3;146.5;461475
+03.2025;Grid-Tied PV Inverter;Residential;3;391.9;1234485
+04.2025;Grid-Tied PV Inverter;Residential;3;421.3;1327095
+05.2025;Grid-Tied PV Inverter;Residential;3;446.6;1406790
+06.2025;Grid-Tied PV Inverter;Residential;3;426;1341900
+07.2025;Grid-Tied PV Inverter;Residential;3;418.2;1317330
+08.2025;Grid-Tied PV Inverter;Residential;3;382.3;1204245
+09.2025;Grid-Tied PV Inverter;Residential;3;107.2;337680
+10.2025;Grid-Tied PV Inverter;Residential;3;0;0
+11.2025;Grid-Tied PV Inverter;Residential;3;0;0
+12.2025;Grid-Tied PV Inverter;Residential;3;0;0
+TOTAL;;;--;2817.8;8876070
