@@ -1,0 +1,10 @@
+{
+  "davixavieerr@dev.com": {
+    "name": "Davi Xavier",
+    "email": "davixavieerr@dev.com",
+    "password": "scrypt:32768:8:1$u1SU3h8PYK5neQ1N$afc93c35f606224ac7ae7faa76a471baa75a1d5cba60a2eaf2bad9828f70133a3514772501785b903a8b3d683de3fcc8e5e8d85a42ad8284f83a224d97e5e90b",
+    "plan": "Starter",
+    "theme": "padrão",
+    "colorTheme": "dark"
+  }
+}

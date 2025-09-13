@@ -1,62 +1,53 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-active="reports">
+<html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Relatórios — GoodEnergy</title>
-  <link rel="stylesheet" href="../styles/styles.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
-  <link rel="shortcut icon" href="/FrontGoodEnergy/assets/ico/GE_definitive-1111.ico" type="image/x-icon">
-  <!-- Cor da barra em navegadores mobile -->
-  <meta name="theme-color" content="#ffffff">
-
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href="../assets/ico/GE_definitive-1111.ico" type="image/x-icon">
+    <title>Relatórios — GoodEnergy</title>
+    <link rel="stylesheet" href="../styles/styles.css" />
+    <meta name="theme-color" content="#ffffff">
 </head>
 <body data-active="reports">
-  <div class="app">
-    <aside class="sidebar">
-      <div class="brand"><img src="../assets/logo-Good_energy_blue.png"><h1>GoodEnergy</h1></div>
-      <nav class="nav"></nav>
-      <div class="foot">Olá, <span id="userName">Usuário</span></div>
-    </aside>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand"><img src="../assets/logo-Good_energy_blue.png"><h1>GoodEnergy</h1></div>
+            <nav class="nav"></nav>
+            <div class="foot">Olá, <span id="userName">Usuário</span></div>
+        </aside>
+        <main>
+            <div class="topbar">
+                <button class="ai-assistant-btn">Assistente IA</button>
+                <div class="actions">
+                     <div style="position: relative;">
+                        <button id="notificationsBtn" class="icon-btn">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                            <span id="notificationBadge" class="badge"></span>
+                        </button>
+                        <div id="notificationsPopup" class="notifications-popup hide">
+                            <div id="popupAlerts" class="list"></div>
+                        </div>
+                    </div>
+                    <button id="zenModeBtn" class="icon-btn" title="Modo Zen">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>Relatório de Geração Mensal</h3>
+                    <div class="grafico-container mt18">
+                        <canvas id="reportChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <div id="loader-overlay" class="loader-overlay hide"><div class="loader"></div></div>
+    <div id="toast-container" class="toast-container"></div>
 
-    <main>
-      <div class="topbar">
-        <div class="search"><input placeholder="Buscar relatório"></div>
-        <div class="actions"><a class="icon-btn" href="#" onclick="window.print( )">Exportar PDF</a></div>
-      </div>
-      <div class="content">
-        <div class="card">
-          <div class="grid-3">
-            <div>
-              <label>Período</label>
-              <select id="reportPeriod">
-                <option value="today">Hoje</option>
-                <option value="7d">Últimos 7 dias</option>
-                <option value="12m">Últimos 12 meses</option>
-              </select>
-            </div>
-            <div>
-              <label>Tipo de Relatório</label>
-              <select id="reportType">
-                <option value="generation">Geração</option>
-                <option value="consumption">Consumo</option>
-                <option value="savings">Economia</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-            <h3>Visualização do Relatório</h3>
-            <div style="height: 350px;">
-              <canvas id="reportChart"></canvas>
-            </div>
-        </div>
-      </div>
-    </main>
-  </div>
-  <script src="../js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/app.js"></script>
 </body>
 </html>

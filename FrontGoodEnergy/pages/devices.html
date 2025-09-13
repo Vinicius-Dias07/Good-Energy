@@ -1,43 +1,79 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-active="devices">
+<html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="shortcut icon" href="/FrontGoodEnergy/assets/ico/GE_definitive-1111.ico" type="image/x-icon">
-  <title>Dispositivos — GoodEnergy</title>
-
-
-
-  <!-- Cor da barra em navegadores mobile -->
-  <meta name="theme-color" content="#ffffff">
-
-  
-  <link rel="stylesheet" href="../styles/styles.css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href="../assets/ico/GE_definitive-1111.ico" type="image/x-icon">
+    <title>Dispositivos — GoodEnergy</title>
+    <link rel="stylesheet" href="../styles/styles.css" />
+    <meta name="theme-color" content="#ffffff">
 </head>
 <body data-active="devices">
-  <div class="app">
-    <aside class="sidebar">
-      <div class="brand"><img src="../assets/logo-Good_energy_blue.png"><h1>GoodEnergy</h1></div>
-      <nav class="nav"></nav>
-      <div class="foot">Olá, <span id="userName">Usuário</span></div>
-    </aside>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand"><img src="../assets/logo-Good_energy_blue.png"><h1>GoodEnergy</h1></div>
+            <nav class="nav"></nav>
+            <div class="foot">Olá, <span id="userName">Usuário</span></div>
+        </aside>
 
-    <main>
-      <div class="topbar"><div class="search"><input placeholder="Filtrar por nome, cômodo, tipo..."></div></div>
-      <div class="content">
-        <div class="card">
-          <div class="flex">
-            <h3>Controle de dispositivos</h3>
-            <span class="right tag">Cenários: Economia • Conforto • Ausente</span>
-          </div>
-          <table id="deviceTable" class="mt12">
-            <thead><tr><th>Nome</th><th>Tipo</th><th>Status</th><th>Potência</th><th></th></tr></thead>
-            <tbody></tbody>
-          </table>
+        <main>
+            <div class="topbar">
+                <button class="ai-assistant-btn">Assistente IA</button>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <div class="row" style="border-bottom: none; padding-bottom: 0;">
+                        <h3>Controle de dispositivos</h3>
+                        <button id="addDeviceBtn" class="icon-btn">Adicionar Dispositivo</button>
+                    </div>
+                    <table id="deviceTable" class="mt18">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Tipo</th>
+                                <th>Status</th>
+                                <th>Potência</th>
+                                <th class="right">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <div id="addDeviceModal" class="modal-overlay hide">
+        <div class="modal-panel">
+            <button id="closeModalBtn" class="modal-close-btn">&times;</button>
+            <h3>Adicionar Novo Dispositivo</h3>
+            <form id="addDeviceForm" class="mt18">
+                <label>Nome do Dispositivo</label>
+                <input name="name" placeholder="Ex: Lâmpada do Escritório" required>
+                
+                <label class="mt12">Cômodo</label>
+                <input name="room" placeholder="Ex: Escritório" required>
+                
+                <label class="mt12">Tipo</label>
+                <select name="type" required>
+                    <option value="light">Iluminação</option>
+                    <option value="climate">Climatização</option>
+                    <option value="appliance">Eletrodoméstico</option>
+                    <option value="ev">Carregador EV</option>
+                    <option value="water">Aquecimento de Água</option>
+                    <option value="other">Outro</option>
+                </select>
+                
+                <div class="form-actions">
+                    <button class="icon-btn" type="submit">Adicionar</button>
+                </div>
+            </form>
         </div>
-      </div>
-    </main>
-  </div>
-  <script src="../js/app.js"></script>
+    </div>
+    
+    <div id="loader-overlay" class="loader-overlay hide"><div class="loader"></div></div>
+    <div id="toast-container" class="toast-container"></div>
+    <script src="../js/app.js"></script>
 </body>
 </html>

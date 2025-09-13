@@ -1,48 +1,49 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-active="user">
+<html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="shortcut icon" href="/FrontGoodEnergy/assets/ico/GE_definitive-1111.ico" type="image/x-icon">
-  <title>Usuário — GoodEnergy</title>
-
-
-  <!-- Cor da barra em navegadores mobile -->
-  <meta name="theme-color" content="#ffffff">
-  
-  <link rel="stylesheet" href="../styles/styles.css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href="../assets/ico/GE_definitive-1111.ico" type="image/x-icon">
+    <title>Meu Perfil — GoodEnergy</title>
+    <link rel="stylesheet" href="../styles/styles.css" />
+    <meta name="theme-color" content="#ffffff">
 </head>
 <body data-active="user">
-  <div class="app">
-    <aside class="sidebar">
-      <div class="brand"><img src="../assets/logo-Good_energy_blue.png"><h1>GoodEnergy</h1></div>
-      <nav class="nav"></nav>
-      <div class="foot">Olá, <span id="userName">Usuário</span></div>
-    </aside>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand"><img src="../assets/logo-Good_energy_blue.png"><h1>GoodEnergy</h1></div>
+            <nav class="nav"></nav>
+            <div class="foot">Olá, <span id="userName">Usuário</span></div>
+        </aside>
 
-    <main>
-      <div class="topbar"><div class="search"><input placeholder="Atualize seu perfil"></div></div>
-      <div class="content">
-        <div class="grid">
-          <div class="card">
-            <h3>Perfil</h3>
-            <label>Nome</label>
-            <input id="uName" placeholder="Seu nome">
-            <label class="mt12">E-mail</label>
-            <input id="uEmail" type="email" placeholder="voce@email.com">
-            <button class="icon-btn mt18" id="userSave">Salvar</button>
-          </div>
-          <div class="card">
-            <h3>Plano</h3>
-            <div class="row"><span>Seu plano</span><span class="tag" id="planTag">Starter</span></div>
-            <div class="row"><span>Dispositivos conectados</span><span>5</span></div>
-            <div class="row"><span>Limite de relatórios</span><span>Ilimitado</span></div>
-            <div class="row"><span>Integração GoodEnergy</span><span class="tag success">Pronto</span></div>
-          </div>
-        </div>
-      </div>
-    </main>
-  </div>
-  <script src="../js/app.js"></script>
+        <main>
+            <div class="topbar">
+                <button class="ai-assistant-btn">Assistente IA</button>
+            </div>
+            <div class="content">
+                <div class="grid-2">
+                    <div class="card">
+                        <h3>Meu Perfil</h3>
+                        <form id="userForm">
+                            <label>Nome Completo</label>
+                            <input name="name" id="uName">
+                            <label class="mt12">E-mail</label>
+                            <input name="email" id="uEmail" type="email" readonly>
+                            <button id="userSave" type="button" class="icon-btn mt18 w-100">Salvar Alterações</button>
+                        </form>
+                    </div>
+                    <div class="card">
+                        <h3>Meu Plano</h3>
+                        <p>Seu plano atual é o <span id="planTag" class="tag success">Starter</span>.</p>
+                        <p class="sub">O plano Starter lhe dá acesso a todos os recursos básicos de monitoramento e controle da sua geração de energia.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <div id="loader-overlay" class="loader-overlay hide"><div class="loader"></div></div>
+    <div id="toast-container" class="toast-container"></div>
+    <script src="../js/app.js"></script>
 </body>
 </html>
