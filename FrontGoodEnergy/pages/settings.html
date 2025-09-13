@@ -3,13 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="shortcut icon" href="/FrontGoodEnergy/assets/ico/GE_definitive-1111.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="../assets/ico/GE_definitive-1111.ico" type="image/x-icon">
   <title>Configurações — GoodEnergy</title>
   
   <link rel="stylesheet" href="../styles/styles.css" />
 
-
-  <!-- Cor da barra em navegadores mobile -->
   <meta name="theme-color" content="#ffffff">
 </head>
 <body data-active="settings">
@@ -21,36 +19,35 @@
     </aside>
 
     <main>
-      <div class="topbar"><div class="search"><input placeholder="Buscar preferências..."></div></div>
+      <div class="topbar">
+        <button class="ai-assistant-btn">Assistente IA</button>
+      </div>
       <div class="content">
-        <div class="grid">
-          <div class="card">
-            <h3>Preferências</h3>
-            <label>Tarifa de energia (R$/kWh)</label>
-            <input value="0.95">
-            <label class="mt12">Fuso horário</label>
-            <select><option>GMT-2 (Fernando de Noronha)</option><option>GMT-3 (Brasília)</option><option>GMT-4 (Mato Grosso, Mato Grosso do Sul, Roraima, Rondônia e parte do Amazonas)</option></select>
-            <label class="mt12">Notificações</label>
-            <select><option>Ativadas</option><option>Silenciadas</option></select>
-            
-            <label class="mt18">Tema da Interface</label>
-            <div class="theme-switcher" id="themeSwitcher">
-              <button data-theme="padrão" class="padrão" title="Padrão"></button>
-              <button data-theme="solar" class="solar" title="Solar"></button>
-              <button data-theme="aqua" class="aqua" title="Aqua"></button>
-              <button data-theme="forest" class="forest" title="Forest"></button>
-            </div>
-
-            <button class="icon-btn mt18">Salvar Preferências</button>
+        <div class="card">
+          <h3>Preferências</h3>
+          <label>Tarifa de energia (R$/kWh)</label>
+          <input value="0.95">
+          <label class="mt12">Fuso horário</label>
+          <select><option>GMT-2 (Fernando de Noronha)</option><option selected>GMT-3 (Brasília)</option><option>GMT-4 (Mato Grosso, Mato Grosso do Sul, Roraima, Rondônia e parte do Amazonas)</option></select>
+          <label class="mt12">Notificações</label>
+          <select><option>Ativadas</option><option>Silenciadas</option></select>
+          
+          <label class="mt18">Aparência</label>
+          <div class="theme-switcher" id="colorThemeSwitcher">
+            <button data-colortheme="dark" title="Tema Escuro"></button>
+            <button data-colortheme="light" title="Tema Claro"></button>
           </div>
-          <div class="card">
-            <h3>Integrações</h3>
-            <div class="row"><span>GoodEnergy API</span><span class="tag success">Conectado</span></div>
-            <div class="row"><span>Alexa</span><span class="tag">Opcional</span></div>
-            <div class="row"><span>Home Assistant</span><span class="tag">Opcional</span></div>
+
+          <label class="mt18">Tema da Interface</label>
+          <div class="theme-switcher" id="themeSwitcher">
+            <button data-theme="padrão" class="padrão" title="Padrão"></button>
+            <button data-theme="solar" class="solar" title="Solar"></button>
+            <button data-theme="aqua" class="aqua" title="Aqua"></button>
+            <button data-theme="forest" class="forest" title="Forest"></button>
+          </div>
+
           </div>
         </div>
-      </div>
     </main>
   </div>
   <script src="../js/app.js"></script>

@@ -1,34 +1,31 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Título da página -->
   <title>Login — GoodEnergy</title>
-  <link rel="shortcut icon" href="/FrontGoodEnergy/assets/ico/GE_definitive-1111.ico" type="image/x-icon">
-  <!-- Cor da barra em navegadores mobile -->
-  <meta name="theme-color" content="#ffffff">
-
-  <!-- Estilo principal -->
+  <link rel="shortcut icon" href="../assets/ico/GE_definitive-1111.ico" type="image/x-icon">
+  <meta name="theme-color" content="#0b0f1a">
   <link rel="stylesheet" href="../styles/styles.css">
-
 </head>
 <body class="hero" data-active="login">
   <div class="panel">
     <div class="brand-lg">
-      <img src="../assets/logo-Good_energy_yellow.png" alt="GoodEnergy-Logo"><h1>Entrar</h1>
+      <img src="../assets/logo-Good_energy_yellow.png" alt="GoodEnergy-Logo"><h1>Entrar na sua Conta</h1>
     </div>
     <form id="loginForm" class="mt12">
-      <label>Nome</label>
-      <input name="name" placeholder="Seu nome">
-      <label class="mt12">E-mail</label>
-      <input name="email" type="email" placeholder="voce@email.com">
-      <label class="mt12">Senha</label>
-      <input name="pass" type="password" placeholder="••••••••">
-      <button class="icon-btn mt18" type="submit">Entrar</button>
-      <a class="right mt18" href="./pages/index.html">Voltar</a>
+      <label for="email">E-mail</label>
+      <input id="email" name="email" type="email" placeholder="voce@email.com" autocomplete="email" required>
+      
+      <label class="mt12" for="pass">Senha</label>
+      <input id="pass" name="pass" type="password" placeholder="••••••••" autocomplete="current-password" required>
+
+      <div class="form-actions">
+        <button class="icon-btn w-100" type="submit">Entrar</button>
+        <div class="center text-sm">
+            <span>Não tem uma conta? <a href="./register.html" class="link-primary">Crie uma aqui</a></span>
+        </div>
+      </div>
     </form>
   </div>
   <script src="../js/app.js"></script>
