@@ -23,8 +23,8 @@
       "name": "TV",
       "room": "sala",
       "type": "appliance",
-      "on": true,
-      "watts": 200
+      "on": false,
+      "watts": 0
     }
   ]
 }

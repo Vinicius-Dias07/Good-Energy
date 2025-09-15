@@ -562,3 +562,18 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
         font-size: 0.9rem;
     }
 }
+
+
+
+.icon-link {
+  display: inline-flex;       /* ícone + texto alinhados */
+  align-items: center;        /* centraliza verticalmente */
+  gap: 10px;                  /* espaço entre ícone e texto */
+  text-decoration: none;      /* remove sublinhado */
+}
+
+.icon-link .icon {
+  width: 40px;   /* largura do ícone */
+  height: 40px;  /* altura do ícone */
+  flex-shrink: 0; /* evita distorção */
+}
