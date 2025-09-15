@@ -209,3 +209,356 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
   gap: 8px;
   justify-content: flex-end;
 }
+
+
+
+
+
+
+
+
+
+
+/* --- Estilos Específicos da Página do Assistente de IA --- */
+
+/* Estilo da Seção Hero da Página IA */
+.hero { 
+    /* Use a mesma imagem de fundo do seu projeto ou uma nova.
+       Se for usar uma imagem sua, substitua '../assets/ceu.png' pelo caminho correto. */
+    background-image: url('../assets/ceu.png'); /* Exemplo: use a imagem 'ceu.png' do seu projeto */
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    padding: 100px 20px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 450px;
+}
+.hero .panel {
+    width: min(700px, 95vw); 
+    padding: 28px; 
+    border-radius: 18px;
+    background: rgba(10, 15, 26, .75); 
+    border: 1px solid rgba(255, 255, 255, .12);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px); 
+    box-shadow: var(--shadow);
+}
+.hero h1.brand-lg {
+    font-size: 2.2rem; /* Tamanho um pouco maior para o título principal da IA */
+    margin-bottom: 10px;
+}
+.hero .brand-lg img {
+    width: 60px;
+    height: 60px;
+    margin-right: 10px;
+}
+.hero p.muted { 
+    max-width: 500px;
+    margin: 0 auto;
+    font-size: 1.05rem;
+    line-height: 1.5;
+}
+/* Estilo para o CTA principal da Hero */
+.hero .ai-assistant-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    font-size: 1.1rem;
+    padding: 16px 30px;
+    border-radius: 14px;
+    margin-top: 18px; 
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+    display: inline-block; /* Para que transform e box-shadow funcionem bem */
+}
+.hero .ai-assistant-btn:hover {
+    background: rgba(59, 130, 246, 0.9);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(59, 130, 246, 0.4);
+}
+
+/* Seção de Casa Inteligente */
+.home-automation-section {
+    padding: 60px 20px;
+    background: var(--bg-soft); 
+    border-top: 1px solid var(--grid);
+    border-bottom: 1px solid var(--grid);
+    text-align: center;
+}
+.home-automation-section h3 { /* Reutiliza o h3 dos cards */
+    margin: 0 0 10px 0; font-size: 1rem; color: var(--text); opacity: 0.9;
+}
+.home-automation-section p {
+    max-width: 600px;
+    margin: 0 auto;
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+/* Opcional: Se quiser que a seção de casa inteligente também seja um card */
+/* .home-automation-section .card { ... estilos de card ... } */
+
+
+/* Estilo para a Seção Final CTA */
+.final-cta-section {
+    padding: 60px 20px;
+    background: var(--bg-soft); 
+    border-top: 1px solid var(--grid);
+    text-align: center;
+}
+.final-cta-section h2 {
+    font-size: 1.8rem;
+    color: var(--text);
+    margin-bottom: 20px;
+}
+.final-cta-section p {
+    max-width: 600px;
+    margin: 0 auto 30px auto; /* Espaçamento para os botões */
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+/* Estilo para os novos botões de ação na CTA final */
+.cta-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap; /* Permite quebrar em nova linha em telas menores */
+}
+
+.cta-button {
+    display: inline-flex; /* Usa flex para alinhar ícone e texto */
+    align-items: center;
+    gap: 8px;
+    padding: 14px 24px;
+    border-radius: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none; /* Remove sublinhado padrão de <a> */
+    box-shadow: var(--shadow);
+    border: none; /* Remove borda padrão */
+    cursor: pointer;
+}
+
+.cta-button .icon {
+    width: 20px;
+    height: 20px;
+    stroke-width: 1.8; /* Ajuste a espessura do traço se necessário */
+    fill: none; /* Garante que o ícone não tenha preenchimento padrão */
+    stroke: currentColor; /* Usa a cor do texto do botão */
+}
+
+/* Estilo para os botões de ação direta (Suporte, Casa, Chat) */
+.cta-button.icon-link {
+    background: var(--bg-soft);
+    color: var(--text);
+    border: 1px solid var(--grid);
+}
+.cta-button.icon-link:hover {
+    background: var(--primary-glow);
+    color: var(--primary);
+    border-color: var(--primary);
+}
+.cta-button.icon-link:hover .icon {
+    stroke: var(--primary); /* Cor do ícone no hover */
+}
+
+/* Estilos para links internos (#chat-widget, #home-automation) */
+/* Já definidos acima para .cta-button.icon-link, que serão usados por eles */
+
+/* Estilo para o botão do Assistente IA na Topbar */
+.topbar .ai-assistant-btn { /* Reutiliza o estilo base do seu botão IA */
+    background: var(--bg-soft);
+    border: 1px solid rgba(255, 255, 255, .08);
+    color: var(--muted);
+    padding: 10px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+.topbar .ai-assistant-btn:hover {
+    border-color: var(--primary);
+    color: var(--text);
+}
+/* Estilo quando o botão está ativo na topbar */
+.topbar .ai-assistant-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+
+/* Estilo do Widget de Chat */
+.chat-widget {
+    position: fixed;
+    bottom: 24px; /* Posição inicial, pode ser ajustada */
+    right: 24px; /* Posição inicial, pode ser ajustada */
+    width: min(380px, 90vw);
+    height: min(500px, 80vh);
+    background: var(--card);
+    border: 1px solid var(--grid);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    z-index: 101; /* Garante que o chat fique acima de outros elementos */
+    opacity: 0; /* Começa escondido */
+    visibility: hidden; /* Começa escondido */
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    transform: translateY(20px); /* Pequeno deslocamento para aparecer */
+}
+.chat-widget.show { /* Classe para exibir o chat */
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--grid);
+    background: var(--bg-soft); /* Fundo um pouco diferente para o header */
+    border-top-left-radius: var(--radius); /* Ajusta cantos */
+    border-top-right-radius: var(--radius);
+}
+.chat-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--text);
+}
+.chat-body {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column-reverse; /* Mensagens mais novas no topo */
+}
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.message {
+    padding: 10px 14px;
+    border-radius: 18px;
+    max-width: 85%;
+    word-wrap: break-word; /* Garante que palavras longas não quebrem o layout */
+}
+.message.user {
+    align-self: flex-end;
+    background: var(--primary);
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+.message.bot {
+    align-self: flex-start;
+    background: var(--bg-soft);
+    border-bottom-left-radius: 4px;
+    color: var(--text);
+}
+.chat-input {
+    display: flex;
+    gap: 8px;
+    padding: 10px;
+    border-top: 1px solid var(--grid);
+    background: var(--bg-soft); /* Fundo igual ao header */
+    border-bottom-left-radius: var(--radius); /* Ajusta cantos */
+    border-bottom-right-radius: var(--radius);
+}
+.chat-input input {
+    flex-grow: 1;
+    background: transparent; /* Já tem o fundo do pai */
+    border: none;
+    color: var(--text);
+    padding: 12px 14px;
+    border-radius: 12px; /* Mantém o border-radius do input */
+    outline: none;
+    font-size: 0.95rem;
+}
+.chat-input input::placeholder {
+    color: var(--muted);
+}
+.chat-input .icon-btn {
+    flex-shrink: 0;
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    padding: 8px;
+}
+.chat-input .icon-btn:hover {
+    color: var(--primary);
+}
+
+/* Responsividade para Layout Geral */
+@media (max-width: 768px) {
+    .hero {
+        min-height: 350px;
+        padding: 60px 20px;
+    }
+    .hero .panel {
+        padding: 20px;
+    }
+    .hero h1.brand-lg {
+        font-size: 1.8rem;
+    }
+    .hero p.muted {
+        font-size: 1rem;
+    }
+    .cta-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    .cta-button {
+        width: 80%; /* Faz os botões preencherem mais em telas menores */
+    }
+    .chat-widget {
+        bottom: 15px;
+        right: 15px;
+        width: 95%;
+        height: 85%;
+    }
+}
+@media (max-width: 600px) {
+    .app {
+        grid-template-columns: 1fr;
+    }
+    .sidebar {
+        display: none; /* Ou implementar lógica para menu mobile */
+    }
+    .topbar {
+        padding: 14px 18px;
+    }
+    .content {
+        padding: 18px;
+    }
+    .hero .panel {
+        padding: 15px;
+    }
+    .hero h1.brand-lg {
+        font-size: 1.6rem;
+    }
+    .hero .ai-assistant-btn {
+        font-size: 1rem;
+        padding: 12px 25px;
+    }
+    .cta-actions {
+        gap: 15px;
+    }
+    .cta-button {
+        padding: 12px 20px;
+        font-size: 0.9rem;
+    }
+    .chat-header h3 {
+        font-size: 1rem;
+    }
+    .chat-input input {
+        font-size: 0.9rem;
+    }
+}

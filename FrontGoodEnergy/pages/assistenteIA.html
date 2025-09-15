@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href="https://github.com/Vinicius-Dias07/Good-Energy/blob/master/FrontGoodEnergy/assets/2amarelo-removebg-preview.png?raw=true" type="image/x-icon">
+    <title>Assistente IA — GoodEnergy</title>
+    <link rel="stylesheet" href="../styles/styles.css" />
+    <meta name="theme-color" content="#ffffff">
+</head>
+<body data-active="ia">
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand"><img src="https://github.com/Vinicius-Dias07/Good-Energy/blob/master/FrontGoodEnergy/assets/2amarelo-removebg-preview.png?raw=true"><h1>GoodEnergy</h1></div>
+            <nav class="nav">
+                </nav>
+            <div class="foot">Olá, <span id="userName">Usuário</span></div>
+        </aside>
+
+        <main>
+            <div class="topbar">
+                <button class="ai-assistant-btn active" id="toggleChatBtn">Assistente IA</button>
+            </div>
+            
+            <div class="content">
+                <div class="hero">
+                    <div class="panel">
+                        <h1 class="brand-lg">
+                           <img src="https://github.com/Vinicius-Dias07/Good-Energy/blob/master/FrontGoodEnergy/assets/2amarelo-removebg-preview.png?raw=true">
+                           Assistente de IA
+                        </h1>
+                        <p class="muted mt12">Receba suporte dedicado, otimize seu consumo de energia solar, tire dúvidas e controle sua casa com a inteligência artificial.</p>
+                        <a href="#chat-widget" class="ai-assistant-btn mt18">Converse com Seu Assistente de IA Agora</a>
+                    </div>
+                </div>
+
+                <div class="grid-2 mt18">
+                    <div class="card">
+                        <h3>Otimização de Consumo</h3>
+                        <p class="muted">Nossa IA analisa seu consumo em tempo real e oferece dicas personalizadas para você aproveitar ao máximo sua energia solar.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Suporte Instantâneo</h3>
+                        <p class="muted">Tire suas dúvidas sobre instalação, manutenção ou funcionamento do seu sistema solar a qualquer momento.</p>
+                    </div>
+                </div>
+
+                <section id="home-automation" class="home-automation-section">
+                    <div class="card"> <h3>Sua Casa Mais Inteligente e Conectada</h3>
+                        <p class="muted">Integre dispositivos e controle iluminação, climatização e segurança por comandos de voz ou pelo aplicativo. Compatível com assistentes como a Alexa.</p>
+                    </div>
+                </section>
+                
+            
+
+                <section class="final-cta-section">
+                    <h2>Maximize Sua Experiência com Energia Inteligente!</h2>
+                    <p class="muted">Você já faz parte do futuro da energia. Explore todo o potencial do seu Assistente de IA, otimize seu consumo e descubra novas funcionalidades para tornar sua casa ainda mais conectada e eficiente.</p>
+                    <div class="cta-actions">
+                        <a href="#chat-widget" class="cta-button icon-link">
+                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8c0 1.418.394 2.745 1.07 3.888l4.378 4.378c.504.504 1.17.778 1.879.778h1.087a6.05 6.05 0 00.778-1.879l4.378-4.378zM8 12a1 1 0 11-2 0 1 1 0 012 0zM12 8a1 1 0 11-2 0 1 1 0 012 0zM16 8a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
+                            Suporte e Manutenção
+                        </a>
+                        <a href="#home-automation" class="cta-button icon-link">
+                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 00-18 0c0 4.418 3.582 8 8 8s8-3.582 8-8zM12 17c-2.761 0-5-2.239-5-5 0-2.761 2.239-5 5-5s5 2.239 5 5c0 2.761-2.239 5-5 5z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            Casa Inteligente
+                        </a>
+                        <a href="#chat-widget" class="cta-button icon-link">
+                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.375 13.75c4.738-.736 8.625-3.555 8.625-7.75M3.75 13.75C8.49 13.014 12.375 10.195 12.375 6.013M12.375 19.504C17.113 18.768 21 15.95 21 12.013c0-4.738-3.582-8.625-8.625-8.625S3.75 7.275 3.75 12.013c0 4.738 3.582 8.625 8.625 8.625zM12.75 19.504C17.5 18.768 21 15.95 21 12.013c0-4.738-3.582-8.625-8.625-8.625s-8.625 3.887-8.625 8.625c0 4.738 3.582 8.625 8.625 8.625z"></path></svg>
+                            Fale com o Assistente
+                        </a>
+                    </div>
+                </section>
+            </div>
+            
+            <div id="chat-widget" class="chat-widget hide">
+                <div class="chat-header">
+                    <h3>Assistente IA</h3>
+                </div>
+                <div class="chat-body">
+                    <div id="chat-messages" class="chat-messages">
+                        </div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="chat-input-text" placeholder="Digite sua mensagem...">
+                    <button id="chat-send-btn" class="icon-btn">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                    <button id="chat-mic-btn" class="icon-btn">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7v1a1 1 0 01-2 0v-1a7 7 0 01-7-7v-1.5a1 1 0 011-1h1a1 1 0 011 1v1.5a5 5 0 0010 0v-1.5a1 1 0 011-1h1a1 1 0 011 1zM12 4a2 2 0 012 2v4a2 2 0 01-4 0V6a2 2 0 012-2z"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="../js/app.js"></script>
+    <script src="../js/ia-assistant.js"></script>
+</body>
+</html>
