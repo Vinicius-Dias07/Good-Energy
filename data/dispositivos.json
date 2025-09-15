@@ -16,5 +16,15 @@
       "on": true,
       "watts": 200
     }
+  ],
+  "gabrielsimioniwo@gmail.com": [
+    {
+      "id": "3e17a525-6097-49e9-8805-aa3be8faa600",
+      "name": "TV",
+      "room": "sala",
+      "type": "appliance",
+      "on": true,
+      "watts": 200
+    }
   ]
 }
