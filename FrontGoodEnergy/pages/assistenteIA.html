@@ -19,18 +19,21 @@
 
         <main>
             <div class="topbar">
-                <button class="ai-assistant-btn active" id="toggleChatBtn">Assistente IA</button>
+                <a href="#chat-widget" class="ai-assistant-btn active js-toggle-chat" id="toggleChatBtn">Assistente IA</a>
+                
+                <div class="actions">
+                    </div>
             </div>
             
             <div class="content">
                 <div class="hero">
                     <div class="panel">
                         <h1 class="brand-lg">
-                           <img src="https://github.com/Vinicius-Dias07/Good-Energy/blob/master/FrontGoodEnergy/assets/2amarelo-removebg-preview.png?raw=true">
+                           <img src="https://github.com/Vinicius-Dias07/Good-Energy/blob/master/FrontGoodEnergy/assets/2amarelo-removebg-preview.png?raw=true" alt="Logo GoodEnergy">
                            Assistente de IA
                         </h1>
                         <p class="muted mt12">Receba suporte dedicado, otimize seu consumo de energia solar, tire dúvidas e controle sua casa com a inteligência artificial.</p>
-                        <a href="#chat-widget" class="ai-assistant-btn mt18">Converse com Seu Assistente de IA Agora</a>
+                        <a href="#chat-widget" class="ai-assistant-btn mt18 js-toggle-chat">Converse com Seu Assistente de IA Agora</a>
                     </div>
                 </div>
 
@@ -46,31 +49,30 @@
                 </div>
 
                 <section id="home-automation" class="home-automation-section">
-                    <div class="card"> <h3>Sua Casa Mais Inteligente e Conectada</h3>
+                    <div class="card">
+                        <h3>Sua Casa Mais Inteligente e Conectada</h3>
                         <p class="muted">Integre dispositivos e controle iluminação, climatização e segurança por comandos de voz ou pelo aplicativo. Compatível com assistentes como a Alexa.</p>
                     </div>
                 </section>
                 
-            
-
                 <section class="final-cta-section">
                     <h2>Maximize Sua Experiência com Energia Inteligente!</h2>
                     <p class="muted">Você já faz parte do futuro da energia. Explore todo o potencial do seu Assistente de IA, otimize seu consumo e descubra novas funcionalidades para tornar sua casa ainda mais conectada e eficiente.</p>
                     <div class="cta-actions">
-                    <a href="#chat-widget" class="cta-button icon-link">
-  <img src="https://github.com/Vinicius-Dias07/Good-Energy/blob/master/FrontGoodEnergy/assets/ia-good.png?raw=true" class="icon" alt="Ícone Suporte">
-  Suporte e Manutenção
-</a>
+                        <a href="#chat-widget" class="cta-button icon-link js-toggle-chat">
+                            <img src="https://github.com/Vinicius-Dias07/Good-Energy/blob/master/FrontGoodEnergy/assets/ia-good.png?raw=true" class="icon" alt="Ícone Suporte">
+                            Suporte e Manutenção
+                        </a>
 
-<a href="#chat-widget" class="cta-button icon-link">
-  <img src="https://github.com/Vinicius-Dias07/Good-Energy/blob/master/FrontGoodEnergy/assets/2222.png?raw=true" class="icon" alt="Ícone Casa Inteligente">
-  Casa Inteligente
-</a>
+                        <a href="#home-automation" class="cta-button icon-link">
+                            <img src="https://github.com/Vinicius-Dias07/Good-Energy/blob/master/FrontGoodEnergy/assets/2222.png?raw=true" class="icon" alt="Ícone Casa Inteligente">
+                            Casa Inteligente
+                        </a>
 
-<a href="#chat-widget" class="cta-button icon-link">
-  <img src="https://github.com/Vinicius-Dias07/Good-Energy/blob/master/FrontGoodEnergy/assets/aiii.png?raw=true" class="icon" alt="Ícone Assistente">
-  Fale com o Assistente
-</a>
+                        <a href="#chat-widget" class="cta-button icon-link js-toggle-chat">
+                            <img src="https://github.com/Vinicius-Dias07/Good-Energy/blob/master/FrontGoodEnergy/assets/aiii.png?raw=true" class="icon" alt="Ícone Assistente">
+                            Fale com o Assistente
+                        </a>
                     </div>
                 </section>
             </div>
@@ -84,12 +86,12 @@
                         </div>
                 </div>
                 <div class="chat-input">
+                    <button id="chat-mic-btn" class="icon-btn">
+                        <img class="icon" src="URL_DO_SEU_ICONE_MICROFONE" alt="Microfone">
+                    </button>
                     <input type="text" id="chat-input-text" placeholder="Digite sua mensagem...">
                     <button id="chat-send-btn" class="icon-btn">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </button>
-                    <button id="chat-mic-btn" class="icon-btn">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7v1a1 1 0 01-2 0v-1a7 7 0 01-7-7v-1.5a1 1 0 011-1h1a1 1 0 011 1v1.5a5 5 0 0010 0v-1.5a1 1 0 011-1h1a1 1 0 011 1zM12 4a2 2 0 012 2v4a2 2 0 01-4 0V6a2 2 0 012-2z"></path></svg>
+                        <img class="icon" src="URL_DO_SEU_ICONE_ENVIAR" alt="Enviar">
                     </button>
                 </div>
             </div>
@@ -97,6 +99,6 @@
     </div>
     
     <script src="../js/app.js"></script>
-    <script src="../js/ia-assistant.js"></script>
+    <script src="../js/chatbot.js"></script>
 </body>
 </html>

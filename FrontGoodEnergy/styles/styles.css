@@ -577,3 +577,72 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
   height: 40px;  /* altura do ícone */
   flex-shrink: 0; /* evita distorção */
 }
+
+
+/* Estilos para a linha de input do chat */
+.chat-input {
+    display: flex;
+    align-items: center; /* Alinha verticalmente os itens */
+    gap: 8px;
+    padding: 10px;
+    border-top: 1px solid var(--grid);
+    background: var(--bg-soft); 
+    border-bottom-left-radius: var(--radius); 
+    border-bottom-right-radius: var(--radius);
+    
+    /* --- NOVA CONFIGURAÇÃO --- */
+    flex-direction: row-reverse; /* Alinha os itens da direita para a esquerda */
+    padding-right: 10px; /* Espaço extra à direita */
+    padding-left: 10px; /* Espaço extra à esquerda */
+}
+
+.chat-input input {
+    flex-grow: 1; /* Permite que o input ocupe o espaço restante */
+    background: transparent; 
+    border: none;
+    color: var(--text);
+    padding: 12px 14px;
+    border-radius: 12px; 
+    outline: none;
+    font-size: 0.95rem;
+    /* Precisamos garantir que o input fique no meio e os botões nas pontas */
+    order: 2; /* Define a ordem visual do input */
+    min-width: 0; /* Importante para que o input possa encolher se necessário */
+}
+.chat-input input::placeholder {
+    color: var(--muted);
+}
+
+/* Estilos para os botões de microfone e enviar */
+.chat-input .icon-btn {
+    flex-shrink: 0; /* Impede que os botões encolham */
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    padding: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.chat-input .icon-btn:hover {
+    color: var(--primary);
+}
+
+/* Ajustes para os ícones dos botões de microfone e enviar */
+.chat-input .icon-btn .icon { /* Assumindo que você adicionou a classe 'icon' aos SVGs */
+    width: 22px; /* Um pouco maior para destaque */
+    height: 22px;
+    stroke-width: 1.8;
+}
+
+/* Ordem visual dos botões */
+#chat-mic-btn {
+    order: 1; /* Microfone é o primeiro da esquerda para a direita (pois a direção é reversa) */
+}
+#chat-send-btn {
+    order: 3; /* Botão de enviar é o último (mais à direita, na ordem visual) */
+}
+
+/* Estilo para indicar que o microfone está ativo */
+#chat-mic-btn.listening {
+    color: var(--danger); /* Ou outra cor que indique gravação ativa */
+}
