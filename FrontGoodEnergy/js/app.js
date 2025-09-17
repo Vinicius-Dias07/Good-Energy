@@ -204,8 +204,8 @@ async function dashboardInit() {
             new Chart(energyCtx, {
                 type: 'line', data: { labels: chartData.labels,
                     datasets: [
-                        { label: 'Geração (kW)', data: chartData.generation_kw, fill: true, tension: 0.35, backgroundColor: 'rgba(34, 197, 94, 0.2)', borderColor: '#22c55e' },
-                        { label: 'Consumo (kW)', data: simulatedConsumptionHistory, fill: true, tension: 0.35, backgroundColor: 'rgba(239, 68, 68, 0.2)', borderColor: '#ef4444' }
+                        { label: 'Geração (kW)', data: chartData.generation_kw, fill: true, tension: 0.35, backgroundColor: 'rgba(67, 116, 182, 0.2)', borderColor: 'rgba(61, 75, 148)' },
+                        { label: 'Consumo (kW)', data: simulatedConsumptionHistory, fill: true, tension: 0.35, backgroundColor: 'rgba(252, 206, 33, 0.2)', borderColor: 'rgba(244, 199, 60)' }
                     ]
                 },
                 options: { responsive: true, maintainAspectRatio: false }
@@ -489,8 +489,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Cria uma nova instância do gráfico.
         new Chart(ctx, {
-            // Define o tipo do gráfico como 'pie' (pizza).
-            type: 'pie',
+            // <-- MUDANÇA 1: O tipo do gráfico foi alterado para 'doughnut'.
+            type: 'doughnut',
             
             // Define os dados do gráfico.
             data: {
@@ -504,19 +504,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     data: [data.charged_percentage, data.empty_percentage],
                     // Define as cores para cada fatia da pizza.
                     backgroundColor: [
-                        'rgba(34, 197, 94, 0.2)', // Verde para "Carga"
-                        'rgba(239, 68, 68, 0.2)'  // vermelho para "Vazio"
+                        'rgba(67, 116, 182, 0.1)', // Cor para "Carga" (com transparência)
+                        'rgba(244, 199, 60, 0.1)'  // Cor para "Vazio" (cinza transparente)
                     ],
                     borderColor: [
-                        '#22c55e',
-                        '#ef4444'
+                        'rgba(61, 75, 148)',
+                        'rgba(244, 199, 60)'
                     ],
-                    borderWidth: 1
+                    borderWidth: 2
                 }]
             },
             
             // Define opções de customização do gráfico.
             options: {
+                // <-- MUDANÇA 2: Adicionada a opção 'cutout' para criar o anel.
+                cutout: '55%', // Deixa a borda com 45% da espessura total.
+
                 responsive: true, // Torna o gráfico responsivo ao tamanho do container.
                 plugins: {
                     legend: {
