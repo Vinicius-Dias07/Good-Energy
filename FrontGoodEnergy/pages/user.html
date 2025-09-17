@@ -21,6 +21,33 @@
                 <a href="assistenteIA.html" class="ai-assistant-btn">Assistente IA</a>
             </div>
             <div class="content">
+                <div class="card delete-account-container" id="delete-container">
+                    <h2>Gerenciamento da Conta</h2>
+
+                    <button id="deleteAccountBtn" class="delete-button-initial">
+                        Excluir Minha Conta
+                    </button>
+
+                    <div id="deleteConfirmBox" class="confirmation-box hide">
+                        <h4>Confirmar Exclusão de Conta</h4>
+                        <p class="warning-text">
+                            <strong>AVISO:</strong> Esta ação é permanente e irreversível. Todos os seus dados, incluindo seus dispositivos cadastrados, serão removidos.
+                        </p>
+                        <label for="deletePasswordInput">Para confirmar, digite sua senha:</label>
+                        <input id="deletePasswordInput" type="password" placeholder="Sua senha" />
+
+                        <p id="deleteErrorMsg" class="error-message hide"></p>
+                        
+                        <div class="button-group">
+                            <button id="deleteCancelBtn" class="cancel-button">
+                                Cancelar
+                            </button>
+                            <button id="deleteConfirmBtn" class="confirm-delete-button">
+                                Confirmar Exclusão
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 <div class="grid-2">
                     <div class="card">
                         <h3>Meu Perfil</h3>

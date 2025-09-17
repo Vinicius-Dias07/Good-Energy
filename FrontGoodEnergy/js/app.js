@@ -355,12 +355,85 @@ function settingsInit() {
     }
 }
 
-function populateUser() {
+// SUBSTITUA a função 'populateUser' por esta nova função 'userPageInit'
+
+function userPageInit() {
+    // Parte 1: Preencher os dados do formulário do usuário (lógica que já existia)
     if (!user) return;
     const uName = el('uName'), uEmail = el('uEmail'), planTag = el('planTag');
     if (uName) uName.value = user.name;
     if (uEmail) uEmail.value = user.email;
     if (planTag) planTag.textContent = user.plan;
+
+    // Parte 2: Lógica para a exclusão da conta
+    const deleteBtn = el('deleteAccountBtn');
+    const confirmBox = el('deleteConfirmBox');
+    const cancelBtn = el('deleteCancelBtn');
+    const confirmBtn = el('deleteConfirmBtn');
+    const passwordInput = el('deletePasswordInput');
+    const errorMsg = el('deleteErrorMsg');
+    
+    // Verifica se todos os elementos existem antes de adicionar os eventos
+    if (!deleteBtn || !confirmBox || !cancelBtn || !confirmBtn || !passwordInput || !errorMsg) {
+        return; 
+    }
+
+    // Evento para mostrar a caixa de confirmação
+    deleteBtn.addEventListener('click', () => {
+        deleteBtn.classList.add('hide');
+        confirmBox.classList.remove('hide');
+    });
+
+    // Evento para cancelar e esconder a caixa
+    cancelBtn.addEventListener('click', () => {
+        confirmBox.classList.add('hide');
+        deleteBtn.classList.remove('hide');
+        passwordInput.value = '';
+        errorMsg.classList.add('hide');
+    });
+
+    // Evento para confirmar e executar a exclusão
+    confirmBtn.addEventListener('click', async () => {
+        const password = passwordInput.value;
+        if (!password) {
+            errorMsg.textContent = "Por favor, digite sua senha para confirmar.";
+            errorMsg.classList.remove('hide');
+            return;
+        }
+
+        errorMsg.classList.add('hide');
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = 'Excluindo...';
+        showLoader();
+
+        try {
+            const response = await fetch('http://127.0.0.1:5000/api/user', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: user.email,
+                    password: password
+                })
+            });
+
+            const result = await response.json();
+            if (!response.ok) {
+                throw new Error(result.error || 'Não foi possível excluir a conta.');
+            }
+
+            localStorage.clear(); // Limpa todos os dados do usuário
+            showToast('Sua conta foi removida com sucesso.', 'success');
+            setTimeout(() => { window.location.href = 'login.html'; }, 1500);
+
+        } catch (err) {
+            hideLoader();
+            showToast(err.message, 'error');
+            errorMsg.textContent = err.message;
+            errorMsg.classList.remove('hide');
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = 'Confirmar Exclusão';
+        }
+    });
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{
@@ -378,8 +451,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
     register: registerInit,
     reports: reportsInit,
     settings: settingsInit,
-    user: populateUser
-  };
+    user: userPageInit 
+};
   if(pageInitializers[activePage]) {
     pageInitializers[activePage]();
   }
