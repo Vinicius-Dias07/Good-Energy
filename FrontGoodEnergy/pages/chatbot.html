@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="shortcut icon" href="/FrontGoodEnergy/assets/GoodEnergyLogo.png" type="image/x-icon">
     <title>Chatbot — GoodEnergy</title>
-    <link rel="stylesheet" href="../styles/styles.css" /> <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="../styles/styles.css" /> 
+    <meta name="theme-color" content="#ffffff">
 </head>
-<body data-active="chat"> <div class="app">
+<body data-active="chat">
+    <div class="app">
         <aside class="sidebar">
             <div class="brand"><img src="/FrontGoodEnergy/assets/GoodEnergyLogo.png"><h1>GoodEnergy</h1></div>
             <nav class="nav">
@@ -17,15 +19,17 @@
 
         <main>
             <div class="topbar">
-           <a href="assistenteIA.html" class="icon-btn back-to-assistant-btn">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-        <polyline points="9 22 9 12 15 12 15 22"></polyline>
-    </svg>
-</a> </div>
+                <a href="assistenteIA.html" class="icon-btn back-to-assistant-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                </a>
+            </div>
             
             <div class="content">
-                <div id="chat-widget" class="chat-widget show"> <div class="chat-header">
+                <div id="chat-widget" class="chat-widget show"> 
+                    <div class="chat-header">
                         <h3>Assistente IA</h3>
                     </div>
                     <div class="chat-body">
@@ -34,15 +38,24 @@
                     </div>
                     <div class="chat-input">
                         <button id="chat-mic-btn" class="icon-btn">
-                            <img class="icon" src="/FrontGoodEnergy/assets/8725978_microphone_icon.png" alt="Microfone"> </button>
+                            <img class="icon" src="/FrontGoodEnergy/assets/8725978_microphone_icon.png" alt="Microfone"> 
+                        </button>
                         <input type="text" id="chat-input-text" placeholder="Digite sua mensagem...">
                         <button id="chat-send-btn" class="icon-btn">
-                            <img class="icon" src="/FrontGoodEnergy/assets/9027465_send_icon.png" alt="Enviar"> </button>
+                            <img class="icon" src="/FrontGoodEnergy/assets/9027465_send_icon.png" alt="Enviar"> 
+                        </button>
                     </div>
                 </div>
-            </div>
+
+                <div id="conversation-history" class="conversation-history">
+                    <h4>Histórico de Conversas</h4>
+                    <ul id="history-list">
+                        </ul>
+                </div>
+                </div>
         </main>
     </div>
     
-    <script src="../js/chatbot.js"></script> </body>
+    <script src="../js/chatbot.js"></script> 
+</body>
 </html>
