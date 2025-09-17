@@ -1,0 +1,6 @@
+Flask
+Flask-Cors
+pandas
+Werkzeug
+
+#pip install -r requirements.txt
