@@ -457,3 +457,80 @@ document.addEventListener('DOMContentLoaded', ()=>{
     pageInitializers[activePage]();
   }
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    // Função assíncrona para buscar os dados da bateria da nossa API Flask.
+    async function fetchBatteryData() {
+        try {
+            // Faz a requisição para o endpoint que criamos.
+            const response = await fetch('http://127.0.0.1:5000/api/battery/status');
+            
+            // Verifica se a requisição foi bem-sucedida.
+            if (!response.ok) {
+                throw new Error('Falha ao buscar dados da bateria');
+            }
+            
+            // Converte a resposta para JSON.
+            const data = await response.json();
+            
+            // Chama a função para criar o gráfico, passando os dados recebidos.
+            createBatteryChart(data);
+
+        } catch (error) {
+            console.error("Erro:", error);
+        }
+    }
+
+    // Função para criar o gráfico de pizza com os dados.
+    function createBatteryChart(data) {
+        // Pega o contexto do elemento canvas onde o gráfico será desenhado.
+        const ctx = document.getElementById('batteryPieChart').getContext('2d');
+
+        // Cria uma nova instância do gráfico.
+        new Chart(ctx, {
+            // Define o tipo do gráfico como 'pie' (pizza).
+            type: 'pie',
+            
+            // Define os dados do gráfico.
+            data: {
+                // Usa os rótulos vindos da API: ["Carga", "Vazio"].
+                labels: data.labels,
+                
+                // Define os datasets (conjuntos de dados).
+                datasets: [{
+                    label: 'Status da Bateria',
+                    // Usa os valores de porcentagem vindos da API.
+                    data: [data.charged_percentage, data.empty_percentage],
+                    // Define as cores para cada fatia da pizza.
+                    backgroundColor: [
+                        'rgba(34, 197, 94, 0.2)', // Verde para "Carga"
+                        'rgba(239, 68, 68, 0.2)'  // vermelho para "Vazio"
+                    ],
+                    borderColor: [
+                        '#22c55e',
+                        '#ef4444'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            
+            // Define opções de customização do gráfico.
+            options: {
+                responsive: true, // Torna o gráfico responsivo ao tamanho do container.
+                plugins: {
+                    legend: {
+                        position: 'top', // Posição da legenda.
+                    },
+                    title: {
+                        display: true, // Mostra o título.
+                        text: 'Nível da Bateria' // Texto do título.
+                    }
+                }
+            }
+        });
+    }
+
+    // Chama a função inicial para buscar os dados e iniciar o processo.
+    fetchBatteryData();
+});

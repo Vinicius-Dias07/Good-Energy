@@ -3,5 +3,4 @@ Flask-Cors
 pandas
 Werkzeug
 
-# https://prod.liveshare.vsengsaas.visualstudio.com/join?CE08B95244EAF7021A8A19C1472B8140DAFA
 #pip install -r requirements.txt

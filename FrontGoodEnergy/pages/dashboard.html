@@ -34,6 +34,7 @@
                     </button>
                 </div>
             </div>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <div class="content">
                 <div class="kpis">
                     <div class="card kpi"> <h3>Geração Hoje</h3> <div id="kpiGen" class="value">-- kWh</div> </div>
@@ -41,11 +42,19 @@
                     <div class="card kpi"> <h3>Economia Estimada Hoje</h3> <div id="kpiSaving" class="value">R$ --</div> </div>
                     <div class="card kpi"> <h3>Bateria (Simulado)</h3> <div id="kpiBatt" class="value">-- %</div> </div>
                 </div>
+                
                 <div class="grid-destaque">
                     <div class="card">
                         <h3>Geração x Consumo (24h)</h3>
                         <div class="grafico-container"> <canvas id="chartEnergy"></canvas> </div>
                     </div>
+                </div>
+                <div class="grid-destaque">
+                    <div class="card">
+                <div class="chart-container" style="position: relative; height:300px; width:300px">
+    <canvas id="batteryPieChart"></canvas>
+                </div>
+                </div>
                 </div>
                 <div class="grid-2">
                     <div id="intensive-devices-card" class="card hide">
