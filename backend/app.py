@@ -264,8 +264,14 @@ def get_kpis():
     if not today_data.empty:
         # A geração de hoje é a diferença entre o maior e o menor valor de 'Total Generation(kWh)' no período de hoje.
         generation_today = today_data['Total Generation(kWh)'].max() - today_data['Total Generation(kWh)'].min()
-    # Retorna os KPIs (Key Performance Indicators) calculados em formato JSON.
-    return jsonify({"todayGenKwh": generation_today, "totalGenKwh": total_generation})
+        # --- NOVA LINHA: Simula o consumo atual da casa ---
+    house_load_kw = random.uniform(0.3, 2.5) # Simula um consumo entre 300W e 2.5kW
+    # Retorna os KPIs, AGORA INCLUINDO o consumo da casa.
+    return jsonify({
+        "todayGenKwh": generation_today, 
+        "totalGenKwh": total_generation,
+        "houseLoadKw": house_load_kw  
+    })
 
 # Define a rota '/api/generation/history' que aceita requisições GET.
 @app.route('/api/generation/history', methods=['GET'])
@@ -480,18 +486,41 @@ def get_battery_status():
         # Calcula a porcentagem vazia.
         empty_percentage = 100.0 - charged_percentage
 
-        # Prepara os dados para serem enviados como JSON.
+        now = datetime.now()
+        is_charging = 9 <= now.hour < 16
+        
+        if is_charging:
+            fluxo_watts = random.randint(500, 2500) # Carregando com 500W a 2.5kW
+            status_texto = "Carregando"
+        else:
+            fluxo_watts = random.randint(-1500, -300) # Descarregando com 300W a 1.5kW
+            status_texto = "Descarregando"
+        # --- FIM DA NOVA LÓGICA ---
+
         battery_data = {
             "charged_percentage": charged_percentage,
             "empty_percentage": empty_percentage,
-            "labels": ["Carga", "Vazio"] # Rótulos para o gráfico
+            "labels": ["Carga", "Vazio"],
+            "fluxo_watts": fluxo_watts, # Novo dado
+            "status_texto": status_texto # Novo dado
         }
-        
-        # Retorna os dados em formato JSON.
-        return jsonify(battery_data)
 
+        battery_data = {
+            "charged_percentage": charged_percentage,
+            "empty_percentage": empty_percentage,
+            "labels": ["Carga", "Vazio"],
+            "fluxo_watts": fluxo_watts,
+            "status_texto": status_texto
+        }
+
+        capacidade_total_kwh = 13.5
+        energia_armazenada_kwh = round((charged_percentage / 100) * capacidade_total_kwh, 1)
+
+        # CORREÇÃO: Adicionando a nova chave ao dicionário
+        battery_data['energia_kwh'] = energia_armazenada_kwh
+        
+        return jsonify(battery_data)
     except Exception as e:
-        # Em caso de erro, retorna uma mensagem genérica.
         return jsonify({"error": f"Erro ao obter dados da bateria: {e}"}), 500
 
 # --- INICIALIZAÇÃO DO SERVIDOR ---

@@ -814,3 +814,127 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
   border-radius: 12px;
   text-align: center;
 }
+
+.grid-2-interno {
+  display: grid;
+  /* A 1ª coluna se ajusta ao conteúdo, a 2ª ocupa o resto */
+  grid-template-columns: auto 1fr; 
+  gap: 40px; /* Aumentamos o vão para dar um respiro */
+  align-items: center; /* Centraliza verticalmente para um melhor alinhamento */
+}
+
+/* Ajuste para telas menores */
+@media (max-width: 900px) {
+  .grid-2-interno {
+    grid-template-columns: 1fr; /* Faz com que vire uma única coluna */
+  }
+}
+
+.bateria-status {
+  margin-bottom: 15px; /* Adiciona um espaço abaixo, antes do título h3 */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.weather-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.weather-details {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.weather-location {
+  text-align: right;
+  font-size: 0.9rem;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ajuste para telas menores */
+@media (max-width: 600px) {
+  .weather-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .weather-location {
+    text-align: left;
+    margin-top: 10px;
+  }
+}
+
+.bateria-fluxo {
+  background-color: var(--bg-soft);
+  padding: 10px 15px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+}
+
+.weather-info {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap; /* Permite quebrar linha em telas pequenas */
+}
+
+.weather-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.weather-main img {
+  width: 50px;
+  height: 50px;
+}
+.weather-details h3 {
+  margin: 0;
+  font-size: 2rem;
+}
+.weather-details span {
+  text-transform: capitalize;
+  color: var(--muted);
+}
+
+/* Grid para os detalhes extras */
+.weather-extra-details {
+  display: flex;
+  gap: 20px;
+  border-left: 1px solid var(--grid);
+  padding-left: 20px;
+}
+.weather-extra-details div {
+  display: flex;
+  flex-direction: column;
+}
+.weather-extra-details span {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+.weather-extra-details strong {
+  font-size: 1.1rem;
+}
+
+/* Alinha a localização à direita */
+.weather-location {
+  margin-left: auto; /* Este é o truque para empurrar para a direita */
+  text-align: right;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.weather-location strong {
+    color: var(--text);
+}

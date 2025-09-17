@@ -34,45 +34,84 @@
                     </button>
                 </div>
             </div>
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
             <div class="content">
                 <div class="kpis">
                     <div class="card kpi"> <h3>Geração Hoje</h3> <div id="kpiGen" class="value">-- kWh</div> </div>
                     <div class="card kpi"> <h3>Consumo da Casa</h3> <div id="kpiUse" class="value">-- kW</div> <div class="sub">Consumo em tempo real</div> </div>
                     <div class="card kpi"> <h3>Economia Estimada Hoje</h3> <div id="kpiSaving" class="value">R$ --</div> </div>
-                    <div class="card kpi"> <h3>Bateria (Simulado)</h3> <div id="kpiBatt" class="value">-- %</div> </div>
                 </div>
-                
+
+               <div class="card">
+                    <div class="weather-info">
+                        <div class="weather-main">
+                            <img id="weather-icon" src="" alt="Ícone do tempo">
+                            <div class="weather-details">
+                                <h3 id="weather-temp">--°C</h3>
+                                <span id="weather-desc">--</span>
+                            </div>
+                        </div>
+                        
+                        <div class="weather-extra-details">
+                            <div>
+                                <span>Umidade</span>
+                                <strong id="weather-humidity">-- %</strong>
+                            </div>
+                            <div>
+                                <span>Vento</span>
+                                <strong id="weather-wind">-- km/h</strong>
+                            </div>
+                            <div>
+                                <span>Nuvens</span>
+                                <strong id="weather-clouds">-- %</strong>
+                            </div>
+                        </div>
+
+                        <div class="weather-location">
+                            <span>Previsão para:</span>
+                            <strong id="weather-location-name">--</strong>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="grid-destaque">
                     <div class="card">
                         <h3>Geração x Consumo (24h)</h3>
-                        <div class="grafico-container"> <canvas id="chartEnergy"></canvas> </div>
+                        <div class="grafico-container" style="height: 280px;">
+                            <canvas id="chartEnergy"></canvas>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="grid-destaque">
-                    <div class="card">
-                <div class="chart-container" style="position: relative; height:300px; width:300px">
-    <canvas id="batteryPieChart"></canvas>
-                </div>
-                </div>
                 </div>
 
-                <div class="grid-2">
-                    <div id="intensive-devices-card" class="card hide">
-                        <h3>Dispositivos mais intensivos</h3>
-                        <div id="intensive-devices-list" class="list"></div>
-                    </div>
+                <div class="grid-destaque">
                     <div class="card">
-                        <h3>Horários Bons para Geração Solar</h3>
-                        <table>
-                            <thead> <tr><th>Período</th><th>Potencial</th></tr> </thead>
-                            <tbody>
-                                <tr><td>10:00 - 11:00</td><td><span class="tag success">Alto</span></td></tr>
-                                <tr><td>11:00 - 14:00</td><td><span class="tag success">Máximo</span></td></tr>
-                                <tr><td>14:00 - 15:00</td><td><span class="tag success">Alto</span></td></tr>
-                            </tbody>
-                        </table>
+                        <div class="grid-2-interno">
+                            <div class="chart-container" style="position: relative; width:100%;">
+                                <canvas id="batteryPieChart"></canvas>
+                            </div>
+
+                            <div>
+                                <div class="bateria-status">
+                                    <span>Status da Bateria:</span>
+                                    <span class="tag success">Saudável</span>
+                                </div>
+                                <div class="bateria-fluxo">
+                                    <span id="battery-status-text">--</span>
+                                    <strong id="battery-flow-watts">-- W</strong>
+                                </div>
+                                <h3>Horários para Geração</h3>
+                                <table>
+                                    <thead>
+                                        <tr><th>Período</th><th>Potencial</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>10:00 - 11:00</td><td><span class="tag success">Alto</span></td></tr>
+                                        <tr><td>11:00 - 14:00</td><td><span class="tag success">Máximo</span></td></tr>
+                                        <tr><td>14:00 - 15:00</td><td><span class="tag success">Alto</span></td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
