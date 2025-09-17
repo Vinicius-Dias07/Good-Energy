@@ -60,7 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const messageElement = document.createElement('div');
         messageElement.classList.add('message', sender);
         messageElement.textContent = message;
-        chatMessagesContainer.prepend(messageElement); // Adiciona no topo para scroll reverso
+        chatMessagesContainer.appendChild(messageElement); 
+        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // Rola para a última mensagem
     }
 
     // Função para processar a mensagem do usuário
