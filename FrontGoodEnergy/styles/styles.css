@@ -646,3 +646,81 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
 #chat-mic-btn.listening {
     color: var(--danger); /* Ou outra cor que indique gravação ativa */
 }
+
+
+.content {
+    /* REMOVA esta linha: padding: 24px; */
+    flex-grow: 1; /* Permite que o content cresça para ocupar o espaço */
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-widget {
+    /* REMOVA AS LINHAS ABAIXO */
+    /* position: fixed; */
+    /* bottom: 24px; */
+    /* right: 24px; */
+    /* width: min(380px, 90vw); */
+    /* height: min(500px, 80vh); */
+
+    /* ADICIONE AS LINHAS ABAIXO */
+    position: relative;
+    width: 100%;
+    height: 100%;
+    
+    /* Mantenha o restante dos estilos, como border, box-shadow, etc. */
+    background: var(--card);
+    border: 1px solid var(--grid);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    z-index: 101;
+    opacity: 1; /* Sempre visível na página */
+    visibility: visible;
+    transform: none; /* Sem animação de entrada */
+}
+
+.chat-body {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column; /* MUDE para 'column', não 'column-reverse' */
+    justify-content: flex-end; /* Mensagens mais novas no final */
+}
+
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chat-input .icon-btn:hover {
+    color: var(--primary);
+}
+
+.message.user {
+    align-self: flex-end;
+    background: var(--primary); /* JÁ ESTÁ USANDO a variável */
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.back-to-assistant-btn {
+    /* REMOVA os estilos antigos aqui, se houver */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px; /* Ajuste o padding para o tamanho desejado */
+    border-radius: 12px;
+    background: var(--bg-soft);
+    border: 1px solid var(--grid);
+    color: var(--muted);
+    transition: all 0.2s ease;
+}
+
+.back-to-assistant-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
