@@ -209,6 +209,45 @@ def delete_device(device_id):
     write_json_file(DEVICES_FILE, devices_db)
     return jsonify({"message": "Dispositivo removido"})
 
+@app.route('/api/user', methods=['DELETE'])
+def delete_user():
+    # 1. Obter os dados (e-mail e senha para confirmação)
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        return jsonify({"error": "E-mail e senha são obrigatórios para exclusão"}), 400
+
+    # 2. Ler os bancos de dados de usuários e dispositivos
+    users_db = read_json_file(USERS_FILE, {})
+    devices_db = read_json_file(DEVICES_FILE, {})
+
+    user = users_db.get(email)
+
+    # 3. VERIFICAÇÃO DE SEGURANÇA: Checar se o usuário existe e se a senha está correta
+    if not user or not check_password_hash(user.get('password'), password):
+        # Usamos a mesma mensagem de erro do login para não informar se o erro foi no e-mail ou na senha
+        return jsonify({"error": "Credenciais inválidas."}), 401
+
+    # 4. Se a senha estiver correta, proceder com a exclusão
+    try:
+        # Remover o usuário de users.json
+        del users_db[email]
+        write_json_file(USERS_FILE, users_db)
+
+        # Remover os dispositivos associados ao usuário em dispositivos.json (se existirem)
+        if email in devices_db:
+            del devices_db[email]
+            write_json_file(DEVICES_FILE, devices_db)
+
+        return jsonify({"message": "Usuário e todos os seus dados foram removidos com sucesso."}), 200
+
+    except Exception as e:
+        # Em caso de um erro inesperado durante a escrita dos arquivos
+        return jsonify({"error": f"Ocorreu um erro ao remover o usuário: {e}"}), 500
+
+
 # --- INICIALIZAÇÃO DO SERVIDOR ---
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

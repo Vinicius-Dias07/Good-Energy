@@ -1,22 +1,4 @@
 {
-  "davixavieerr@dev.com": [
-    {
-      "id": "a070ac5a-57d5-4969-9371-a9e65332909b",
-      "name": "computador",
-      "room": "quarto",
-      "type": "other",
-      "on": true,
-      "watts": 60
-    },
-    {
-      "id": "0788a439-f02c-4e7a-93ca-6427dcea2ac3",
-      "name": "tv",
-      "room": "quarto",
-      "type": "appliance",
-      "on": true,
-      "watts": 200
-    }
-  ],
   "gabrielsimioniwo@gmail.com": [
     {
       "id": "3e17a525-6097-49e9-8805-aa3be8faa600",

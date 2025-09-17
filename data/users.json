@@ -1,18 +1,18 @@
 {
-  "davixavieerr@dev.com": {
-    "name": "Davi Xavier",
-    "email": "davixavieerr@dev.com",
-    "password": "scrypt:32768:8:1$u1SU3h8PYK5neQ1N$afc93c35f606224ac7ae7faa76a471baa75a1d5cba60a2eaf2bad9828f70133a3514772501785b903a8b3d683de3fcc8e5e8d85a42ad8284f83a224d97e5e90b",
-    "plan": "Starter",
-    "theme": "padrão",
-    "colorTheme": "dark"
-  },
   "gabrielsimioniwo@gmail.com": {
     "name": "gabriel",
     "email": "gabrielsimioniwo@gmail.com",
     "password": "scrypt:32768:8:1$ujkOp4SfuXD99F7L$2914c65c8873ec88f655cb25838d08b3fb91066eb59804881f9d4b849fd41dfb76771ef42452dab95534aa4ae856b89c506d088473b811fe89677ec308b005fe",
     "plan": "Starter",
     "theme": "solar",
+    "colorTheme": "dark"
+  },
+  "davixavieerr@gmail.com": {
+    "name": "Davi Xavier",
+    "email": "davixavieerr@gmail.com",
+    "password": "scrypt:32768:8:1$TsROuTOsM5rVmuja$019143152f0e5c3f692cce081dd919f780cc11460124ca44287cee71f848e638ddb8501b87618b00fac9490822ed49f7a8c58f347c56d720bbd958356720d02b",
+    "plan": "Starter",
+    "theme": "padrão",
     "colorTheme": "dark"
   }
 }

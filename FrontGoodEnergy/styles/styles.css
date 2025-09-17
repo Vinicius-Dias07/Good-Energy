@@ -724,3 +724,93 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
     border-color: var(--primary);
     color: var(--primary);
 }
+
+.delete-account-container {
+  border: 1px solid var(--danger);
+  background-color: rgba(239, 68, 68, 0.05); /* Usa a cor de perigo do tema */
+  padding: 20px;
+  margin-top: 18px; /* Adiciona um espaço acima */
+}
+
+.delete-account-container h2 {
+  margin-top: 0;
+  color: var(--danger);
+}
+
+.delete-button-initial {
+  background-color: var(--danger);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 12px; /* Usa o raio padrão */
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.delete-button-initial:hover {
+  background-color: #cc0000; /* Um vermelho mais escuro no hover */
+}
+
+.confirmation-box {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.warning-text {
+  color: #ffb8b8; /* Cor mais clara para o texto de aviso */
+  font-size: 0.9em;
+  border-left: 3px solid var(--danger);
+  padding-left: 10px;
+}
+
+.confirmation-box label {
+  font-weight: bold;
+  color: var(--muted);
+}
+
+.confirmation-box input {
+  /* O input já herda os estilos globais, não precisa de estilo extra */
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.button-group button {
+  border: none;
+  padding: 10px 15px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.cancel-button {
+  background-color: var(--bg-soft);
+  color: var(--text);
+  border: 1px solid var(--grid);
+}
+
+.confirm-delete-button {
+  background-color: var(--danger);
+  color: white;
+}
+
+.confirm-delete-button:disabled {
+  background-color: #ff9999;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #f87171;
+  background-color: rgba(153, 27, 27, 0.2);
+  border: 1px solid var(--danger);
+  padding: 10px;
+  border-radius: 12px;
+  text-align: center;
+}
