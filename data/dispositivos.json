@@ -8,5 +8,15 @@
       "on": false,
       "watts": 0
     }
+  ],
+  "davixavieerr@gmail.com": [
+    {
+      "id": "07fa5f87-5b27-45a4-ab13-505ed0e15890",
+      "name": "Alexa",
+      "room": "quarto",
+      "type": "other",
+      "on": true,
+      "watts": 60
+    }
   ]
 }
