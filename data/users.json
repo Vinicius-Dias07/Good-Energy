@@ -18,7 +18,7 @@
   "goodenergy@dev.com.br": {
     "name": "Fiap",
     "email": "goodenergy@dev.com.br",
-    "password": "scrypt:32768:8:1$p0OU2D4pd86NGI15$9fe53cbad6eae26a7f07a04cfafbe2230e7123f8a23200df2daf5e9e66865af0731534b26bb5a74b17553cc994b0e55f8bc4fbd05922bd83add1add925c2dbb0",
+    "password": "scrypt:32768:8:1$Og7Uf1FPqxMnahfa$ac1965000e37a2c902b69b26b9ef7a1668c01d4d4384318e12ba8db50791914bc3a2421fa7d9dc6f5d1906be72c942d9c7cda6e90f0dabd2c7844d9bd75b2d6d",
     "plan": "Starter",
     "theme": "padrão",
     "colorTheme": "dark"

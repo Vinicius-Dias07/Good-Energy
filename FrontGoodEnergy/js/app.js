@@ -1,5 +1,49 @@
 // app.js - Versão COMPLETA E ESTÁVEL com todas as funções e correções
 
+async function fetchWeather() {
+    const apiKey = '288e9288c597f70a80a921fd488da25a'; 
+    const lat = -23.5614;
+    const lon = -46.6565;
+    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=pt_br`;
+
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+            throw new Error('Não foi possível obter a previsão do tempo.');
+        }
+        const data = await response.json();
+
+        // --- Seleciona os elementos ANTIGOS ---
+        const iconEl = el('weather-icon');
+        const tempEl = el('weather-temp');
+        const descEl = el('weather-desc');
+        const locationEl = el('weather-location-name');
+
+        // --- Seleciona os NOVOS elementos ---
+        const humidityEl = el('weather-humidity');
+        const windEl = el('weather-wind');
+        const cloudsEl = el('weather-clouds');
+
+        // --- Preenche TODOS os elementos com os dados da API ---
+        
+        // Dados principais
+        iconEl.src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+        tempEl.textContent = `${Math.round(data.main.temp)}°C`;
+        descEl.textContent = data.weather[0].description;
+        locationEl.textContent = data.name;
+
+        // Novos detalhes
+        humidityEl.textContent = `${data.main.humidity} %`;
+        // O vento vem em m/s, convertemos para km/h (multiplicando por 3.6)
+        windEl.textContent = `${Math.round(data.wind.speed * 3.6)} km/h`;
+        cloudsEl.textContent = `${data.clouds.all} %`;
+
+    } catch (error) {
+        console.error("Erro ao buscar dados do clima:", error);
+        el('weather-desc').textContent = "Erro ao carregar dados.";
+    }
+}
+
 const user = JSON.parse(localStorage.getItem('ge_user'));
 
 if (!user && !['login', 'register', 'index', undefined].includes(document.body.dataset.active)) {
@@ -167,15 +211,31 @@ function registerInit() {
       const result = await response.json();
       hideLoader();
       if (!response.ok) { throw new Error(result.error || 'Não foi possível criar a conta.'); }
+
+      // --- A MÁGICA ACONTECE AQUI ---
+
+      // 1. Salva o usuário no localStorage, realizando o "login"
       localStorage.setItem('ge_user', JSON.stringify(result));
-      showToast(`Conta criada com sucesso, ${result.name}!`, 'success');
-      setTimeout(() => window.location.href = 'dashboard.html', 500);
-    } catch (error) { hideLoader(); showToast(error.message, 'error'); }
+
+      // 2. Mostra uma mensagem mais clara para o usuário
+      showToast(`Cadastro realizado, ${result.name}! Redirecionando para o dashboard...`, 'success');
+
+      // 3. Redireciona para o dashboard após um breve intervalo
+      setTimeout(() => {
+          window.location.href = 'dashboard.html';
+      }, 1500); // Aumentamos para 1.5s para dar tempo de ler a mensagem
+
+    } catch (error) { 
+        hideLoader(); 
+        showToast(error.message, 'error'); 
+    }
   });
 }
 
 async function dashboardInit() {
     showLoader();
+    fetchWeather();
+    fetchBatteryData(); 
     try {
         const [kpisResponse, chartResponse] = await Promise.all([
             fetch(`http://127.0.0.1:5000/api/kpis?email=${user.email}`),
@@ -192,7 +252,6 @@ async function dashboardInit() {
         el('kpiGen').textContent = `${todayGen.toFixed(1)} kWh`;
         el('kpiUse').textContent = `${houseLoad.toFixed(2)} kW`;
         el('kpiSaving').textContent = `R$ ${(todayGen * tariff).toFixed(2)}`;
-        el('kpiBatt').textContent = `${(50 + Math.random() * 40).toFixed(0)}%`; 
         
         if (typeof Chart === 'undefined') { return console.error('A biblioteca Chart.js não foi carregada.'); }
         
@@ -204,8 +263,8 @@ async function dashboardInit() {
             new Chart(energyCtx, {
                 type: 'line', data: { labels: chartData.labels,
                     datasets: [
-                        { label: 'Geração (kW)', data: chartData.generation_kw, fill: true, tension: 0.35, backgroundColor: 'rgba(67, 116, 182, 0.2)', borderColor: 'rgba(61, 75, 148)' },
-                        { label: 'Consumo (kW)', data: simulatedConsumptionHistory, fill: true, tension: 0.35, backgroundColor: 'rgba(252, 206, 33, 0.2)', borderColor: 'rgba(244, 199, 60)' }
+                        { label: 'Geração (kW)', data: chartData.generation_kw, fill: true, tension: 0.35, backgroundColor: 'rgba(0, 255, 0, 0.1)', borderColor: 'rgba(0, 255, 0)' },
+                        { label: 'Consumo (kW)', data: simulatedConsumptionHistory, fill: true, tension: 0.35, backgroundColor: 'rgba(255, 0, 0, 0.1)', borderColor: 'rgba(255, 0, 0)' }
                     ]
                 },
                 options: { responsive: true, maintainAspectRatio: false }
@@ -458,82 +517,66 @@ document.addEventListener('DOMContentLoaded', ()=>{
   }
 });
 
-document.addEventListener('DOMContentLoaded', () => {
 
-    // Função assíncrona para buscar os dados da bateria da nossa API Flask.
-    async function fetchBatteryData() {
-        try {
-            // Faz a requisição para o endpoint que criamos.
-            const response = await fetch('http://127.0.0.1:5000/api/battery/status');
-            
-            // Verifica se a requisição foi bem-sucedida.
-            if (!response.ok) {
-                throw new Error('Falha ao buscar dados da bateria');
+// FUNÇÕES DA BATERIA (podem ficar fora do DOMContentLoaded)
+
+async function fetchBatteryData() {
+    try {
+        const response = await fetch('http://127.0.0.1:5000/api/battery/status');
+        if (!response.ok) {
+            throw new Error('Falha ao buscar dados da bateria');
+        }
+        const data = await response.json();
+        createBatteryChart(data);
+    } catch (error) {
+        console.error("Erro:", error);
+    }
+}
+
+function createBatteryChart(data) {
+    const ctx = document.getElementById('batteryPieChart')?.getContext('2d');
+    if (!ctx) return; // Se não encontrar o elemento, para a execução
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: data.labels,
+            datasets: [{
+                label: 'Status da Bateria',
+                data: [data.charged_percentage, data.empty_percentage],
+                backgroundColor: [
+                    'rgba(0, 255, 0, 0.1)',
+                    'rgba(255, 0, 0, 0.1)'
+                ],
+                borderColor: [
+                    'rgba(0, 255, 0)',
+                    'rgba(255, 0, 0)'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            cutout: '55%',
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                title: { display: true, text: 'Nível da Bateria' }
             }
-            
-            // Converte a resposta para JSON.
-            const data = await response.json();
-            
-            // Chama a função para criar o gráfico, passando os dados recebidos.
-            createBatteryChart(data);
+        }
+    });
 
-        } catch (error) {
-            console.error("Erro:", error);
+    // ===== A LÓGICA FOI MOVIDA PARA CÁ (O LUGAR CORRETO) =====
+    const statusTextEl = el('battery-status-text');
+    const flowWattsEl = el('battery-flow-watts');
+
+    if (statusTextEl && flowWattsEl) {
+        statusTextEl.textContent = data.status_texto;
+        flowWattsEl.textContent = `${data.fluxo_watts} W`;
+
+        if (data.fluxo_watts > 0) {
+            flowWattsEl.style.color = 'var(--success)';
+        } else {
+            flowWattsEl.style.color = 'var(--warning)';
         }
     }
-
-    // Função para criar o gráfico de pizza com os dados.
-    function createBatteryChart(data) {
-        // Pega o contexto do elemento canvas onde o gráfico será desenhado.
-        const ctx = document.getElementById('batteryPieChart').getContext('2d');
-
-        // Cria uma nova instância do gráfico.
-        new Chart(ctx, {
-            // <-- MUDANÇA 1: O tipo do gráfico foi alterado para 'doughnut'.
-            type: 'doughnut',
-            
-            // Define os dados do gráfico.
-            data: {
-                // Usa os rótulos vindos da API: ["Carga", "Vazio"].
-                labels: data.labels,
-                
-                // Define os datasets (conjuntos de dados).
-                datasets: [{
-                    label: 'Status da Bateria',
-                    // Usa os valores de porcentagem vindos da API.
-                    data: [data.charged_percentage, data.empty_percentage],
-                    // Define as cores para cada fatia da pizza.
-                    backgroundColor: [
-                        'rgba(67, 116, 182, 0.1)', // Cor para "Carga" (com transparência)
-                        'rgba(244, 199, 60, 0.1)'  // Cor para "Vazio" (cinza transparente)
-                    ],
-                    borderColor: [
-                        'rgba(61, 75, 148)',
-                        'rgba(244, 199, 60)'
-                    ],
-                    borderWidth: 2
-                }]
-            },
-            
-            // Define opções de customização do gráfico.
-            options: {
-                // <-- MUDANÇA 2: Adicionada a opção 'cutout' para criar o anel.
-                cutout: '55%', // Deixa a borda com 45% da espessura total.
-
-                responsive: true, // Torna o gráfico responsivo ao tamanho do container.
-                plugins: {
-                    legend: {
-                        position: 'top', // Posição da legenda.
-                    },
-                    title: {
-                        display: true, // Mostra o título.
-                        text: 'Nível da Bateria' // Texto do título.
-                    }
-                }
-            }
-        });
-    }
-
-    // Chama a função inicial para buscar os dados e iniciar o processo.
-    fetchBatteryData();
-});
+}
