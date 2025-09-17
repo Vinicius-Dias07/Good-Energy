@@ -10,6 +10,9 @@ from flask import Flask, request, jsonify
 # Isso permite que o seu frontend (rodando em um domínio/porta diferente) possa fazer requisições para este backend.
 from flask_cors import CORS
 
+#sabe o que é importa random né nao preciso detalhar
+import random
+
 # Importa a biblioteca 'json' para trabalhar com arquivos JSON (ler e escrever).
 import json
 
@@ -460,6 +463,36 @@ def delete_user():
         # Retorna uma mensagem de erro do servidor.
         return jsonify({"error": f"Ocorreu um erro ao remover o usuário: {e}"}), 500
 
+#simula a carga da bateria para o grafico e o trquinho la em cima
+bateria_simulada = random.randint(1,100)
+
+@app.route('/api/battery/status', methods=['GET'])
+def get_battery_status():
+    """
+    Endpoint para fornecer o status atual da bateria.
+    Em um cenário real, este valor viria de um sensor ou da API do inversor/bateria.
+    Para este exemplo, vamos simular um valor fixo.
+    """
+    try:
+        # Simula a bateria
+        charged_percentage = bateria_simulada
+        
+        # Calcula a porcentagem vazia.
+        empty_percentage = 100.0 - charged_percentage
+
+        # Prepara os dados para serem enviados como JSON.
+        battery_data = {
+            "charged_percentage": charged_percentage,
+            "empty_percentage": empty_percentage,
+            "labels": ["Carga", "Vazio"] # Rótulos para o gráfico
+        }
+        
+        # Retorna os dados em formato JSON.
+        return jsonify(battery_data)
+
+    except Exception as e:
+        # Em caso de erro, retorna uma mensagem genérica.
+        return jsonify({"error": f"Erro ao obter dados da bateria: {e}"}), 500
 
 # --- INICIALIZAÇÃO DO SERVIDOR ---
 
