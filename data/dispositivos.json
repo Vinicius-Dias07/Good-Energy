@@ -5,8 +5,8 @@
       "name": "TV",
       "room": "sala",
       "type": "appliance",
-      "on": false,
-      "watts": 0
+      "on": true,
+      "watts": 200
     }
   ],
   "davixavieerr@gmail.com": [
