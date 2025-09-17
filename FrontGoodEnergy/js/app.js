@@ -87,7 +87,7 @@ function mountSidebar(active='dashboard'){
   logoutButton.href = "#"; logoutButton.id = "logoutBtn"; logoutButton.title = "Sair";
   logoutButton.innerHTML = `${icons.logout}<span>Sair</span>`;
   nav.appendChild(logoutButton);
-  logoutButton.addEventListener('click', (e) => { e.preventDefault(); localStorage.clear(); window.location.href = 'login.html'; });
+  logoutButton.addEventListener('click', (e) => { e.preventDefault(); localStorage.clear(); window.location.href = 'index.html'; });
   if (user) el('userName').textContent = user.name.split(' ')[0];
 }
 
