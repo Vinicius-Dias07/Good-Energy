@@ -37,10 +37,14 @@ body[data-colortheme="light"] {
 }
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes rotation { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@keyframes fadeOut { to { opacity: 0; } }
+
 * { box-sizing: border-box; }
-html, body { height: 100%; }
+html, body { height: 100%; margin: 0; }
 body {
-  margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu;
   color: var(--text); background-color: var(--bg);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -48,12 +52,39 @@ a { color: inherit; text-decoration: none; }
 button { cursor: pointer; }
 .hide { display: none !important; }
 
-.app { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
-.sidebar {
-  position: sticky; top: 0; height: 100vh; background: var(--bg-soft);
-  border-right: 1px solid var(--grid); padding: 22px 14px;
-  display: flex; flex-direction: column;
+/* LAYOUT PRINCIPAL */
+.app { 
+  display: flex;
+  height: 100vh;
+  width: 100%;
 }
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--bg-soft);
+  border-right: 1px solid var(--grid);
+  padding: 22px 14px;
+  display: flex;
+  flex-direction: column;
+}
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 24px;
+}
+
+/* COMPONENTES GERAIS */
 .brand { display: flex; align-items: center; gap: 10px; padding: 10px 8px; margin-bottom: 18px; }
 .brand img { width: 50px; height: 50px; }
 .brand h1 { font-size: 1.6rem; margin: 0; font-weight: 700; }
@@ -72,7 +103,6 @@ button { cursor: pointer; }
   display: flex; align-items: center; justify-content: space-between;
   padding: 18px 24px; border-bottom: 1px solid var(--grid);
   background: rgba(11, 15, 26, 0.6);
-  -webkit-backdrop-filter: blur(8px); /* --- CORREÇÃO SAFARI --- */
   backdrop-filter: blur(8px);
 }
 .actions { display: flex; align-items: center; gap: 10px; position: relative; }
@@ -82,7 +112,6 @@ button { cursor: pointer; }
   justify-content: center; transition: all 0.2s ease;
 }
 .icon-btn:hover { border-color: var(--primary); }
-.icon-btn svg { width: 20px; height: 20px; }
 .badge {
   position: absolute; top: 4px; right: 4px; background: var(--danger);
   border-radius: 10px; font-size: .7rem; line-height: 1;
@@ -94,7 +123,6 @@ button { cursor: pointer; }
   border-radius: var(--radius); box-shadow: var(--shadow);
   padding: 8px; z-index: 20; animation: fadeIn 0.2s ease;
 }
-.content { padding: 24px; display: grid; gap: 18px; }
 .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
 .card { background: var(--card); border: 1px solid var(--grid); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); }
 .card h3 { margin: 0 0 10px 0; font-size: 1rem; color: var(--text); opacity: 0.9; }
@@ -108,25 +136,15 @@ button { cursor: pointer; }
 label { display: block; margin-bottom: 6px; color: var(--muted); }
 input, select, textarea { width: 100%; background: var(--bg-soft); border: 1px solid var(--grid); color: var(--text); padding: 12px 14px; border-radius: 12px; outline: none; }
 table { width: 100%; border-collapse: collapse; }
-th, td { 
-    padding: 12px 10px; 
-    text-align: left; 
-}
-tbody tr {
-    border-bottom: 1px solid var(--grid);
-}
-tbody tr:last-child {
-    border-bottom: none; /* Remove a borda apenas da última linha do corpo */
-}
-thead tr {
-    border-bottom: 2px solid var(--grid); /* Deixa a borda do cabeçalho mais forte */
-}
+th, td { padding: 12px 10px; text-align: left; }
+tbody tr { border-bottom: 1px solid var(--grid); }
+tbody tr:last-child { border-bottom: none; }
+thead tr { border-bottom: 2px solid var(--grid); }
 th { font-weight: 700; color: var(--muted); }
 .hero { min-height: 100vh; display: grid; place-items: center; background-color: var(--bg); background-image: url(../assets/ceu.png); background-size: cover; background-position: center; }
 .hero .panel {
   width: min(520px, 92vw); padding: 28px; border-radius: 18px;
   background: rgba(10, 15, 26, .75); border: 1px solid rgba(255, 255, 255, .12);
-  -webkit-backdrop-filter: blur(8px); /* --- CORREÇÃO SAFARI --- */
   backdrop-filter: blur(8px); 
   box-shadow: var(--shadow); text-align: center;
 }
@@ -158,24 +176,19 @@ th { font-weight: 700; color: var(--muted); }
 .loader-overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(11, 15, 26, 0.7); 
-  -webkit-backdrop-filter: blur(4px); /* --- CORREÇÃO SAFARI --- */
   backdrop-filter: blur(4px);
   display: flex; align-items: center; justify-content: center; z-index: 999;
 }
 .loader { width: 48px; height: 48px; border: 5px solid var(--primary); border-bottom-color: transparent; border-radius: 50%; animation: rotation 1s linear infinite; }
-@keyframes rotation { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 .toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
 .toast { padding: 14px 20px; border-radius: 12px; color: white; font-size: 0.9rem; box-shadow: 0 5px 20px rgba(0,0,0,0.4); animation: slideIn 0.3s ease, fadeOut 0.5s ease 3.5s forwards; border: 1px solid transparent; }
 .toast.success { background-color: #1f3830; border-color: var(--success); }
 .toast.error { background-color: #41232c; border-color: var(--danger); }
-@keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-@keyframes fadeOut { to { opacity: 0; } }
 .form-actions { margin-top: 24px; display: flex; flex-direction: column; gap: 16px; }
 .grafico-container { position: relative; width: 100%; height: 350px; }
 .modal-overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(11, 15, 26, 0.7); 
-  -webkit-backdrop-filter: blur(8px); /* --- CORREÇÃO SAFARI --- */
   backdrop-filter: blur(8px);
   display: flex; align-items: center; justify-content: center; z-index: 1000;
   opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -210,22 +223,105 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
   justify-content: flex-end;
 }
 
+/* Estilos Específicos da Página do Assistente de IA */
+.chat-widget {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--grid);
+  background: var(--bg-soft);
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+}
+.chat-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--text);
+}
+.chat-body {
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Mensagens mais novas no topo inferior */
+}
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.message {
+  padding: 12px;
+  border-radius: 25px;
+  margin-bottom: 5px;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+.message.user {
+  align-self: flex-end;
+  background: var(--primary);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+.message.bot {
+  align-self: flex-start;
+  background: var(--bg-soft);
+  border-bottom-left-radius: 4px;
+  color: var(--text);
+}
+.chat-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  border-top: 1px solid var(--grid);
+  background: var(--bg-soft);
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+}
+.chat-input input {
+  flex-grow: 1;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  padding: 12px 14px;
+  border-radius: 12px;
+  outline: none;
+  font-size: 0.95rem;
+  order: 2;
+  min-width: 0;
+}
+.chat-input input::placeholder {
+  color: var(--muted);
+}
+.chat-input .icon-btn {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  padding: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+.chat-input .icon-btn:hover {
+  color: var(--primary);
+  transform: scale(1.1);
+}
+#chat-mic-btn { order: 1; }
+#chat-send-btn { order: 3; }
 
-
-
-
-
-
-
-
-
-/* --- Estilos Específicos da Página do Assistente de IA --- */
-
-/* Estilo da Seção Hero da Página IA */
+/* LAYOUT DAS PÁGINAS (Hero, etc.) */
 .hero { 
-    /* Use a mesma imagem de fundo do seu projeto ou uma nova.
-       Se for usar uma imagem sua, substitua '../assets/ceu.png' pelo caminho correto. */
-    background-image: url('../assets/ceu.png'); /* Exemplo: use a imagem 'ceu.png' do seu projeto */
+    background-image: url('../assets/ceu.png'); 
     background-size: cover;
     background-position: center;
     position: relative;
@@ -244,12 +340,11 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
     border-radius: 18px;
     background: rgba(10, 15, 26, .75); 
     border: 1px solid rgba(255, 255, 255, .12);
-    -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px); 
     box-shadow: var(--shadow);
 }
 .hero h1.brand-lg {
-    font-size: 2.2rem; /* Tamanho um pouco maior para o título principal da IA */
+    font-size: 2.2rem;
     margin-bottom: 10px;
 }
 .hero .brand-lg img {
@@ -263,7 +358,6 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
     font-size: 1.05rem;
     line-height: 1.5;
 }
-/* Estilo para o CTA principal da Hero */
 .hero .ai-assistant-btn {
     background: var(--primary);
     color: white;
@@ -273,15 +367,13 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
     border-radius: 14px;
     margin-top: 18px; 
     box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
-    display: inline-block; /* Para que transform e box-shadow funcionem bem */
+    display: inline-block;
 }
 .hero .ai-assistant-btn:hover {
     background: rgba(59, 130, 246, 0.9);
     transform: translateY(-3px);
     box-shadow: 0 12px 25px rgba(59, 130, 246, 0.4);
 }
-
-/* Seção de Casa Inteligente */
 .home-automation-section {
     padding: 60px 20px;
     background: var(--bg-soft); 
@@ -289,7 +381,7 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
     border-bottom: 1px solid var(--grid);
     text-align: center;
 }
-.home-automation-section h3 { /* Reutiliza o h3 dos cards */
+.home-automation-section h3 {
     margin: 0 0 10px 0; font-size: 1rem; color: var(--text); opacity: 0.9;
 }
 .home-automation-section p {
@@ -299,11 +391,6 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
     font-size: 0.95rem;
     line-height: 1.4;
 }
-/* Opcional: Se quiser que a seção de casa inteligente também seja um card */
-/* .home-automation-section .card { ... estilos de card ... } */
-
-
-/* Estilo para a Seção Final CTA */
 .final-cta-section {
     padding: 60px 20px;
     background: var(--bg-soft); 
@@ -317,43 +404,37 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
 }
 .final-cta-section p {
     max-width: 600px;
-    margin: 0 auto 30px auto; /* Espaçamento para os botões */
+    margin: 0 auto 30px auto;
     color: var(--muted);
     font-size: 0.95rem;
     line-height: 1.4;
 }
-
-/* Estilo para os novos botões de ação na CTA final */
 .cta-actions {
     display: flex;
     justify-content: center;
     gap: 20px;
-    flex-wrap: wrap; /* Permite quebrar em nova linha em telas menores */
+    flex-wrap: wrap;
 }
-
 .cta-button {
-    display: inline-flex; /* Usa flex para alinhar ícone e texto */
+    display: inline-flex;
     align-items: center;
     gap: 8px;
     padding: 14px 24px;
     border-radius: 14px;
     font-weight: 600;
     transition: all 0.3s ease;
-    text-decoration: none; /* Remove sublinhado padrão de <a> */
+    text-decoration: none;
     box-shadow: var(--shadow);
-    border: none; /* Remove borda padrão */
+    border: none;
     cursor: pointer;
 }
-
 .cta-button .icon {
     width: 20px;
     height: 20px;
-    stroke-width: 1.8; /* Ajuste a espessura do traço se necessário */
-    fill: none; /* Garante que o ícone não tenha preenchimento padrão */
-    stroke: currentColor; /* Usa a cor do texto do botão */
+    stroke-width: 1.8;
+    fill: none;
+    stroke: currentColor;
 }
-
-/* Estilo para os botões de ação direta (Suporte, Casa, Chat) */
 .cta-button.icon-link {
     background: var(--bg-soft);
     color: var(--text);
@@ -365,14 +446,9 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
     border-color: var(--primary);
 }
 .cta-button.icon-link:hover .icon {
-    stroke: var(--primary); /* Cor do ícone no hover */
+    stroke: var(--primary);
 }
-
-/* Estilos para links internos (#chat-widget, #home-automation) */
-/* Já definidos acima para .cta-button.icon-link, que serão usados por eles */
-
-/* Estilo para o botão do Assistente IA na Topbar */
-.topbar .ai-assistant-btn { /* Reutiliza o estilo base do seu botão IA */
+.topbar .ai-assistant-btn {
     background: var(--bg-soft);
     border: 1px solid rgba(255, 255, 255, .08);
     color: var(--muted);
@@ -386,402 +462,129 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
     border-color: var(--primary);
     color: var(--text);
 }
-/* Estilo quando o botão está ativo na topbar */
 .topbar .ai-assistant-btn.active {
     background: var(--primary);
     color: white;
     border-color: var(--primary);
 }
 
-
-/* Estilo do Widget de Chat */
-.chat-widget {
-    position: fixed;
-    bottom: 24px; /* Posição inicial, pode ser ajustada */
-    right: 24px; /* Posição inicial, pode ser ajustada */
-    width: min(380px, 90vw);
-    height: min(500px, 80vh);
-    background: var(--card);
-    border: 1px solid var(--grid);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
+/* Histórico de Conversas */
+.conversation-history {
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
-    z-index: 101; /* Garante que o chat fique acima de outros elementos */
-    opacity: 0; /* Começa escondido */
-    visibility: hidden; /* Começa escondido */
-    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-    transform: translateY(20px); /* Pequeno deslocamento para aparecer */
+    padding: 20px 14px;
+    margin-top: 20px;
 }
-.chat-widget.show { /* Classe para exibir o chat */
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+.conversation-history h4 {
+    font-size: 14px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #2a3b55;
+    padding-bottom: 5px;
 }
-.chat-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 14px 20px;
-    border-bottom: 1px solid var(--grid);
-    background: var(--bg-soft); /* Fundo um pouco diferente para o header */
-    border-top-left-radius: var(--radius); /* Ajusta cantos */
-    border-top-right-radius: var(--radius);
-}
-.chat-header h3 {
+.conversation-history ul {
+    list-style: none;
+    padding: 0;
     margin: 0;
-    font-size: 1.1rem;
-    color: var(--text);
-}
-.chat-body {
-    flex-grow: 1;
-    padding: 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column-reverse; /* Mensagens mais novas no topo */
-}
-.chat-messages {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-}
-.message {
-    padding: 10px 14px;
-    border-radius: 18px;
-    max-width: 85%;
-    word-wrap: break-word; /* Garante que palavras longas não quebrem o layout */
-}
-.message.user {
-    align-self: flex-end;
-    background: var(--primary);
-    color: white;
-    border-bottom-right-radius: 4px;
-}
-.message.bot {
-    align-self: flex-start;
-    background: var(--bg-soft);
-    border-bottom-left-radius: 4px;
-    color: var(--text);
-}
-.chat-input {
-    display: flex;
     gap: 8px;
+}
+.conversation-history ul li {
+    background: #1f2e45;
     padding: 10px;
-    border-top: 1px solid var(--grid);
-    background: var(--bg-soft); /* Fundo igual ao header */
-    border-bottom-left-radius: var(--radius); /* Ajusta cantos */
-    border-bottom-right-radius: var(--radius);
-}
-.chat-input input {
-    flex-grow: 1;
-    background: transparent; /* Já tem o fundo do pai */
-    border: none;
-    color: var(--text);
-    padding: 12px 14px;
-    border-radius: 12px; /* Mantém o border-radius do input */
-    outline: none;
-    font-size: 0.95rem;
-}
-.chat-input input::placeholder {
-    color: var(--muted);
-}
-.chat-input .icon-btn {
-    flex-shrink: 0;
-    background: transparent;
-    border: none;
-    color: var(--muted);
-    padding: 8px;
-}
-.chat-input .icon-btn:hover {
-    color: var(--primary);
-}
-
-/* Responsividade para Layout Geral */
-@media (max-width: 768px) {
-    .hero {
-        min-height: 350px;
-        padding: 60px 20px;
-    }
-    .hero .panel {
-        padding: 20px;
-    }
-    .hero h1.brand-lg {
-        font-size: 1.8rem;
-    }
-    .hero p.muted {
-        font-size: 1rem;
-    }
-    .cta-actions {
-        flex-direction: column;
-        align-items: center;
-    }
-    .cta-button {
-        width: 80%; /* Faz os botões preencherem mais em telas menores */
-    }
-    .chat-widget {
-        bottom: 15px;
-        right: 15px;
-        width: 95%;
-        height: 85%;
-    }
-}
-@media (max-width: 600px) {
-    .app {
-        grid-template-columns: 1fr;
-    }
-    .sidebar {
-        display: none; /* Ou implementar lógica para menu mobile */
-    }
-    .topbar {
-        padding: 14px 18px;
-    }
-    .content {
-        padding: 18px;
-    }
-    .hero .panel {
-        padding: 15px;
-    }
-    .hero h1.brand-lg {
-        font-size: 1.6rem;
-    }
-    .hero .ai-assistant-btn {
-        font-size: 1rem;
-        padding: 12px 25px;
-    }
-    .cta-actions {
-        gap: 15px;
-    }
-    .cta-button {
-        padding: 12px 20px;
-        font-size: 0.9rem;
-    }
-    .chat-header h3 {
-        font-size: 1rem;
-    }
-    .chat-input input {
-        font-size: 0.9rem;
-    }
-}
-
-
-
-.icon-link {
-  display: inline-flex;       /* ícone + texto alinhados */
-  align-items: center;        /* centraliza verticalmente */
-  gap: 10px;                  /* espaço entre ícone e texto */
-  text-decoration: none;      /* remove sublinhado */
-}
-
-.icon-link .icon {
-  width: 40px;   /* largura do ícone */
-  height: 40px;  /* altura do ícone */
-  flex-shrink: 0; /* evita distorção */
-}
-
-
-/* Estilos para a linha de input do chat */
-.chat-input {
-    display: flex;
-    align-items: center; /* Alinha verticalmente os itens */
-    gap: 8px;
-    padding: 10px;
-    border-top: 1px solid var(--grid);
-    background: var(--bg-soft); 
-    border-bottom-left-radius: var(--radius); 
-    border-bottom-right-radius: var(--radius);
-    
-    /* --- NOVA CONFIGURAÇÃO --- */
-    flex-direction: row-reverse; /* Alinha os itens da direita para a esquerda */
-    padding-right: 10px; /* Espaço extra à direita */
-    padding-left: 10px; /* Espaço extra à esquerda */
-}
-
-.chat-input input {
-    flex-grow: 1; /* Permite que o input ocupe o espaço restante */
-    background: transparent; 
-    border: none;
-    color: var(--text);
-    padding: 12px 14px;
-    border-radius: 12px; 
-    outline: none;
-    font-size: 0.95rem;
-    /* Precisamos garantir que o input fique no meio e os botões nas pontas */
-    order: 2; /* Define a ordem visual do input */
-    min-width: 0; /* Importante para que o input possa encolher se necessário */
-}
-.chat-input input::placeholder {
-    color: var(--muted);
-}
-
-/* Estilos para os botões de microfone e enviar */
-.chat-input .icon-btn {
-    flex-shrink: 0; /* Impede que os botões encolham */
-    background: transparent;
-    border: none;
-    color: var(--muted);
-    padding: 8px;
+    border-radius: 5px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    font-size: 14px;
+    word-wrap: break-word;
+    transition: background 0.2s ease-in-out;
 }
-.chat-input .icon-btn:hover {
-    color: var(--primary);
+.conversation-history ul li:hover {
+    background: #2a3b55;
 }
-
-/* Ajustes para os ícones dos botões de microfone e enviar */
-.chat-input .icon-btn .icon { /* Assumindo que você adicionou a classe 'icon' aos SVGs */
-    width: 22px; /* Um pouco maior para destaque */
-    height: 22px;
-    stroke-width: 1.8;
+.conversation-history ul li.active {
+    background: #2a3b55;
+    border: 1px solid #0078ff;
+    color: #fff;
 }
-
-/* Ordem visual dos botões */
-#chat-mic-btn {
-    order: 1; /* Microfone é o primeiro da esquerda para a direita (pois a direção é reversa) */
-}
-#chat-send-btn {
-    order: 3; /* Botão de enviar é o último (mais à direita, na ordem visual) */
-}
-
-/* Estilo para indicar que o microfone está ativo */
-#chat-mic-btn.listening {
-    color: var(--danger); /* Ou outra cor que indique gravação ativa */
-}
-
-
-.content {
-    /* REMOVA esta linha: padding: 24px; */
-    flex-grow: 1; /* Permite que o content cresça para ocupar o espaço */
-    display: flex;
-    flex-direction: column;
-}
-
-.chat-widget {
-    /* REMOVA AS LINHAS ABAIXO */
-    /* position: fixed; */
-    /* bottom: 24px; */
-    /* right: 24px; */
-    /* width: min(380px, 90vw); */
-    /* height: min(500px, 80vh); */
-
-    /* ADICIONE AS LINHAS ABAIXO */
-    position: relative;
+.new-conversation-btn {
     width: 100%;
-    height: 100%;
-    
-    /* Mantenha o restante dos estilos, como border, box-shadow, etc. */
-    background: var(--card);
-    border: 1px solid var(--grid);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    display: flex;
-    flex-direction: column;
-    z-index: 101;
-    opacity: 1; /* Sempre visível na página */
-    visibility: visible;
-    transform: none; /* Sem animação de entrada */
+    padding: 12px 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    background: #040d61;
+    color: #f5f0f0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: left;
+    transition: background 0.2s ease-in-out;
+}
+.new-conversation-btn:hover {
+    background: #2478cc;
 }
 
-.chat-body {
-    flex-grow: 1;
-    padding: 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column; /* MUDE para 'column', não 'column-reverse' */
-    justify-content: flex-end; /* Mensagens mais novas no final */
-}
-
-.chat-messages {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.chat-input .icon-btn:hover {
-    color: var(--primary);
-}
-
-.message.user {
-    align-self: flex-end;
-    background: var(--primary); /* JÁ ESTÁ USANDO a variável */
-    color: white;
-    border-bottom-right-radius: 4px;
-}
-
+/* OUTROS COMPONENTES */
 .back-to-assistant-btn {
-    /* REMOVA os estilos antigos aqui, se houver */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 14px; /* Ajuste o padding para o tamanho desejado */
-    border-radius: 12px;
-    background: var(--bg-soft);
-    border: 1px solid var(--grid);
-    color: var(--muted);
-    transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: var(--bg-soft);
+  border: 1px solid var(--grid);
+  color: var(--muted);
+  transition: all 0.2s ease;
 }
-
 .back-to-assistant-btn:hover {
     border-color: var(--primary);
     color: var(--primary);
 }
-
 .delete-account-container {
   border: 1px solid var(--danger);
-  background-color: rgba(239, 68, 68, 0.05); /* Usa a cor de perigo do tema */
+  background-color: rgba(239, 68, 68, 0.05);
   padding: 20px;
-  margin-top: 18px; /* Adiciona um espaço acima */
+  margin-top: 18px;
 }
-
 .delete-account-container h2 {
   margin-top: 0;
   color: var(--danger);
 }
-
 .delete-button-initial {
   background-color: var(--danger);
   color: white;
   border: none;
   padding: 10px 15px;
-  border-radius: 12px; /* Usa o raio padrão */
+  border-radius: 12px;
   cursor: pointer;
   font-weight: bold;
   transition: background-color 0.2s ease;
 }
-
-.delete-button-initial:hover {
-  background-color: #cc0000; /* Um vermelho mais escuro no hover */
-}
-
+.delete-button-initial:hover { background-color: #cc0000; }
 .confirmation-box {
   display: flex;
   flex-direction: column;
   gap: 15px;
   margin-top: 15px;
 }
-
 .warning-text {
-  color: #ffb8b8; /* Cor mais clara para o texto de aviso */
+  color: #ffb8b8;
   font-size: 0.9em;
   border-left: 3px solid var(--danger);
   padding-left: 10px;
 }
-
 .confirmation-box label {
   font-weight: bold;
   color: var(--muted);
 }
-
-.confirmation-box input {
-  /* O input já herda os estilos globais, não precisa de estilo extra */
-}
-
 .button-group {
   display: flex;
   gap: 10px;
   justify-content: flex-end;
   margin-top: 10px;
 }
-
 .button-group button {
   border: none;
   padding: 10px 15px;
@@ -789,23 +592,19 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
   cursor: pointer;
   font-weight: bold;
 }
-
 .cancel-button {
   background-color: var(--bg-soft);
   color: var(--text);
   border: 1px solid var(--grid);
 }
-
 .confirm-delete-button {
   background-color: var(--danger);
   color: white;
 }
-
 .confirm-delete-button:disabled {
   background-color: #ff9999;
   cursor: not-allowed;
 }
-
 .error-message {
   color: #f87171;
   background-color: rgba(153, 27, 27, 0.2);
@@ -814,44 +613,34 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
   border-radius: 12px;
   text-align: center;
 }
-
 .grid-2-interno {
   display: grid;
-  /* A 1ª coluna se ajusta ao conteúdo, a 2ª ocupa o resto */
   grid-template-columns: auto 1fr; 
-  gap: 40px; /* Aumentamos o vão para dar um respiro */
-  align-items: center; /* Centraliza verticalmente para um melhor alinhamento */
+  gap: 40px;
+  align-items: center;
 }
-
-/* Ajuste para telas menores */
 @media (max-width: 900px) {
-  .grid-2-interno {
-    grid-template-columns: 1fr; /* Faz com que vire uma única coluna */
-  }
+  .grid-2-interno { grid-template-columns: 1fr; }
 }
-
 .bateria-status {
-  margin-bottom: 15px; /* Adiciona um espaço abaixo, antes do título h3 */
+  margin-bottom: 15px;
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 0.9rem;
   color: var(--muted);
 }
-
 .weather-info {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
 }
-
 .weather-details {
   display: flex;
   align-items: center;
   gap: 15px;
 }
-
 .weather-location {
   text-align: right;
   font-size: 0.9rem;
@@ -859,8 +648,6 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
   display: flex;
   flex-direction: column;
 }
-
-/* Ajuste para telas menores */
 @media (max-width: 600px) {
   .weather-info {
     flex-direction: column;
@@ -871,7 +658,6 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
     margin-top: 10px;
   }
 }
-
 .bateria-fluxo {
   background-color: var(--bg-soft);
   padding: 10px 15px;
@@ -882,14 +668,12 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
   margin-bottom: 20px;
   font-size: 1.1rem;
 }
-
 .weather-info {
   display: flex;
   align-items: center;
   gap: 24px;
-  flex-wrap: wrap; /* Permite quebrar linha em telas pequenas */
+  flex-wrap: wrap;
 }
-
 .weather-main {
   display: flex;
   align-items: center;
@@ -907,8 +691,6 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
   text-transform: capitalize;
   color: var(--muted);
 }
-
-/* Grid para os detalhes extras */
 .weather-extra-details {
   display: flex;
   gap: 20px;
@@ -927,308 +709,12 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
 .weather-extra-details strong {
   font-size: 1.1rem;
 }
-
-/* Alinha a localização à direita */
 .weather-location {
-  margin-left: auto; /* Este é o truque para empurrar para a direita */
+  margin-left: auto;
   text-align: right;
   font-size: 0.9rem;
   color: var(--muted);
 }
 .weather-location strong {
     color: var(--text);
-}
-
-
-.app {
-    display: flex;
-    height: 100vh;
-    background: #0f1c2e;
-    color: #fff;
-}
-
-/* Sidebar */
-.sidebar {
-    width: 260px;
-    background: #162436;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-.brand {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.brand img {
-    width: 40px;
-    margin-right: 10px;
-}
-
-.brand h1 {
-    font-size: 18px;
-    margin: 0;
-}
-
-.conversation-history {
-    flex: 1;
-    margin-top: 10px;
-    overflow-y: auto;
-}
-
-.conversation-history h4 {
-    font-size: 14px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #2a3b55;
-    padding-bottom: 5px;
-}
-
-.conversation-history ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.conversation-history ul li {
-    background: #1f2e45;
-    margin-bottom: 8px;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.conversation-history ul li:hover {
-    background: #2a3b55;
-}
-
-.foot {
-    margin-top: auto;
-    font-size: 13px;
-    color: #ccc;
-}
-
-/* Main (Chat) */
-main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    background: #0f1c2e;
-}
-
-.content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.chat-widget {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.chat-body {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-}
-
-.chat-input {
-    display: flex;
-    padding: 10px;
-    background: #162436;
-    border-top: 1px solid #2a3b55;
-}
-
-.chat-input input {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 5px;
-    outline: none;
-}
-
-.chat-input button {
-    margin-left: 10px;
-    padding: 12px 16px;
-    border: none;
-    border-radius: 5px;
-    background: #0078ff;
-    color: #fff;
-    cursor: pointer;
-}
-
-/* Sidebar - ajusta o histórico */
-.conversation-history {
-    flex: 1;
-    margin-top: 20px; /* espaço entre logo e histórico */
-    display: flex;
-    flex-direction: column;
-}
-
-.conversation-history h4 {
-    font-size: 14px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #2a3b55;
-    padding-bottom: 5px;
-}
-
-.conversation-history ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column; /* garante que os itens fiquem embaixo */
-    gap: 8px; /* espaço entre mensagens */
-}
-
-.conversation-history ul li {
-    background: #1f2e45;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    word-wrap: break-word;
-}
-
-.conversation-history ul li:hover {
-    background: #2a3b55;
-}
-
-/* Main ocupa todo espaço da direita */
-main {
-    flex: 1;              /* ocupa o resto da tela */
-    display: flex;
-    flex-direction: column;
-    margin: 0;            /* remove margens indesejadas */
-    max-width: none;      /* garante que não tenha limite */
-    width: 100%;          /* força ocupar toda largura */
-}
-
-/* Ajuste para o chat ocupar tudo */
-.content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-
-/* No seu styles.css, encontre a regra para .app e modifique-a */
-.app {
-  display: grid;
-  /* Define duas colunas: 260px para a sidebar e 1fr para o resto da tela */
-  grid-template-columns: 260px 1fr;
-  min-height: 100vh;
-}
-
-/* Garante que o histórico preencha toda a altura disponível da sidebar */
-.conversation-history {
-    flex-grow: 1; /* Permite que o histórico ocupe o espaço restante */
-    display: flex; /* Para que os elementos internos se ajustem */
-    flex-direction: column;
-    padding: 20px 14px; /* Adiciona padding para o conteúdo */
-}
-
-/* Oculta o rodapé da sidebar em telas menores, se desejar */
-@media (max-width: 768px) {
-  .sidebar {
-    display: none;
-  }
-  .app {
-    grid-template-columns: 1fr; /* Ocupa a tela inteira em uma única coluna */
-  }
-}
-
-.app {
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  min-height: 100vh;
-}
-
-.conversation-history ul li.active {
-    background: #2a3b55;
-    border: 1px solid #0078ff;
-    color: #fff;
-}
-
-
-/* Animação para os botões de envio e microfone */
-.chat-input .icon-btn {
-    transition: transform 0.2s ease-in-out;
-}
-
-.chat-input .icon-btn:hover {
-    transform: scale(1.1); /* Aumenta o tamanho do botão em 10% */
-}
-
-
-/* Animação para os botões de envio e microfone */
-.chat-input .icon-btn {
-    transition: transform 0.2s ease-in-out;
-}
-
-.chat-input .icon-btn:hover {
-    transform: scale(1.1); /* Aumenta o tamanho do botão em 10% */
-}
-
-.chat-messages .message {
-    padding: 12px;
-    border-radius: 25px; /* Valor para arredondar as bordas */
-    margin-bottom: 15px;
-    max-width: 80%;
-}
-
-
-/* Estilo do botão "Nova Conversa" */
-.new-conversation-btn {
-    width: 100%;
-    padding: 12px 10px;
-    margin-top: 10px;
-    margin-bottom: 20px;
-    background: #040d61; /* Cor principal, azul */
-    color: #f5f0f0;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-    text-align: left;
-    transition: background 0.2s ease-in-out;
-}
-
-.new-conversation-btn:hover {
-    background: #005bb5; /* Azul um pouco mais escuro ao passar o mouse */
-}
-
-/* Estilo geral para os botões de ícone */
-.icon-btn {
-    width: 45px;          /* Largura fixa */
-    height: 45px;         /* Altura fixa */
-    border-radius: 50%;   /* Deixa a forma circular */
-    background: #0078ff;  /* Cor de fundo padrão (azul) */
-    border: none;
-    display: flex;        /* Para centralizar o ícone */
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.2s; /* Transição suave para efeitos */
-}
-
-/* Oculta o fundo dos botões de voltar e outros ícones se necessário */
-.back-to-assistant-btn {
-    background: transparent;
-}
-
-/* Efeito de hover nos botões de ícone */
-.icon-btn:hover {
-    background: #07070752;  /* Um tom de azul mais escuro */
-}
-
-/* Efeito para o botão do microfone quando está gravando */
-.chat-mic-btn.recording {
-    background: #e74c3c; /* Cor vermelha para indicar gravação */
 }
