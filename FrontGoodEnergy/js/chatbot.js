@@ -1,25 +1,20 @@
-// chatbot.js (ou ia-assistant.js) - CÓDIGO COMPLETO E CORRIGIDO
+// chatbot.js (ou ia-assistant.js) - VERSÃO COM HISTÓRICO DE CONVERSAS
 
 document.addEventListener('DOMContentLoaded', () => {
     // --- Elementos do Chat ---
-    const chatWidget = document.getElementById('chat-widget');
     const chatInputText = document.getElementById('chat-input-text');
     const chatSendBtn = document.getElementById('chat-send-btn');
     const chatMicBtn = document.getElementById('chat-mic-btn');
     const chatMessagesContainer = document.getElementById('chat-messages');
     
-    // --- Elementos do Histórico de Conversas ---
+    // --- Elementos do Histórico ---
     const historyList = document.getElementById('history-list');
-    const conversationHistoryContainer = document.getElementById('conversation-history'); // Usado para controle de visibilidade
 
-    // --- Controle de Exibição do Widget de Chat ---
-    // As funções showChatWidget e hideChatWidget foram removidas pois não parecem ser chamadas por nenhum botão.
-    // Se você tiver botões específicos para abrir/fechar o chat, precisará implementá-los e chamá-los.
-    // O chat widget é exibido por padrão pois a classe 'show' está no HTML.
+    // --- Controle das Conversas ---
+    let conversations = {}; // Armazena todas as conversas
+    let currentConversation = null; // ID da conversa atual
 
-    // --- Lógica do Chat ---
-
-    // Simulação de Respostas da IA
+    // --- Simulação de Respostas da IA ---
     const aiResponses = {
         "olá": "Olá! Como posso ajudar você hoje com seu Assistente de IA?",
         "oi": "Olá! Como posso ajudar você hoje com seu Assistente de IA?",
@@ -30,136 +25,222 @@ document.addEventListener('DOMContentLoaded', () => {
         "como conectar alexa": "Para conectar com a Alexa, abra o app Alexa, procure pela skill 'GoodEnergy IA' e siga as instruções de login.",
         "casa inteligente": "A função Casa Inteligente permite controlar luzes, termostato e outros dispositivos compatíveis por voz ou app. Você pode gerenciar suas conexões na seção 'Casa Inteligente' ou pedindo pelo chat.",
         "qualquer coisa": "Desculpe, não entendi. Poderia reformular sua pergunta?",
-        // Adicione mais respostas aqui
     };
 
-    /**
-     * Adiciona uma mensagem ao chat principal e garante que o scroll vá para o final.
-     * @param {string} message - O texto da mensagem.
-     * @param {'user' | 'bot'} sender - Quem enviou a mensagem ('user' ou 'bot').
-     */
+    // --- Funções do Chat ---
+
     function addMessage(message, sender) {
+        if (!currentConversation) return;
+
         const messageElement = document.createElement('div');
         messageElement.classList.add('message', sender);
         messageElement.textContent = message;
-        
-        chatMessagesContainer.appendChild(messageElement); 
-        // Garante que o scroll vá para a última mensagem adicionada
-        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; 
+        chatMessagesContainer.appendChild(messageElement);
+
+        // Guarda no histórico de mensagens dessa conversa
+        conversations[currentConversation].messages.push({ sender, text: message });
+
+        // Scroll automático
+        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
     }
 
-    /**
-     * Adiciona uma entrada ao histórico de conversas.
-     * As mensagens mais recentes aparecem no topo.
-     * @param {string} message - O texto da mensagem do usuário.
-     */
-    function addHistoryEntry(message) {
+    function startNewConversation(initialMessage) {
+        const convId = Date.now().toString();
+        conversations[convId] = { messages: [] };
+
         const historyItem = document.createElement('li');
-        // Trunca a mensagem se for muito longa para caber bem no histórico
-        historyItem.textContent = message.length > 50 ? message.substring(0, 47) + '...' : message; 
-        historyList.prepend(historyItem); // Adiciona no topo da lista de histórico
+        historyItem.textContent = initialMessage.length > 30 ? initialMessage.slice(0, 27) + "..." : initialMessage;
+        historyItem.dataset.id = convId;
+
+        historyItem.addEventListener('click', () => {
+            loadConversation(convId);
+        });
+
+        historyList.prepend(historyItem);
+
+        currentConversation = convId;
+        chatMessagesContainer.innerHTML = ""; // Limpa tela
+        addMessage("Nova conversa iniciada!", "bot");
     }
 
-    /**
-     * Processa a entrada do usuário, a adiciona ao chat e ao histórico.
-     * @param {string} input - O texto digitado pelo usuário.
-     */
+    function loadConversation(convId) {
+        currentConversation = convId;
+        chatMessagesContainer.innerHTML = "";
+        conversations[convId].messages.forEach(msg => {
+            addMessage(msg.text, msg.sender);
+        });
+    }
+
     function processUserInput(input) {
         const userInput = input.toLowerCase().trim();
-        
-        if (!userInput) return; // Não processa mensagens vazias
+        if (!userInput) return;
 
-        addMessage(input, 'user'); // Adiciona a mensagem no chat principal
-        addHistoryEntry(input);    // Adiciona a mensagem no histórico
+        if (!currentConversation) {
+            startNewConversation(input);
+        }
 
-        // Simula o tempo de resposta da IA
+        addMessage(input, 'user');
+
         setTimeout(() => {
             let response = aiResponses[userInput] || aiResponses["qualquer coisa"];
             addMessage(response, 'bot');
-        }, 1000); // Espera 1 segundo para a resposta
+        }, 800);
     }
 
-    // --- Event Listeners para o Chat ---
-
-    // Enviar mensagem ao clicar no botão
+    // --- Event Listeners ---
     chatSendBtn.addEventListener('click', () => {
         const message = chatInputText.value;
         if (message.trim()) {
             processUserInput(message);
-            chatInputText.value = ''; // Limpa o campo de input
+            chatInputText.value = '';
         }
     });
 
-    // Enviar mensagem ao pressionar Enter no campo de input
     chatInputText.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
-            e.preventDefault(); // Previne o comportamento padrão do Enter (nova linha)
-            chatSendBtn.click(); // Simula um clique no botão de enviar
+            e.preventDefault();
+            chatSendBtn.click();
         }
     });
 
-    // --- Funcionalidade de Microfone (Web Speech API) ---
-    let listening = false;
-    // Garante que a API de reconhecimento de voz esteja disponível
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (SpeechRecognition) {
-        const recognition = new SpeechRecognition();
-        recognition.lang = 'pt-BR';
-        recognition.continuous = false; // Captura uma frase por vez
-        recognition.interimResults = true; // Permite obter resultados parciais enquanto fala
+    // --- Boas-vindas ---
+    chatMessagesContainer.innerHTML = "";
+    addMessage("👋 Olá! Clique em 'Nova conversa' ou envie uma mensagem para começar.", "bot");
 
-        recognition.onresult = (event) => {
-            const transcript = Array.from(event.results)
-                .map((result) => result[0].transcript)
-                .join('');
-            chatInputText.value = transcript;
-        };
+    // --- Extra: botão para iniciar manualmente ---
+    const newConversationBtn = document.createElement('button');
+    newConversationBtn.textContent = "➕ Nova conversa";
+    newConversationBtn.style.margin = "10px";
+    newConversationBtn.addEventListener('click', () => {
+        startNewConversation("Conversa em branco");
+    });
+    historyList.parentNode.insertBefore(newConversationBtn, historyList);
+});
 
-        recognition.onend = () => {
-            listening = false;
-            chatMicBtn.classList.remove('listening'); // Remove classe de estilo para indicar que parou de ouvir
-        };
 
-        recognition.onerror = (event) => {
-            console.error('Erro no reconhecimento de voz:', event.error);
-            listening = false;
-            chatMicBtn.classList.remove('listening');
-        };
+document.addEventListener('DOMContentLoaded', () => {
+    const chatMessagesContainer = document.getElementById('chat-messages');
+    const chatInputText = document.getElementById('chat-input-text');
+    const chatSendBtn = document.getElementById('chat-send-btn');
+    const historyList = document.getElementById('history-list');
 
-        chatMicBtn.addEventListener('click', () => {
-            if (!listening) {
-                recognition.start();
-                listening = true;
-                chatMicBtn.classList.add('listening'); // Adiciona classe para indicar que está ouvindo
-                chatInputText.value = ''; // Limpa campo enquanto ouve
-            } else {
-                recognition.stop(); // Para a gravação se já estiver ouvindo
-            }
-        });
-    } else {
-        console.warn("A API de Reconhecimento de Voz não é suportada por este navegador.");
-        // Opcionalmente, desabilitar ou esconder o botão do microfone se não for suportado
-        chatMicBtn.style.display = 'none'; 
+    let conversations = JSON.parse(localStorage.getItem("conversations")) || {};
+    let currentConversation = null;
+
+    const aiResponses = {
+        "olá": "Olá! Como posso ajudar você hoje com seu Assistente de IA?",
+        "oi": "Olá! Como posso ajudar você hoje com seu Assistente de IA?",
+        "como funciona a otimização de consumo": "Nossa IA analisa seus padrões de uso para sugerir os melhores horários para usar aparelhos de alto consumo, maximizando sua economia.",
+        "o que é otimização de consumo": "É um recurso que ajuda você a economizar na conta de luz, aproveitando melhor a energia gerada pelos seus painéis solares.",
+        "suporte instalação": "Para suporte com instalação, por favor, entre em contato com nossa central de atendimento em [telefone/email] ou agende uma visita pelo link na seção 'Suporte e Manutenção'.",
+        "manutenção": "Recomendamos a checagem anual do seu sistema. Você pode agendar sua manutenção através do seu portal do cliente ou pedindo aqui pelo chat.",
+        "como conectar alexa": "Para conectar com a Alexa, abra o app Alexa, procure pela skill 'GoodEnergy IA' e siga as instruções de login.",
+        "casa inteligente": "A função Casa Inteligente permite controlar luzes, termostato e outros dispositivos compatíveis por voz ou app.",
+        "qualquer coisa": "Desculpe, não entendi. Poderia reformular sua pergunta?",
+    };
+
+    // --- Salva no localStorage ---
+    function saveConversations() {
+        localStorage.setItem("conversations", JSON.stringify(conversations));
     }
 
+    // --- Renderiza histórico ---
+    function renderHistory() {
+        historyList.innerHTML = "";
+        Object.entries(conversations).reverse().forEach(([id, conv]) => {
+            const historyItem = document.createElement("li");
+            historyItem.textContent = conv.title;
+            historyItem.dataset.id = id;
+            historyItem.addEventListener("click", () => loadConversation(id));
+            historyList.appendChild(historyItem);
+        });
+    }
 
-    // --- Inicialização ---
+    // --- Adiciona mensagem ---
+    function addMessage(message, sender) {
+        const msg = document.createElement("div");
+        msg.classList.add("message", sender);
+        msg.textContent = message;
+        chatMessagesContainer.appendChild(msg);
 
-    // Adiciona a mensagem de boas-vindas ao chat principal
-    addMessage("Olá! Sou seu Assistente de IA. Como posso te ajudar hoje?", 'bot');
+        // salva mensagem na conversa
+        if (currentConversation) {
+            conversations[currentConversation].messages.push({ sender, text: message });
+            saveConversations();
+        }
 
-    // Lógica para mostrar/esconder o histórico em telas menores (opcional)
-    function toggleHistoryVisibility() {
-        // Se a largura da tela for menor ou igual a 768px (ajuste conforme necessário)
-        if (window.innerWidth <= 768) {
-            if (conversationHistoryContainer) conversationHistoryContainer.style.display = 'none';
-        } else {
-            // Restaura a exibição padrão para telas maiores (flex, pois o CSS define)
-            if (conversationHistoryContainer) conversationHistoryContainer.style.display = 'flex'; 
+        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+    }
+
+    // --- Nova conversa ---
+    function startNewConversation(initialMessage = "Nova conversa") {
+        const convId = Date.now().toString();
+        conversations[convId] = { messages: [], title: initialMessage };
+        currentConversation = convId;
+        chatMessagesContainer.innerHTML = "";
+        addMessage("Nova conversa iniciada!", "bot");
+        saveConversations();
+        renderHistory();
+    }
+
+    // --- Atualiza título apenas na primeira msg ---
+    function updateConversationTitle(convId, newTitle) {
+        if (conversations[convId].title === "Nova conversa") {
+            conversations[convId].title = newTitle.length > 30 ? newTitle.slice(0, 27) + "..." : newTitle;
+            saveConversations();
+            renderHistory();
         }
     }
 
-    // Chama a função de visibilidade ao carregar a página e quando a janela muda de tamanho
-    toggleHistoryVisibility();
-    window.addEventListener('resize', toggleHistoryVisibility);
+    // --- Carrega conversa ---
+    function loadConversation(convId) {
+        currentConversation = convId;
+        chatMessagesContainer.innerHTML = "";
+        conversations[convId].messages.forEach(msg => {
+            addMessage(msg.text, msg.sender);
+        });
+    }
+
+    // --- Processa input do usuário ---
+    function processUserInput(input) {
+        const userInput = input.toLowerCase().trim();
+        if (!userInput) return;
+
+        if (!currentConversation) {
+            startNewConversation("Nova conversa");
+        }
+
+        addMessage(input, "user");
+
+        if (conversations[currentConversation].messages.length === 2) { 
+            updateConversationTitle(currentConversation, input);
+        }
+
+        setTimeout(() => {
+            const response = aiResponses[userInput] || aiResponses["qualquer coisa"];
+            addMessage(response, "bot");
+        }, 800);
+    }
+
+    // --- Eventos ---
+    chatSendBtn.addEventListener("click", () => {
+        const msg = chatInputText.value;
+        if (msg.trim()) {
+            processUserInput(msg);
+            chatInputText.value = "";
+        }
+    });
+
+    chatInputText.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            chatSendBtn.click();
+        }
+    });
+
+    // --- Inicialização ---
+    renderHistory();
+    if (Object.keys(conversations).length === 0) {
+        startNewConversation("Nova conversa");
+    }
 });

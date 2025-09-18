@@ -938,3 +938,181 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
 .weather-location strong {
     color: var(--text);
 }
+
+
+.app {
+    display: flex;
+    height: 100vh;
+    background: #0f1c2e;
+    color: #fff;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    background: #162436;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.brand img {
+    width: 40px;
+    margin-right: 10px;
+}
+
+.brand h1 {
+    font-size: 18px;
+    margin: 0;
+}
+
+.conversation-history {
+    flex: 1;
+    margin-top: 10px;
+    overflow-y: auto;
+}
+
+.conversation-history h4 {
+    font-size: 14px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #2a3b55;
+    padding-bottom: 5px;
+}
+
+.conversation-history ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.conversation-history ul li {
+    background: #1f2e45;
+    margin-bottom: 8px;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.conversation-history ul li:hover {
+    background: #2a3b55;
+}
+
+.foot {
+    margin-top: auto;
+    font-size: 13px;
+    color: #ccc;
+}
+
+/* Main (Chat) */
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #0f1c2e;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-widget {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.chat-body {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.chat-input {
+    display: flex;
+    padding: 10px;
+    background: #162436;
+    border-top: 1px solid #2a3b55;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+}
+
+.chat-input button {
+    margin-left: 10px;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 5px;
+    background: #0078ff;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* Sidebar - ajusta o histórico */
+.conversation-history {
+    flex: 1;
+    margin-top: 20px; /* espaço entre logo e histórico */
+    display: flex;
+    flex-direction: column;
+}
+
+.conversation-history h4 {
+    font-size: 14px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #2a3b55;
+    padding-bottom: 5px;
+}
+
+.conversation-history ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column; /* garante que os itens fiquem embaixo */
+    gap: 8px; /* espaço entre mensagens */
+}
+
+.conversation-history ul li {
+    background: #1f2e45;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    word-wrap: break-word;
+}
+
+.conversation-history ul li:hover {
+    background: #2a3b55;
+}
+
+/* Main ocupa todo espaço da direita */
+main {
+    flex: 1;              /* ocupa o resto da tela */
+    display: flex;
+    flex-direction: column;
+    margin: 0;            /* remove margens indesejadas */
+    max-width: none;      /* garante que não tenha limite */
+    width: 100%;          /* força ocupar toda largura */
+}
+
+/* Ajuste para o chat ocupar tudo */
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
