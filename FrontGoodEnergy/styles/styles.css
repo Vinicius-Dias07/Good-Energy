@@ -1116,3 +1116,119 @@ main {
     flex-direction: column;
     width: 100%;
 }
+
+/* No seu styles.css, encontre a regra para .app e modifique-a */
+.app {
+  display: grid;
+  /* Define duas colunas: 260px para a sidebar e 1fr para o resto da tela */
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+}
+
+/* Garante que o histórico preencha toda a altura disponível da sidebar */
+.conversation-history {
+    flex-grow: 1; /* Permite que o histórico ocupe o espaço restante */
+    display: flex; /* Para que os elementos internos se ajustem */
+    flex-direction: column;
+    padding: 20px 14px; /* Adiciona padding para o conteúdo */
+}
+
+/* Oculta o rodapé da sidebar em telas menores, se desejar */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+  .app {
+    grid-template-columns: 1fr; /* Ocupa a tela inteira em uma única coluna */
+  }
+}
+
+.app {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+}
+
+.conversation-history ul li.active {
+    background: #2a3b55;
+    border: 1px solid #0078ff;
+    color: #fff;
+}
+
+
+/* Animação para os botões de envio e microfone */
+.chat-input .icon-btn {
+    transition: transform 0.2s ease-in-out;
+}
+
+.chat-input .icon-btn:hover {
+    transform: scale(1.1); /* Aumenta o tamanho do botão em 10% */
+}
+
+
+/* Animação para os botões de envio e microfone */
+.chat-input .icon-btn {
+    transition: transform 0.2s ease-in-out;
+}
+
+.chat-input .icon-btn:hover {
+    transform: scale(1.1); /* Aumenta o tamanho do botão em 10% */
+}
+
+.chat-messages .message {
+    padding: 12px;
+    border-radius: 25px; /* Valor para arredondar as bordas */
+    margin-bottom: 15px;
+    max-width: 80%;
+}
+
+
+/* Estilo do botão "Nova Conversa" */
+.new-conversation-btn {
+    width: 100%;
+    padding: 12px 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    background: #040d61; /* Cor principal, azul */
+    color: #f5f0f0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: left;
+    transition: background 0.2s ease-in-out;
+}
+
+.new-conversation-btn:hover {
+    background: #005bb5; /* Azul um pouco mais escuro ao passar o mouse */
+}
+
+/* Estilo geral para os botões de ícone */
+.icon-btn {
+    width: 45px;          /* Largura fixa */
+    height: 45px;         /* Altura fixa */
+    border-radius: 50%;   /* Deixa a forma circular */
+    background: #0078ff;  /* Cor de fundo padrão (azul) */
+    border: none;
+    display: flex;        /* Para centralizar o ícone */
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s; /* Transição suave para efeitos */
+}
+
+/* Oculta o fundo dos botões de voltar e outros ícones se necessário */
+.back-to-assistant-btn {
+    background: transparent;
+}
+
+/* Efeito de hover nos botões de ícone */
+.icon-btn:hover {
+    background: #07070752;  /* Um tom de azul mais escuro */
+}
+
+/* Efeito para o botão do microfone quando está gravando */
+.chat-mic-btn.recording {
+    background: #e74c3c; /* Cor vermelha para indicar gravação */
+}
