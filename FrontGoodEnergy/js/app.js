@@ -232,6 +232,8 @@ function registerInit() {
   });
 }
 
+// app.js - trecho com a função dashboardInit corrigida
+
 async function dashboardInit() {
     showLoader();
     fetchWeather();
@@ -270,6 +272,60 @@ async function dashboardInit() {
                 options: { responsive: true, maintainAspectRatio: false }
             });
         }
+        
+        // --- CÓDIGO DO NOVO GRÁFICO, INSERIDO AQUI DENTRO! ---
+        const savedAmount = 350;
+        const goalAmount = 500;
+        
+        document.getElementById('currentSavings').innerText = `R$ ${savedAmount.toFixed(2).replace('.', ',')}`;
+        document.getElementById('goalValue').innerText = `R$ ${goalAmount.toFixed(2).replace('.', ',')}`;
+        
+        const ctxSavings = document.getElementById('savingsGoalChart')?.getContext('2d');
+        if (ctxSavings) {
+             const savingsGoalChart = new Chart(ctxSavings, {
+                type: 'gauge',
+                data: {
+                    datasets: [{
+                        value: savedAmount,
+                        data: [0, goalAmount],
+                        backgroundColor: ['#e0e0e0', '#4CAF50'],
+                        borderColor: ['#fff', '#fff'],
+                        borderWidth: 2,
+                        needle: {
+                            radius: 10,
+                            color: '#555'
+                        }
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '80%',
+                    rotation: -90,
+                    circumference: 180,
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeOutQuart'
+                    },
+                    tooltips: { enabled: false },
+                    plugins: {
+                        datalabels: {
+                            formatter: (value) => {
+                                return `R$ ${value.toFixed(2).replace('.', ',')}`;
+                            },
+                            color: '#000',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            },
+                            offset: 5
+                        }
+                    }
+                }
+            });
+        }
+        // --- FIM DO CÓDIGO DO NOVO GRÁFICO ---
+
     } catch (error) { 
         console.error("Erro detalhado no dashboardInit:", error);
         showToast(error.message, 'error'); 
@@ -277,7 +333,6 @@ async function dashboardInit() {
         hideLoader(); 
     }
 }
-
 async function devicesInit() {
     const tbody = el('deviceTable')?.querySelector('tbody');
     const modal = el('addDeviceModal');
@@ -580,3 +635,5 @@ function createBatteryChart(data) {
         }
     }
 }
+
+
