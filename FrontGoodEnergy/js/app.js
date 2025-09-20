@@ -274,72 +274,157 @@ async function populateUser() {
 }
 
 function reportsInit() {
-    const periodSelect = el('reportPeriod'), typeSelect = el('reportType');
-    if (!periodSelect) return;
-    let reportChartInstance;
+  const periodSelect = el('reportPeriod'), typeSelect = el('reportType');
+  if (!periodSelect) return;
+  let reportChartInstance;
 
-    const generateReportChart = async () => {
-        try {
-            
-            const reportData = await simulateApiCall({
-                labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-                data: Array.from({ length: 7 }, () => Math.random() * 20),
-                chartLabel: `${typeSelect.options[typeSelect.selectedIndex].text} (kWh)`
-            });
-            
-            const ctx = el('reportChart');
-            if (reportChartInstance) reportChartInstance.destroy();
+  const generateReportChart = async () => {
+    try {
+      let labels = [], values = [], labelText = "";
+      const period = periodSelect.value;
+      const type = typeSelect.value;
 
-            reportChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: reportData.labels,
-                    datasets: [{
-                        label: reportData.chartLabel,
-                        data: reportData.data,
-                        backgroundColor: 'rgba(59, 130, 246, 0.5)',
-                        borderColor: '#3b82f6'
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
-        } catch (error) {
-            showToast('Não foi possível gerar o relatório.', 'error');
+      // 🔹 Caso: Hoje e Últimos 7 dias → daily-generation
+      if (period === "today" || period === "7d") {
+        const resp = await fetch("http://127.0.0.1:5000/api/daily-generation");
+        const json = await resp.json();
+        if (!json.success) throw new Error(json.error || "Erro desconhecido");
+
+        let allDays = json.data.daily_generation;
+
+        if (period === "today") {
+          const lastDay = allDays[allDays.length - 1];
+          labels = [lastDay.date];
+          if (type === "generation") {
+            values = [lastDay.generation_kwh];
+            labelText = "Geração (kWh)";
+          } else if (type === "consumption") {
+            values = [lastDay.consumption_kwh || 0];
+            labelText = "Consumo (kWh)";
+          } else if (type === "savings") {
+            values = [lastDay.generation_kwh * 0.75];
+            labelText = "Economia (R$)";
+          }
         }
-    };
 
-    periodSelect.addEventListener('change', generateReportChart);
-    typeSelect.addEventListener('change', generateReportChart);
-    generateReportChart();
+        if (period === "7d") {
+          const last7 = allDays.slice(-7);
+          labels = last7.map(d => d.date);
+          if (type === "generation") {
+            values = last7.map(d => d.generation_kwh);
+            labelText = "Geração (kWh)";
+          } else if (type === "consumption") {
+            values = last7.map(d => d.consumption_kwh || 0);
+            labelText = "Consumo (kWh)";
+          } else if (type === "savings") {
+            values = last7.map(d => d.generation_kwh * 0.75);
+            labelText = "Economia (R$)";
+          }
+        }
+      }
+
+      // 🔹 Caso: Últimos 12 meses → monthly-generation
+      if (period === "12m") {
+        const resp = await fetch("http://127.0.0.1:5000/api/monthly-generation");
+        const json = await resp.json();
+        if (!json.success) throw new Error(json.error || "Erro desconhecido");
+
+        let allMonths = json.data.monthly_generation;
+        labels = allMonths.map(d => d.month);
+
+        if (type === "generation") {
+          values = allMonths.map(d => d.generation_kwh);
+          labelText = "Geração (kWh)";
+        } else if (type === "consumption") {
+          values = allMonths.map(() => 0); // ⚠️ ainda não temos consumo mensal real
+          labelText = "Consumo (kWh)";
+        } else if (type === "savings") {
+          values = allMonths.map(d => d.generation_kwh * 0.75);
+          labelText = "Economia (R$)";
+        }
+      }
+
+      // 🔄 Atualiza o gráfico
+      const ctx = el('reportChart');
+      if (reportChartInstance) reportChartInstance.destroy();
+
+      reportChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: labelText,
+            data: values,
+            backgroundColor: 'rgba(59, 130, 246, 0.5)',
+            borderColor: '#3b82f6'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: labelText }
+            }
+          }
+        }
+      });
+
+    } catch (error) {
+      console.error("❌ Erro no relatório:", error);
+      showToast('Não foi possível gerar o relatório.', 'error');
+    }
+  };
+
+  periodSelect.addEventListener('change', generateReportChart);
+  typeSelect.addEventListener('change', generateReportChart);
+  generateReportChart();
 }
 
+
 async function dashboardInit() {
-    const notifBtn = el('notificationsBtn'), notifPopup = el('notificationsPopup');
-    if (notifBtn && notifPopup) {
-        notifBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            notifPopup.classList.toggle('hide');
-        });
-        document.addEventListener('click', () => notifPopup.classList.add('hide'));
-        notifPopup.addEventListener('click', e => e.stopPropagation());
-    }
+  console.log("🚀 dashboardInit iniciado");
 
-    const zenBtn = el('zenModeBtn'), zenOverlay = el('zenModeOverlay');
-    if (zenBtn && zenOverlay) {
-        zenBtn.addEventListener('click', () => zenOverlay.classList.remove('hide'));
-        zenOverlay.addEventListener('click', () => zenOverlay.classList.add('hide'));
-    }
+  try {
+    const resp = await fetch("http://127.0.0.1:5000/api/energy");
+    console.log("📡 Fetch feito, status:", resp.status);
 
-    try {
-        const dashData = await simulateApiCall(state);
-        kpiFill(dashData);
-        charts(dashData.history, { batteryPct: dashData.batteryPct });
-        renderAlerts('alertList', dashData.alerts);
-        renderAlerts('popupAlerts', dashData.alerts);
-    } catch (error) {
-        showToast(error.message, 'error');
-        document.querySelector('.content').innerHTML = `<div class="card" style="text-align:center; padding: 40px; grid-column: 1 / -1;"><h3>Ops!</h3><p>Não foi possível carregar os dados do dashboard.</p></div>`;
-    }
+    const json = await resp.json();
+    console.log("🔎 JSON recebido:", json);
+
+    if (!json.success) throw new Error(json.error || "Erro desconhecido");
+
+    const data = json.data;
+    const lastDay = data[data.length - 1]; // último dia disponível (simula "hoje")
+
+    const dashData = {
+      todayGenKwh: lastDay.generation_kwh,
+      todayUseKwh: lastDay.consumption_kwh,
+      batteryPct: lastDay.battery_pct,
+      savingsBRL: lastDay.generation_kwh * 0.75,
+      alerts: [{ type: "success", text: "Dados do dashboard carregados da API!" }],
+      history: data.map((d, i) => ({
+        h: i,
+        gen: d.generation_kwh,
+        use: d.consumption_kwh
+      }))
+    };
+
+    kpiFill(dashData);
+    charts(dashData.history, { batteryPct: dashData.batteryPct });
+    renderAlerts("alertList", dashData.alerts);
+    renderAlerts("popupAlerts", dashData.alerts);
+
+  } catch (error) {
+    console.error("❌ Erro no dashboardInit:", error);
+    showToast(error.message, "error");
+    document.querySelector(".content").innerHTML = `
+      <div class="card" style="text-align:center; padding: 40px; grid-column: 1 / -1;">
+        <h3>Ops!</h3>
+        <p>Não foi possível carregar os dados do dashboard.</p>
+      </div>`;
+  }
 }
 
 function settingsInit() {

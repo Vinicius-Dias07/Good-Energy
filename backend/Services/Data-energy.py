@@ -3,6 +3,7 @@ from flask_cors import CORS
 import pandas as pd
 import json
 from datetime import datetime
+import random
 
 app = Flask(__name__)
 CORS(app)
@@ -31,6 +32,36 @@ def calculate_daily_generation():
     except Exception as e:
         print(f"Erro ao calcular geração diária: {e}")
         return None
+    
+import random
+
+#funçao enriquece a geração real da bateria para o front
+def enrich_daily_data(geracao_diaria):
+    """
+    Enriquecer dados de geração com consumo simulado, bateria e importação da rede.
+    """
+    daily_data = []
+
+    for date, generation in geracao_diaria.items():
+        # Simula consumo (70% até 120% da geração)
+        consumo_simulado = round(generation * random.uniform(0.7, 1.2), 2)
+
+        # Simula bateria (40% até 100%)
+        bateria_simulada = random.randint(40, 100)
+
+        # Se consumo > geração, diferença vem da rede
+        grid_import = max(0, round(consumo_simulado - generation, 2))
+
+        # Monta o registro do dia
+        daily_data.append({
+            "date": date.strftime('%Y-%m-%d'),
+            "generation_kwh": round(generation, 2),
+            "consumption_kwh": consumo_simulado,
+            "battery_pct": bateria_simulada,
+            "grid_import_kwh": grid_import
+        })
+
+    return daily_data
 
 def calculate_monthly_generation():
     # Carrega os dados para a variavel df
@@ -154,6 +185,28 @@ def get_monthly_generation():
             "success": False,
             "error": f"Erro interno: {str(e)}"
         }), 500
+    
+@app.route('/api/energy', methods=['GET'])
+def get_energy_data():
+    """
+    Retorna geração diária enriquecida com consumo, bateria e grid.
+    """
+    try:
+        geracao_diaria = calculate_daily_generation()
+        if geracao_diaria is None:
+            return jsonify({"success": False, "error": "Erro ao processar dados"}), 500
+
+        enriched = enrich_daily_data(geracao_diaria)
+
+        response = {
+            "success": True,
+            "data": enriched,
+            "timestamp": datetime.now().isoformat()
+        }
+        return jsonify(response)
+
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
 
 
 
