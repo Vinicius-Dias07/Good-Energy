@@ -519,7 +519,7 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
     transition: background 0.2s ease-in-out;
 }
 .new-conversation-btn:hover {
-    background: #7201f3;
+    background: #0a4ee0;
 }
 
 /* OUTROS COMPONENTES */
