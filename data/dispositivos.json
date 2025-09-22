@@ -7,6 +7,14 @@
       "type": "appliance",
       "on": true,
       "watts": 200
+    },
+    {
+      "id": "412cae18-c384-4d3c-b81f-bbf6b05be821",
+      "name": "geladeira",
+      "room": "cozinha",
+      "type": "appliance",
+      "on": true,
+      "watts": 200
     }
   ],
   "davixavieerr@gmail.com": [
