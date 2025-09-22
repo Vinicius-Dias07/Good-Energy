@@ -730,3 +730,25 @@ body[data-colortheme="light"] .tag { background: var(--bg-soft); color: var(--mu
   /* Adicione a linha abaixo */
   gap: 20px;
 }
+
+/* Estilização da barra de rolagem para navegadores WebKit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+    width: 10px; /* Largura da barra de rolagem */
+}
+
+::-webkit-scrollbar-track {
+    background: #374151; /* Cor do trilho da barra de rolagem */
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #505d6e; /* Cor da barra de rolagem que você move */
+    border-radius: 10px;
+}
+
+/* Opcional: Estilização para o Firefox */
+/* Esta é uma forma mais simples, apenas muda a largura e a cor */
+html {
+    scrollbar-width: thin; /* 'auto' ou 'thin' */
+    scrollbar-color: #505d6e #374151; /* 'thumb' 'track' */
+}
