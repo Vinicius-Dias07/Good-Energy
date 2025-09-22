@@ -240,7 +240,7 @@ async function dashboardInit() {
     fetchBatteryData(); 
     try {
         const [kpisResponse, chartResponse] = await Promise.all([
-            fetch(http://127.0.0.1:5000/api/kpis?email=${user.email}),
+            fetch('http://127.0.0.1:5000/api/kpis?email=${user.email}'),
             fetch('http://127.0.0.1:5000/api/generation/history')
         ]);
         if (!kpisResponse.ok || !chartResponse.ok) { throw new Error('Falha ao buscar dados do dashboard do servidor.'); }
@@ -251,9 +251,9 @@ async function dashboardInit() {
         const todayGen = kpisData?.todayGenKwh ?? 0;
         const houseLoad = kpisData?.houseLoadKw ?? 0;
         
-        el('kpiGen').textContent = ${todayGen.toFixed(1)} kWh;
-        el('kpiUse').textContent = ${houseLoad.toFixed(2)} kW;
-        el('kpiSaving').textContent = R$ ${(todayGen * tariff).toFixed(2)};
+        el('kpiGen').textContent = '${todayGen.toFixed(1)} kWh';
+        el('kpiUse').textContent = '${houseLoad.toFixed(2)} kW';
+        el('kpiSaving').textContent = 'R$ ${(todayGen * tariff).toFixed(2)}';
         
         if (typeof Chart === 'undefined') { return console.error('A biblioteca Chart.js não foi carregada.'); }
         
@@ -283,46 +283,26 @@ async function dashboardInit() {
     }
 }
         
-        // --- CÓDIGO DO NOVO GRÁFICO, INSERIDO AQUI DENTRO! ---
+async function dashboardInit() {
+    try {
+        createSavingsGoalChart();
+
         // --- CÓDIGO DO NOVO GRÁFICO, INSERIDO AQUI DENTRO! ---
         const savedAmount = 350;
         const goalAmount = 500;
-        
-        document.getElementById('currentSavings').innerText = `R$ ${savedAmount.toFixed(2).replace('.', ',')}`;
-        document.getElementById('goalValue').innerText = `R$ ${goalAmount.toFixed(2).replace('.', ',')}`;
-        
-        // ========================
 
+        document.getElementById('currentSavings').innerText =
+            `R$ ${savedAmount.toFixed(2).replace('.', ',')}`;
+        document.getElementById('goalValue').innerText =
+            `R$ ${goalAmount.toFixed(2).replace('.', ',')}`;
         // ========================
-    } catch (error) { 
+    } catch (error) {
         console.error("Erro detalhado no dashboardInit:", error);
-        showToast(error.message, 'error'); 
-    } finally { 
-        hideLoader(); 
+        showToast(error.message, 'error');
+    } finally {
+        hideLoader();
     }
 }
-async function devicesInit() {
-    const tbody = el('deviceTable')?.querySelector('tbody');
-    const modal = el('addDeviceModal');
-    const addBtn = el('addDeviceBtn');
-    const closeBtn = el('closeModalBtn');
-    const form = el('addDeviceForm');
-    if (!tbody || !modal || !addBtn || !closeBtn || !form) return;
-
-    const render = (devices) => {
-        tbody.innerHTML = devices.map(d => `
-            <tr>
-                <td>${d.name}<br><span class="tag" style="opacity:0.7">${d.room}</span></td>
-                <td><span class="tag">${d.type}</span></td>
-                <td>${d.on ? `<span class="tag success">Ligado</span>` : `<span class="tag fail">Desligado</span>`}</td>
-                <td>${d.watts} W</td>
-                <td class="right device-actions">
-                    <button class="icon-btn" data-action="toggle" data-id="${d.id}" data-state="${d.on}">${d.on ? 'Desligar' : 'Ligar'}</button>
-                    <button class="icon-btn" data-action="delete" data-id="${d.id}">Excluir</button>
-                </td>
-            </tr>
-        `).join('');
-    };
 
     const fetchAndRender = async () => {
         showLoader();
@@ -382,7 +362,8 @@ async function devicesInit() {
         } catch (error) { showToast(error.message, 'error'); }
     });
     fetchAndRender();
-}
+
+
 
 function reportsInit() {
     let reportChartInstance;
