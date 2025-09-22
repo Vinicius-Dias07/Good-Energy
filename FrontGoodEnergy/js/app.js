@@ -240,7 +240,7 @@ async function dashboardInit() {
     fetchBatteryData(); 
     try {
         const [kpisResponse, chartResponse] = await Promise.all([
-            fetch(`http://127.0.0.1:5000/api/kpis?email=${user.email}`),
+            fetch(http://127.0.0.1:5000/api/kpis?email=${user.email}),
             fetch('http://127.0.0.1:5000/api/generation/history')
         ]);
         if (!kpisResponse.ok || !chartResponse.ok) { throw new Error('Falha ao buscar dados do dashboard do servidor.'); }
@@ -251,9 +251,9 @@ async function dashboardInit() {
         const todayGen = kpisData?.todayGenKwh ?? 0;
         const houseLoad = kpisData?.houseLoadKw ?? 0;
         
-        el('kpiGen').textContent = `${todayGen.toFixed(1)} kWh`;
-        el('kpiUse').textContent = `${houseLoad.toFixed(2)} kW`;
-        el('kpiSaving').textContent = `R$ ${(todayGen * tariff).toFixed(2)}`;
+        el('kpiGen').textContent = ${todayGen.toFixed(1)} kWh;
+        el('kpiUse').textContent = ${houseLoad.toFixed(2)} kW;
+        el('kpiSaving').textContent = R$ ${(todayGen * tariff).toFixed(2)};
         
         if (typeof Chart === 'undefined') { return console.error('A biblioteca Chart.js não foi carregada.'); }
         
@@ -273,6 +273,16 @@ async function dashboardInit() {
             });
         }
         
+        createSavingsGoalChart();
+
+    } catch (error) { 
+        console.error("Erro detalhado no dashboardInit:", error);
+        showToast(error.message, 'error'); 
+    } finally { 
+        hideLoader(); 
+    }
+}
+        
         // --- CÓDIGO DO NOVO GRÁFICO, INSERIDO AQUI DENTRO! ---
         // --- CÓDIGO DO NOVO GRÁFICO, INSERIDO AQUI DENTRO! ---
         const savedAmount = 350;
@@ -281,54 +291,9 @@ async function dashboardInit() {
         document.getElementById('currentSavings').innerText = `R$ ${savedAmount.toFixed(2).replace('.', ',')}`;
         document.getElementById('goalValue').innerText = `R$ ${goalAmount.toFixed(2).replace('.', ',')}`;
         
-        const ctxSavings = document.getElementById('savingsGoalChart')?.getContext('2d');
-        if (ctxSavings) {
-             const savingsGoalChart = new Chart(ctxSavings, {
-                type: 'gauge',
-                data: {
-                    datasets: [{
-                        value: savedAmount,
-                        data: [0, goalAmount],
-                        backgroundColor: ['#e0e0e0', '#4CAF50'],
-                        borderColor: ['#fff', '#fff'],
-                        borderWidth: 2,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '80%',
-                    rotation: -Math.PI,
-                    circumference: Math.PI,
-                    animation: {
-                        duration: 1000,
-                        easing: 'easeOutQuart'
-                    },
-                    tooltips: { enabled: false },
-                    needle: {
-                        radiusPercentage: 2,
-                        widthPercentage: 3.2,
-                        lengthPercentage: 80,
-                        color: 'var(--text)' 
-                    },
-                    valueLabel: {
-                        display: true,
-                        formatter: (value) => {
-                           return `R$ ${value.toFixed(2).replace('.', ',')}`;
-                        },
-                        color: 'var(--text)', 
-                        backgroundColor: 'var(--card)', 
-                        borderRadius: 5,
-                        padding: { top: 5, right: 5, bottom: 5, left: 5 },
-                        bottomMarginPercentage: 5,
-                        fontSize: 16
-                    }
-                }
-            });
-        }
-        // --- FIM DO CÓDIGO DO NOVO GRÁFICO ---
-        // --- FIM DO CÓDIGO DO NOVO GRÁFICO ---
+        // ========================
 
+        // ========================
     } catch (error) { 
         console.error("Erro detalhado no dashboardInit:", error);
         showToast(error.message, 'error'); 
@@ -638,5 +603,6 @@ function createBatteryChart(data) {
         }
     }
 }
+
 
 
