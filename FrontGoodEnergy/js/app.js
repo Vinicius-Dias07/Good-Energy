@@ -274,6 +274,7 @@ async function dashboardInit() {
         }
         
         // --- CÓDIGO DO NOVO GRÁFICO, INSERIDO AQUI DENTRO! ---
+        // --- CÓDIGO DO NOVO GRÁFICO, INSERIDO AQUI DENTRO! ---
         const savedAmount = 350;
         const goalAmount = 500;
         
@@ -291,39 +292,41 @@ async function dashboardInit() {
                         backgroundColor: ['#e0e0e0', '#4CAF50'],
                         borderColor: ['#fff', '#fff'],
                         borderWidth: 2,
-                        needle: {
-                            radius: 10,
-                            color: '#555'
-                        }
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     cutout: '80%',
-                    rotation: -90,
-                    circumference: 180,
+                    rotation: -Math.PI,
+                    circumference: Math.PI,
                     animation: {
                         duration: 1000,
                         easing: 'easeOutQuart'
                     },
                     tooltips: { enabled: false },
-                    plugins: {
-                        datalabels: {
-                            formatter: (value) => {
-                                return `R$ ${value.toFixed(2).replace('.', ',')}`;
-                            },
-                            color: '#000',
-                            font: {
-                                size: 16,
-                                weight: 'bold'
-                            },
-                            offset: 5
-                        }
+                    needle: {
+                        radiusPercentage: 2,
+                        widthPercentage: 3.2,
+                        lengthPercentage: 80,
+                        color: 'var(--text)' 
+                    },
+                    valueLabel: {
+                        display: true,
+                        formatter: (value) => {
+                           return `R$ ${value.toFixed(2).replace('.', ',')}`;
+                        },
+                        color: 'var(--text)', 
+                        backgroundColor: 'var(--card)', 
+                        borderRadius: 5,
+                        padding: { top: 5, right: 5, bottom: 5, left: 5 },
+                        bottomMarginPercentage: 5,
+                        fontSize: 16
                     }
                 }
             });
         }
+        // --- FIM DO CÓDIGO DO NOVO GRÁFICO ---
         // --- FIM DO CÓDIGO DO NOVO GRÁFICO ---
 
     } catch (error) { 
