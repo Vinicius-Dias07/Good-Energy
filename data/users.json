@@ -22,5 +22,13 @@
     "plan": "Starter",
     "theme": "padrão",
     "colorTheme": "dark"
+  },
+  "lasanha123@gmail.com": {
+    "name": "bruno",
+    "email": "lasanha123@gmail.com",
+    "password": "scrypt:32768:8:1$rRytDSklBn8f3opE$a380a215f8f9fc7d4bb457b69ac0c2e09f84d94d015376038e8a783e758d678a45d344a6624a6decd17d956a6b3262fd22ad3712549889588120cf8c44372e64",
+    "plan": "Starter",
+    "theme": "padrão",
+    "colorTheme": "dark"
   }
 }
