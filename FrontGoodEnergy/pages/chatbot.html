@@ -20,9 +20,7 @@
             <!-- Histórico dentro da sidebar -->
             <div id="conversation-history" class="conversation-history">
                 <h4>Histórico de Conversas</h4>
-                <ul id="history-list">
-                
-                </ul>
+                <ul id="history-list"></ul>
             </div>
 
             <div class="foot">Olá, <span id="userName">Usuário</span></div>
@@ -45,11 +43,10 @@
                 <div id="chat-widget" class="chat-widget show"> 
                     <div class="chat-header">
                         <div class="chat-header">
-                <img src="https://github.com/Vinicius-Dias07/Good-Energy/blob/master/FrontGoodEnergy/assets/2890568_ai_artificial%20intelligence_automaton_brain_electronics_icon.png?raw=true" alt="Logo da GoodEnergy" class="chat-header-logo">
-                <h3>Assistente IA-GoodEnergy </h3>
-            </div>
-
-                    
+                            <img src="https://github.com/Vinicius-Dias07/Good-Energy/blob/master/FrontGoodEnergy/assets/2890568_ai_artificial%20intelligence_automaton_brain_electronics_icon.png?raw=true" 
+                                 alt="Logo da GoodEnergy" class="chat-header-logo">
+                            <h3>Assistente IA-GoodEnergy</h3>
+                        </div>
                     </div>
                     <div class="chat-body">
                         <div id="chat-messages" class="chat-messages"></div>
@@ -74,6 +71,11 @@
     </div>
     <div id="loader-overlay" class="loader-overlay hide"><div class="loader"></div></div>
     <div id="toast-container" class="toast-container"></div>
+
+    <!-- Markdown parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- Seu JS -->
     <script src="../js/chatbot.js"></script> 
 </body>
 </html>
