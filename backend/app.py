@@ -4,8 +4,10 @@
 # - Flask: A classe principal para criar a aplicação web.
 # - request: Um objeto que contém os dados de uma requisição HTTP recebida (ex: dados de um formulário).
 # - jsonify: Uma função que converte dicionários Python para o formato JSON, para ser enviado como resposta da API.
+import google.generativeai as genai
+from flask import Response
+from dotenv import load_dotenv
 from flask import Flask, request, jsonify
-
 # Importa a extensão Flask-CORS para lidar com Cross-Origin Resource Sharing.
 # Isso permite que o seu frontend (rodando em um domínio/porta diferente) possa fazer requisições para este backend.
 from flask_cors import CORS
@@ -32,6 +34,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 # Importa a biblioteca 'uuid' para gerar identificadores únicos universais, usados aqui para criar IDs únicos para cada dispositivo.
 import uuid
+# Carrega variáveis do .env
+load_dotenv()
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+
+# Cria o cliente com a chave
+
 
 # --- CONFIGURAÇÃO INICIAL DA APLICAÇÃO ---
 
@@ -490,19 +498,19 @@ def get_battery_status():
         is_charging = 9 <= now.hour < 16
         
         if is_charging:
-            fluxo_watts = random.randint(500, 2500) # Carregando com 500W a 2.5kW
+            fluxo_watts = random.randint(500, 2500)
             status_texto = "Carregando"
         else:
-            fluxo_watts = random.randint(-1500, -300) # Descarregando com 300W a 1.5kW
+            fluxo_watts = random.randint(-1500, -300) 
             status_texto = "Descarregando"
-        # --- FIM DA NOVA LÓGICA ---
+
 
         battery_data = {
             "charged_percentage": charged_percentage,
             "empty_percentage": empty_percentage,
             "labels": ["Carga", "Vazio"],
-            "fluxo_watts": fluxo_watts, # Novo dado
-            "status_texto": status_texto # Novo dado
+            "fluxo_watts": fluxo_watts,
+            "status_texto": status_texto
         }
 
         battery_data = {
@@ -522,6 +530,54 @@ def get_battery_status():
         return jsonify(battery_data)
     except Exception as e:
         return jsonify({"error": f"Erro ao obter dados da bateria: {e}"}), 500
+@app.route('/api/ask-agent', methods=['POST'])
+def ask_agent():
+    try:
+        data = request.get_json()
+        question = data.get("question", "")
+
+        if not question:
+            return jsonify({"error": "Você precisa enviar uma pergunta no campo 'question'"}), 400
+
+        # Pega os dados de KPIs do endpoint
+        kpis_response = get_kpis()
+        if isinstance(kpis_response, Response):
+            kpis = json.loads(kpis_response.get_data(as_text=True))
+        else:
+            kpis = kpis_response
+
+        todayGen = kpis.get("todayGenKwh", 0)
+        totalGen = kpis.get("totalGenKwh", 0)
+        houseLoad = kpis.get("houseLoadKw", 0)
+
+        # Contexto enviado pro Gemini
+        contexto = (
+            f"Dados de energia solar e consumo:\n"
+            f"- Geração hoje: {todayGen:.2f} kWh\n"
+            f"- Geração total: {totalGen:.2f} kWh\n"
+            f"- Consumo atual da casa: {houseLoad:.2f} kW\n\n"
+            f"Pergunta do usuário: {question}"
+        )
+
+        model = genai.GenerativeModel("gemini-1.5-flash")
+        response = model.generate_content(
+            f"""
+            Você é um assistente de energia solar e IoT.
+            Sempre responda em **Markdown bem formatado**:
+            - Use negrito para valores importantes
+            - Use listas com "•"
+            - Adicione emojis quando fizer sentido (🌞 ⚡ 📉 📈)
+            - Resuma em até 6 linhas para ficar fácil de ler
+
+            {contexto}
+            """
+        )
+
+        return jsonify({"answer": response.text})
+
+    except Exception as e:
+        return jsonify({"error": f"Erro do agente: {e}"}), 500
+
 
 # --- INICIALIZAÇÃO DO SERVIDOR ---
 
