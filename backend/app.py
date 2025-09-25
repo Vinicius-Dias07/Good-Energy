@@ -1,589 +1,807 @@
 # --- IMPORTAÇÃO DAS BIBLIOTECAS NECESSÁRIAS ---
-
-# Importa as classes principais do Flask:
-# - Flask: A classe principal para criar a aplicação web.
-# - request: Um objeto que contém os dados de uma requisição HTTP recebida (ex: dados de um formulário).
-# - jsonify: Uma função que converte dicionários Python para o formato JSON, para ser enviado como resposta da API.
+# Importa as classes e funções principais do Flask para criar e gerenciar a aplicação web.
 import google.generativeai as genai
 from flask import Response
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
-# Importa a extensão Flask-CORS para lidar com Cross-Origin Resource Sharing.
-# Isso permite que o seu frontend (rodando em um domínio/porta diferente) possa fazer requisições para este backend.
+# Importa a extensão Flask-CORS para permitir que o frontend (em outra porta) acesse esta API.
 from flask_cors import CORS
-
-#sabe o que é importa random né nao preciso detalhar
+# Importa a biblioteca 'random' para gerar números aleatórios (usada para simular dados).
 import random
-
-# Importa a biblioteca 'json' para trabalhar com arquivos JSON (ler e escrever).
+# Importa a biblioteca 'json' para ler e escrever em arquivos no formato JSON.
 import json
-
-# Importa a biblioteca 'os' para interagir com o sistema operacional, principalmente para manipular caminhos de arquivos.
+# Importa a biblioteca 'os' para interagir com o sistema operacional (manipular caminhos de arquivos).
 import os
-
-# Importa a biblioteca 'pandas' (com o apelido 'pd'), uma ferramenta poderosa para análise e manipulação de dados, usada aqui para ler e processar os arquivos CSV.
+# Importa a biblioteca 'pandas' para análise e manipulação de dados, especialmente para ler arquivos CSV.
 import pandas as pd
-
-# Importa 'datetime' e 'timedelta' para trabalhar com datas e horas (ex: para filtrar dados por data ou implementar um cache).
+# Importa 'datetime' e 'timedelta' para trabalhar com datas e horas.
 from datetime import datetime, timedelta
-
-# Importa funções de segurança da biblioteca 'werkzeug' (que é uma dependência do Flask).
-# - generate_password_hash: Cria um "hash" seguro de uma senha (nunca se deve salvar senhas em texto puro).
-# - check_password_hash: Compara uma senha fornecida pelo usuário com o hash salvo no banco de dados.
+# Importa funções de segurança para criar e verificar hashes de senhas.
 from werkzeug.security import generate_password_hash, check_password_hash
-
-# Importa a biblioteca 'uuid' para gerar identificadores únicos universais, usados aqui para criar IDs únicos para cada dispositivo.
+# Importa a biblioteca 'uuid' para gerar IDs únicos para os dispositivos.
 import uuid
-# Carrega variáveis do .env
+
+# Carrega as variáveis de ambiente do arquivo .env (como a chave da API do Gemini).
 load_dotenv()
+# Configura a biblioteca do Google AI com a chave da API carregada do .env.
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-# Cria o cliente com a chave
-
-
 # --- CONFIGURAÇÃO INICIAL DA APLICAÇÃO ---
-
-# Cria uma instância da aplicação Flask. '__name__' é uma variável especial do Python que ajuda o Flask a saber onde procurar recursos como templates e arquivos estáticos.
+# Cria a instância principal da aplicação Flask.
 app = Flask(__name__)
-
-# Habilita o CORS para toda a aplicação 'app'. Isso adiciona os cabeçalhos HTTP necessários para permitir requisições de outras origens.
+# Habilita o CORS para toda a aplicação, permitindo requisições de outras origens.
 CORS(app)
 
-# --- CAMINHOS PARA OS ARQUIVOS DE DADOS (VERSÃO CORRIGIDA FINAL) ---
-
-# Define o diretório base como o diretório onde este script (app.py) está localizado.
-# os.path.abspath(__file__) pega o caminho absoluto do script atual.
-# os.path.dirname(...) pega o nome do diretório a partir desse caminho.
+# --- CAMINHOS PARA OS ARQUIVOS DE DADOS ---
+# Define o diretório base como o local onde este script (app.py) está.
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# Define o diretório de dados como uma pasta chamada 'data' que está um nível acima do diretório do script.
-# '..' representa o diretório pai. Ex: se o script está em /projeto/backend/, DATA_DIR será /projeto/data/.
+# Define o diretório de dados (assumindo que está um nível acima da pasta do backend).
 DATA_DIR = os.path.join(BASE_DIR, '..', 'data')
 
-# Define uma função para encontrar um arquivo em um diretório com base em um padrão no nome.
+# Função para encontrar arquivos de dados dinamicamente, buscando por um padrão no nome.
 def find_file_by_pattern(directory, pattern):
-    # Inicia um bloco 'try' para lidar com possíveis erros, como o diretório não existir.
     try:
-        # Itera sobre cada nome de arquivo no diretório especificado.
+        # Percorre todos os arquivos no diretório especificado.
         for filename in os.listdir(directory):
-            # Verifica se o padrão de texto (ex: 'Historical Data Export') está contido no nome do arquivo.
+            # Se o padrão de texto for encontrado no nome do arquivo...
             if pattern in filename:
-                # Se encontrar, imprime uma mensagem de sucesso no console para depuração.
+                # ...imprime para depuração e retorna o caminho completo.
                 print(f"Arquivo encontrado para o padrão '{pattern}': {filename}")
-                # Retorna o caminho completo para o arquivo encontrado.
                 return os.path.join(directory, filename)
-    # Se um erro 'FileNotFoundError' ocorrer (o diretório não existe), este bloco é executado.
+    # Trata o erro caso o diretório não exista.
     except FileNotFoundError:
-        # Imprime uma mensagem de erro clara no console.
         print(f"ERRO: O diretório '{directory}' não foi encontrado.")
-        # Retorna 'None' para indicar que o arquivo não foi encontrado.
         return None
-    # Se o loop terminar sem encontrar um arquivo, esta parte é executada.
+    # Avisa se nenhum arquivo com o padrão foi encontrado.
     print(f"AVISO: Nenhum arquivo encontrado para o padrão '{pattern}' em '{directory}'.")
-    # Retorna 'None' para indicar que nenhum arquivo correspondente foi encontrado.
     return None
 
-# Procura o arquivo de dados históricos na mesma pasta do script (BASE_DIR) usando o padrão 'Historical Data Export'.
+# Caminhos completos para os arquivos que serão usados como "banco de dados".
 HISTORICAL_DATA_FILE = find_file_by_pattern(BASE_DIR, 'Historical Data Export')
-# Procura o arquivo de dados mensais na mesma pasta do script (BASE_DIR) usando o padrão '2025_Plant'.
 MONTHLY_DATA_FILE = find_file_by_pattern(BASE_DIR, '2025_Plant')
-# Constrói o caminho completo para o arquivo 'users.json' dentro do diretório de dados.
 USERS_FILE = os.path.join(DATA_DIR, 'users.json')
-# Constrói o caminho completo para o arquivo 'dispositivos.json' dentro do diretório de dados.
 DEVICES_FILE = os.path.join(DATA_DIR, 'dispositivos.json')
-
+CHAT_HISTORY_FILE = os.path.join(DATA_DIR, 'chat_history.json')
 
 # --- FUNÇÕES AUXILIARES ---
 
-# Define uma função para ler um arquivo JSON de forma segura.
-# Ela recebe o caminho do arquivo e um dicionário/lista com dados padrão.
+# Lê um arquivo JSON de forma segura. Se o arquivo ou diretório não existir, ele os cria.
 def read_json_file(filepath, default_data):
-    # Verifica se o diretório onde o arquivo deveria estar não existe.
+    # Se o diretório do arquivo não existe, cria o diretório.
     if not os.path.exists(os.path.dirname(filepath)):
-        # Se não existir, cria o diretório.
         os.makedirs(os.path.dirname(filepath))
-    # Verifica se o arquivo em si não existe.
+    # Se o arquivo não existe, cria-o com os dados padrão.
     if not os.path.exists(filepath):
-        # Se não existir, cria o arquivo no modo de escrita ('w') com codificação UTF-8.
         with open(filepath, 'w', encoding='utf-8') as f:
-            # Escreve os dados padrão (default_data) no novo arquivo.
             json.dump(default_data, f)
-        # Retorna os dados padrão, pois o arquivo acabou de ser criado com eles.
         return default_data
-    # Se o arquivo já existe, abre-o no modo de leitura ('r') com codificação UTF-8.
+    # Se o arquivo já existe, lê e retorna seu conteúdo.
     with open(filepath, 'r', encoding='utf-8') as f:
-        # Carrega o conteúdo JSON do arquivo e o retorna como um objeto Python (dicionário ou lista).
         return json.load(f)
 
-# Define uma função para escrever dados em um arquivo JSON.
+# Escreve (ou sobrescreve) dados em um arquivo JSON de forma organizada e legível.
 def write_json_file(filepath, data):
-    # Abre o arquivo especificado no modo de escrita ('w') com codificação UTF-8.
     with open(filepath, 'w', encoding='utf-8') as f:
-        # Escreve o objeto Python 'data' no arquivo em formato JSON.
-        # 'indent=2' formata o arquivo com 2 espaços de indentação para ser mais legível.
-        # 'ensure_ascii=False' permite que caracteres especiais (como acentos) sejam salvos corretamente.
+        # 'indent=2' formata o JSON para facilitar a leitura.
         json.dump(data, f, indent=2, ensure_ascii=False)
 
-# Variável para armazenar os dados do inversor em cache na memória. Começa como 'None'.
+# Cache em memória para os dados do inversor, para evitar ler o CSV repetidamente.
 inverter_data_cache = None
-# Variável para armazenar o horário em que o cache foi criado. Começa como 'None'.
 cache_time = None
 
-# Define uma função para obter os dados do inversor, usando um sistema de cache.
+# Função para carregar e processar os dados do inversor a partir do arquivo CSV.
 def get_inverter_data():
-    # Declara que vamos modificar as variáveis globais 'inverter_data_cache' e 'cache_time'.
+    # Declara que vamos usar as variáveis globais de cache.
     global inverter_data_cache, cache_time
-    # Verifica se o cache existe e se foi criado há menos de 10 minutos.
+    # Se o cache for recente (menos de 10 min), usa os dados da memória para performance.
     if inverter_data_cache is not None and cache_time and (datetime.now() - cache_time < timedelta(minutes=10)):
-        # Se o cache for válido, retorna os dados cacheados sem precisar ler o arquivo novamente.
         return inverter_data_cache
-    # Se o caminho para o arquivo histórico não foi encontrado, retorna 'None'.
+    # Se o arquivo de dados não foi encontrado, retorna None.
     if not HISTORICAL_DATA_FILE: return None
-    # Inicia um bloco 'try' para capturar erros durante a leitura e processamento do arquivo.
     try:
-        # Lê o arquivo CSV usando pandas.
-        # - delimiter=';': informa que as colunas são separadas por ponto e vírgula.
-        # - skiprows=2: ignora as 2 primeiras linhas do arquivo (geralmente cabeçalhos ou metadados).
-        # - encoding='latin1': especifica a codificação de caracteres do arquivo, comum em arquivos gerados no Windows.
+        # Usa a biblioteca pandas para ler e limpar o CSV.
         df = pd.read_csv(HISTORICAL_DATA_FILE, delimiter=';', skiprows=2, encoding='latin1')
-        # Converte a coluna 'Time' para o formato de data e hora do pandas, especificando o formato original.
+        # Converte a coluna de tempo para um formato de data/hora utilizável.
         df['Time'] = pd.to_datetime(df['Time'], format='%d.%m.%Y %H:%M:%S')
-        # Define uma lista com os nomes das colunas que devem ser numéricas.
+        # Define quais colunas devem ser numéricas.
         numeric_cols = ['Power(W)', 'Total Generation(kWh)']
-        # Itera sobre cada nome de coluna na lista acima.
+        # Converte as colunas para o formato numérico, trocando vírgula por ponto.
         for col in numeric_cols:
-            # Converte a coluna para texto, substitui vírgulas por pontos (para decimais) e depois converte para número.
-            # 'errors='coerce'' transforma qualquer valor que não puder ser convertido em 'NaN' (Not a Number).
             df[col] = pd.to_numeric(df[col].astype(str).str.replace(',', '.'), errors='coerce')
-        # Remove quaisquer linhas que tenham valores 'NaN' nas colunas numéricas especificadas.
+        # Remove linhas com dados inválidos.
         df.dropna(subset=numeric_cols, inplace=True)
-        # Atualiza o cache global com o DataFrame processado.
+        # Atualiza o cache com os dados limpos e o horário da atualização.
         inverter_data_cache = df
-        # Atualiza o tempo do cache para o horário atual.
         cache_time = datetime.now()
-        # Imprime uma mensagem de sucesso no console para depuração.
         print("Dados do inversor carregados e processados com sucesso.")
-        # Retorna o DataFrame processado.
         return df
-    # Se ocorrer qualquer exceção (erro) no bloco 'try', este bloco é executado.
     except Exception as e:
-        # Imprime uma mensagem de erro detalhada no console.
         print(f"ERRO ao processar o arquivo CSV histórico: {e}")
-        # Retorna 'None' para indicar que houve uma falha.
         return None
 
+# --- ROTAS DE API (ENDPOINTS) ---
 
-# --- ROTAS DE API ---
-
-# Define a rota '/api/register' que aceita requisições do tipo POST.
+# Rota para registrar um novo usuário. Aceita apenas requisições POST.
 @app.route('/api/register', methods=['POST'])
 def register_user():
-    # Obtém os dados JSON enviados na requisição.
+    # Pega os dados JSON enviados pelo frontend.
     data = request.get_json()
-    # Extrai os campos 'name', 'email' e 'password' dos dados recebidos.
+    # Extrai os campos do JSON.
     name, email, password = data.get('name'), data.get('email'), data.get('password')
-    # Verifica se algum dos campos essenciais está faltando.
+    # Valida se todos os campos necessários foram enviados.
     if not all([name, email, password]): return jsonify({"error": "Todos os campos são obrigatórios"}), 400
-    # Lê o arquivo de usuários ou cria um dicionário vazio se ele não existir.
+    # Lê o "banco de dados" de usuários.
     users_db = read_json_file(USERS_FILE, {})
-    # Verifica se o e-mail fornecido já existe como uma chave no banco de dados de usuários.
+    # Verifica se o email já está em uso.
     if email in users_db: return jsonify({"error": "Este e-mail já está cadastrado."}), 409
-    # Adiciona o novo usuário ao dicionário, usando o e-mail como chave. A senha é armazenada como um hash.
-    users_db[email] = {"name": name, "email": email, "password": generate_password_hash(password), "plan": "Starter", "theme": "padrão", "colorTheme": "dark"}
-    # Salva o dicionário de usuários atualizado de volta no arquivo JSON.
+    
+    # Cria o novo usuário com todas as preferências padrão.
+    users_db[email] = {
+        "name": name, "email": email, "password": generate_password_hash(password), 
+        "plan": "Starter", "theme": "padrão", "colorTheme": "dark", 
+        "tariff": 0.95, "savingsGoal": 500, "notifications": "enabled" 
+    }
+    
+    # Salva o banco de dados atualizado.
     write_json_file(USERS_FILE, users_db)
-    # Cria uma cópia dos dados do novo usuário para retornar na resposta.
+    # Prepara os dados do usuário para retornar (sem a senha).
     user_data_to_return = users_db[email].copy()
-    # Remove a chave 'password' da cópia para não enviar o hash da senha de volta ao cliente.
     del user_data_to_return['password']
-    # Retorna os dados do usuário recém-criado com o status HTTP 201 (Created).
+    # Retorna o novo usuário criado com o status 201 (Created).
     return jsonify(user_data_to_return), 201
 
-# Define a rota '/api/login' que aceita requisições do tipo POST.
+# Rota para autenticar (logar) um usuário.
 @app.route('/api/login', methods=['POST'])
 def login_user():
-    # Obtém os dados JSON enviados na requisição.
+    # Pega os dados JSON da requisição.
     data = request.get_json()
-    # Extrai o e-mail e a senha dos dados.
+    # Extrai email e senha.
     email, password = data.get('email'), data.get('password')
-    # Verifica se o e-mail ou a senha não foram fornecidos.
+    # Valida os dados.
     if not email or not password: return jsonify({"error": "E-mail e senha são obrigatórios"}), 400
-    # Lê o banco de dados de usuários.
+    
+    # Lê o banco de dados.
     users_db = read_json_file(USERS_FILE, {})
-    # Tenta obter os dados do usuário correspondente ao e-mail fornecido.
+    # Busca o usuário pelo email.
     user = users_db.get(email)
-    # Verifica se o usuário não foi encontrado OU se o hash da senha não existe OU se a senha fornecida não corresponde ao hash salvo.
+
+    # Verifica se o usuário existe e se a senha está correta, comparando o hash.
     if not user or not user.get('password') or not check_password_hash(user.get('password'), password):
-        # Se qualquer uma das verificações falhar, retorna um erro de credenciais inválidas.
         return jsonify({"error": "Credenciais inválidas."}), 401
-    # Cria uma cópia dos dados do usuário para retornar na resposta.
+
+    # LÓGICA DE MIGRAÇÃO: Atualiza perfis de usuários antigos que não têm as novas chaves.
+    needs_update = False
+    if 'tariff' not in user:
+        user['tariff'] = 0.95
+        needs_update = True
+    if 'savingsGoal' not in user:
+        user['savingsGoal'] = 500
+        needs_update = True
+    if 'notifications' not in user:
+        user['notifications'] = 'enabled'
+        needs_update = True
+
+    # Se alguma chave foi adicionada, salva o arquivo de volta.
+    if needs_update:
+        users_db[email] = user
+        write_json_file(USERS_FILE, users_db)
+
+    # Prepara os dados para retornar (sem a senha).
     user_data_to_return = user.copy()
-    # Remove a chave 'password' da cópia por segurança.
     del user_data_to_return['password']
-    # Retorna os dados do usuário logado com sucesso.
+    # Retorna os dados do usuário logado.
     return jsonify(user_data_to_return)
 
-# Define a rota '/api/user/theme' que aceita requisições do tipo PUT (usado para atualizar dados existentes).
+# Rota para salvar as preferências de tema (cores e modo claro/escuro).
 @app.route('/api/user/theme', methods=['PUT'])
 def save_theme():
-    # Obtém os dados JSON da requisição.
+    # Pega os dados da requisição.
     data = request.get_json()
-    # Extrai o e-mail, o tema e o tema de cor dos dados.
     email, theme, colorTheme = data.get('email'), data.get('theme'), data.get('colorTheme')
-    # Verifica se o e-mail foi fornecido e se pelo menos um dos temas (theme ou colorTheme) foi enviado.
+    # Valida se os dados necessários foram enviados.
     if not email or (theme is None and colorTheme is None):
-        # Se não, retorna um erro.
         return jsonify({"error": "Faltam informações para salvar o tema."}), 400
-    # Lê o banco de dados de usuários.
+    # Lê o banco de dados.
     users_db = read_json_file(USERS_FILE, {})
-    # Verifica se o usuário (e-mail) existe no banco de dados.
+    # Se o usuário existir, atualiza suas preferências de tema.
     if email in users_db:
-        # Se um novo 'theme' foi fornecido, atualiza o tema do usuário.
-        if theme is not None:
-            users_db[email]['theme'] = theme
-        # Se um novo 'colorTheme' foi fornecido, atualiza o tema de cor do usuário.
-        if colorTheme is not None:
-            users_db[email]['colorTheme'] = colorTheme
-        # Salva as alterações no arquivo JSON.
+        if theme is not None: users_db[email]['theme'] = theme
+        if colorTheme is not None: users_db[email]['colorTheme'] = colorTheme
+        # Salva as alterações.
         write_json_file(USERS_FILE, users_db)
-        # Retorna uma mensagem de sucesso.
         return jsonify({"message": "Tema salvo com sucesso!"})
-    # Se o usuário não foi encontrado, retorna um erro 404 (Not Found).
+    # Retorna erro se o usuário não for encontrado.
     return jsonify({"error": "Usuário não encontrado."}), 404
 
-# Define a rota '/api/kpis' que aceita requisições do tipo GET (para buscar dados).
+# Rota para obter os KPIs (Key Performance Indicators) do dashboard.
 @app.route('/api/kpis', methods=['GET'])
 def get_kpis():
-    # Obtém os dados do inversor (do cache ou do arquivo).
+    user_email = request.args.get('email')
+    if not user_email: return jsonify({"error": "E-mail do usuário é necessário"}), 400
+
     df = get_inverter_data()
-    # Se os dados não puderam ser carregados ou o DataFrame está vazio, retorna um erro.
     if df is None or df.empty: return jsonify({"error": "Não foi possível carregar os dados do inversor"}), 500
-    # Calcula a geração total encontrando o valor máximo na coluna 'Total Generation(kWh)'.
-    total_generation = df['Total Generation(kWh)'].max()
-    # Pega a data de hoje.
-    today = datetime.now().date()
-    # Cria um objeto datetime para o início do dia de hoje (meia-noite).
-    start_of_today = datetime.combine(today, datetime.min.time())
-    # Filtra o DataFrame para obter apenas os dados de hoje.
-    today_data = df[df['Time'] >= start_of_today]
-    # Inicializa a variável de geração de hoje como zero.
+    
+    users_db = read_json_file(USERS_FILE, {})
+    user_tariff = users_db.get(user_email, {}).get('tariff', 0.95)
+
+    # --- LÓGICA CORRIGIDA PARA USAR A ÚLTIMA DATA DO ARQUIVO ---
+    # Encontra a data mais recente presente no arquivo de dados.
+    latest_date_in_data = df['Time'].max().date()
+
+    # Filtra o DataFrame para obter apenas os dados desse último dia.
+    today_data = df[df['Time'].dt.date == latest_date_in_data]
+    # --- FIM DA LÓGICA CORRIGIDA ---
+
+    # Calcula a geração de "hoje" (baseado no último dia de dados).
     generation_today = 0
-    # Verifica se há dados para o dia de hoje.
     if not today_data.empty:
-        # A geração de hoje é a diferença entre o maior e o menor valor de 'Total Generation(kWh)' no período de hoje.
         generation_today = today_data['Total Generation(kWh)'].max() - today_data['Total Generation(kWh)'].min()
-        # --- NOVA LINHA: Simula o consumo atual da casa ---
-    house_load_kw = random.uniform(0.3, 2.5) # Simula um consumo entre 300W e 2.5kW
-    # Retorna os KPIs, AGORA INCLUINDO o consumo da casa.
+    
+    # Lógica existente
+    total_generation = df['Total Generation(kWh)'].max()
+    house_load_kw = random.uniform(0.3, 2.5)
+    
+    savings_this_month = 0
+    now = datetime.now()
+    month_data = df[(df['Time'].dt.month == now.month) & (df['Time'].dt.year == now.year)]
+    if not month_data.empty:
+        generation_this_month = month_data['Total Generation(kWh)'].max() - month_data['Total Generation(kWh)'].min()
+        savings_this_month = generation_this_month * user_tariff
+
     return jsonify({
         "todayGenKwh": generation_today, 
         "totalGenKwh": total_generation,
-        "houseLoadKw": house_load_kw  
+        "houseLoadKw": house_load_kw,
+        "savingsThisMonth": savings_this_month
     })
 
-# Define a rota '/api/generation/history' que aceita requisições GET.
+# Rota para o histórico de geração das últimas 24h (usado no gráfico de linha).
 @app.route('/api/generation/history', methods=['GET'])
 def get_generation_history():
-    # Obtém os dados do inversor.
+    # Pega os dados do inversor.
     df = get_inverter_data()
-    # Se os dados não puderam ser carregados, retorna um erro.
-    if df is None or df.empty: return jsonify({"error": "Não foi possível carregar os dados do inversor"}), 500
-    # Encontra o registro de tempo mais recente no DataFrame.
-    end_time = df['Time'].max()
-    # Calcula o tempo de início como 24 horas antes do tempo final.
-    start_time = end_time - timedelta(hours=24)
-    # Filtra o DataFrame para incluir apenas os dados das últimas 24 horas. '.copy()' evita avisos do pandas.
-    recent_data = df[(df['Time'] >= start_time) & (df['Time'] <= end_time)].copy()
-    # Define a coluna 'Time' como o índice do DataFrame, o que é necessário para reamostragem de tempo.
-    recent_data.set_index('Time', inplace=True)
-    # Reamostra os dados de 'Power(W)' em intervalos de 1 hora ('h'), calculando a média para cada hora.
-    # '.fillna(0)' preenche quaisquer horas sem dados com o valor 0.
-    hourly_generation = recent_data['Power(W)'].resample('h').mean().fillna(0)
-    # Retorna os dados formatados para um gráfico:
-    # - "labels": as horas do dia (ex: '09h', '10h').
-    # - "generation_kw": a lista de valores de geração em kW (dividido por 1000) e arredondado para 2 casas decimais.
-    return jsonify({"labels": hourly_generation.index.strftime('%Hh').tolist(), "generation_kw": (hourly_generation / 1000).round(2).tolist()})
+    if df is None or df.empty: 
+        return jsonify({"error": "Não foi possível carregar os dados do inversor"}), 500
 
-# Define a rota '/api/reports/monthly' que aceita requisições GET.
+    # --- LÓGICA ALTERADA PARA INICIAR À 1H DA MANHÃ ---
+    # Encontra a data do registro mais recente no DataFrame.
+    latest_date = df['Time'].max().date()
+
+    # Define o horário de início como 1 da manhã (01:00) dessa data.
+    start_time = datetime.combine(latest_date, datetime.min.time()).replace(hour=1)
+    
+    # Define o horário final como 24 horas depois do início, para pegar o ciclo completo.
+    end_time = start_time + timedelta(hours=24)
+    # --- FIM DA LÓGICA ALTERADA ---
+
+    # Filtra o DataFrame para o novo período (das 1h de hoje até 1h de amanhã).
+    recent_data = df[(df['Time'] >= start_time) & (df['Time'] < end_time)].copy()
+    
+    # Agrupa os dados por hora e calcula a média.
+    recent_data.set_index('Time', inplace=True)
+    hourly_generation = recent_data['Power(W)'].resample('h').mean().fillna(0)
+
+    # Garante que o eixo X tenha todas as 24h, mesmo que não haja dados.
+    full_period_index = pd.date_range(start=start_time, periods=24, freq='h')
+    hourly_generation = hourly_generation.reindex(full_period_index, fill_value=0)
+
+    # Retorna os dados formatados para o gráfico.
+    return jsonify({
+        "labels": hourly_generation.index.strftime('%Hh').tolist(), 
+        "generation_kw": (hourly_generation / 1000).round(2).tolist()
+    })
+
+# Rota para o relatório de geração mensal (usado na página de Relatórios).
 @app.route('/api/reports/monthly', methods=['GET'])
 def get_monthly_report():
-    # Verifica se o caminho para o arquivo de relatório mensal foi encontrado.
-    if not MONTHLY_DATA_FILE: return jsonify({"error": "Arquivo de relatório mensal não configurado ou não encontrado."}), 500
-    # Inicia um bloco 'try' para lidar com erros de leitura do arquivo.
+    # Valida se o arquivo de relatório foi encontrado.
+    if not MONTHLY_DATA_FILE: return jsonify({"error": "Arquivo de relatório mensal não configurado."}), 500
     try:
-        # Lê o arquivo CSV do relatório mensal.
-        # - skiprows=20: Pula as primeiras 20 linhas.
-        # - skipfooter=1: Pula a última linha.
-        # - engine='python': Usa o motor de parsing Python, que é mais flexível e suporta 'skipfooter'.
+        # Lê e processa o arquivo CSV do relatório mensal.
         df = pd.read_csv(MONTHLY_DATA_FILE, delimiter=';', skiprows=20, encoding='latin1', skipfooter=1, engine='python')
-        # Renomeia as colunas para nomes mais simples e padronizados.
         df.rename(columns={'Generation(kWh)': 'generation', 'Date': 'date'}, inplace=True)
-        # Converte a coluna 'generation' para um tipo numérico, substituindo vírgulas por pontos.
         df['generation'] = pd.to_numeric(df['generation'].astype(str).str.replace(',', '.'), errors='coerce')
-        # Remove linhas onde 'date' ou 'generation' sejam nulos ou inválidos.
         df.dropna(subset=['date', 'generation'], inplace=True)
-        # Seleciona apenas as colunas 'date' e 'generation' e as converte para uma lista de dicionários.
+        # Converte os dados para um formato JSON e retorna.
         report_data = df[['date', 'generation']].to_dict(orient='records')
-        # Retorna os dados do relatório em formato JSON.
         return jsonify(report_data)
-    # Captura qualquer exceção que ocorra durante o processo.
     except Exception as e:
-        # Retorna uma mensagem de erro detalhada.
         return jsonify({"error": f"Erro ao processar arquivo de relatório: {e}"}), 500
 
-# Define a rota '/api/devices' que aceita requisições GET (para listar dispositivos).
+# Rota para listar os dispositivos de um usuário.
 @app.route('/api/devices', methods=['GET'])
 def get_devices():
-    # Obtém o parâmetro 'email' da URL da requisição (ex: /api/devices?email=teste@email.com).
+    # Pega o email do usuário da URL.
     user_email = request.args.get('email')
-    # Se o e-mail não for fornecido, retorna um erro.
     if not user_email: return jsonify({"error": "E-mail do usuário é necessário"}), 400
-    # Lê o banco de dados de dispositivos.
+    
+    # Lê os bancos de dados.
     devices_db = read_json_file(DEVICES_FILE, {})
-    # Obtém a lista de dispositivos para o e-mail do usuário, ou uma lista vazia se o usuário não tiver dispositivos.
+    users_db = read_json_file(USERS_FILE, {})
+    # Pega os dispositivos do usuário.
     user_devices = devices_db.get(user_email, [])
-    # Retorna a lista de dispositivos do usuário em formato JSON.
+    
+    # Usa a tarifa salva no perfil do usuário para o cálculo de custo.
+    user_tariff = users_db.get(user_email, {}).get('tariff', 0.95)
+    
+    # Adiciona o custo por hora a cada dispositivo antes de retornar.
+    for device in user_devices:
+        cost_per_hour = (device.get('watts', 0) / 1000) * user_tariff
+        device['cost_per_hour'] = f"R$ {cost_per_hour:.2f}"
+
     return jsonify(user_devices)
 
-# Define a rota '/api/devices' que aceita requisições POST (para adicionar um novo dispositivo).
+# Rota para adicionar um novo dispositivo.
 @app.route('/api/devices', methods=['POST'])
 def add_device():
-    # Obtém os dados JSON da requisição.
+    # Pega os dados do novo dispositivo.
     data = request.get_json()
-    # Extrai as informações do novo dispositivo.
     user_email, name, room, type = data.get('email'), data.get('name'), data.get('room'), data.get('type')
-    # Verifica se todos os campos necessários foram fornecidos.
     if not all([user_email, name, room, type]): return jsonify({"error": "Todos os campos são obrigatórios"}), 400
-    # Lê o banco de dados de dispositivos.
+    # Lê o banco de dados.
     devices_db = read_json_file(DEVICES_FILE, {})
-    # Obtém a lista de dispositivos existente para este usuário.
     user_devices = devices_db.get(user_email, [])
-    # Cria um dicionário para o novo dispositivo com um ID único gerado por uuid4.
+    # Cria o novo dispositivo com um ID único.
     new_device = {"id": str(uuid.uuid4()), "name": name, "room": room, "type": type, "on": False, "watts": 0}
-    # Adiciona o novo dispositivo à lista de dispositivos do usuário.
+    # Adiciona um custo padrão para consistência de dados.
+    new_device['cost_per_hour'] = "R$ 0.00"
+    # Adiciona e salva o dispositivo.
     user_devices.append(new_device)
-    # Atualiza o banco de dados com a nova lista de dispositivos para este usuário.
     devices_db[user_email] = user_devices
-    # Salva as alterações no arquivo JSON.
     write_json_file(DEVICES_FILE, devices_db)
-    # Retorna os dados do dispositivo recém-criado com o status 201 (Created).
+    # Retorna o dispositivo criado.
     return jsonify(new_device), 201
 
-# Define uma rota para um dispositivo específico usando seu ID, que aceita requisições PUT (para atualizar).
+# Rota para atualizar o estado de um dispositivo (ligar/desligar).
 @app.route('/api/devices/<string:device_id>', methods=['PUT'])
 def toggle_device(device_id):
-    # Obtém os dados JSON da requisição.
+    # Pega os dados da requisição.
     data = request.get_json()
-    # Extrai o e-mail do usuário e o novo estado ('on') do dispositivo.
     user_email, new_state = data.get('email'), data.get('on')
-    # Verifica se o e-mail ou o novo estado estão faltando.
     if not user_email or new_state is None: return jsonify({"error": "Faltam dados para atualizar o dispositivo"}), 400
-    # Lê o banco de dados de dispositivos.
+    # Lê o banco de dados.
     devices_db = read_json_file(DEVICES_FILE, {})
-    # Obtém a lista de dispositivos do usuário.
     user_devices = devices_db.get(user_email, [])
-    # Inicializa uma flag para verificar se o dispositivo foi encontrado.
+    # Procura pelo dispositivo com o ID correspondente.
     device_found = False
-    # Itera sobre a lista de dispositivos do usuário.
     for device in user_devices:
-        # Verifica se o ID do dispositivo atual corresponde ao ID da URL.
         if device['id'] == device_id:
-            # Atualiza o estado 'on' do dispositivo.
+            # Atualiza o estado (ligado/desligado).
             device['on'] = new_state
-            # Atualiza a potência ('watts') com base no novo estado e no tipo do dispositivo.
+            # Simula o consumo em Watts baseado no tipo de dispositivo.
             device['watts'] = device['on'] * (200 if device['type'] == 'appliance' else 900 if device['type'] == 'climate' else 60)
-            # Marca que o dispositivo foi encontrado.
             device_found = True
-            # Interrompe o loop, pois o dispositivo já foi encontrado e atualizado.
             break
-    # Se o loop terminar e o dispositivo não for encontrado, retorna um erro 404.
+    # Se não encontrar, retorna erro.
     if not device_found: return jsonify({"error": "Dispositivo não encontrado"}), 404
-    # Atualiza o banco de dados com a lista de dispositivos modificada.
+    # Salva as alterações.
     devices_db[user_email] = user_devices
-    # Salva as alterações no arquivo JSON.
     write_json_file(DEVICES_FILE, devices_db)
-    # Retorna uma mensagem de sucesso.
     return jsonify({"message": "Dispositivo atualizado"})
 
-# Define uma rota para um dispositivo específico usando seu ID, que aceita requisições DELETE.
+# Rota para excluir um dispositivo.
 @app.route('/api/devices/<string:device_id>', methods=['DELETE'])
 def delete_device(device_id):
-    # Obtém o e-mail do usuário dos parâmetros da URL.
+    # Pega o email da URL.
     user_email = request.args.get('email')
-    # Se o e-mail não for fornecido, retorna um erro.
     if not user_email: return jsonify({"error": "E-mail do usuário é necessário"}), 400
-    # Lê o banco de dados de dispositivos.
+    # Lê o banco de dados.
     devices_db = read_json_file(DEVICES_FILE, {})
-    # Obtém a lista de dispositivos do usuário.
     user_devices = devices_db.get(user_email, [])
-    # Armazena o número inicial de dispositivos para verificar se algum foi removido.
+    # Remove o dispositivo da lista.
     initial_len = len(user_devices)
-    # Cria uma nova lista contendo todos os dispositivos, exceto aquele cujo ID corresponde ao fornecido.
     user_devices = [d for d in user_devices if d['id'] != device_id]
-    # Se o comprimento da lista não mudou, significa que o dispositivo não foi encontrado.
+    # Verifica se o dispositivo foi realmente removido.
     if len(user_devices) == initial_len: return jsonify({"error": "Dispositivo não encontrado"}), 404
-    # Atualiza o banco de dados com a nova lista (sem o dispositivo removido).
+    # Salva a lista atualizada.
     devices_db[user_email] = user_devices
-    # Salva as alterações no arquivo JSON.
     write_json_file(DEVICES_FILE, devices_db)
-    # Retorna uma mensagem de sucesso.
     return jsonify({"message": "Dispositivo removido"})
 
-# Define a rota '/api/user' que aceita requisições DELETE (para excluir a conta de um usuário).
+# Rota para excluir a conta de um usuário.
 @app.route('/api/user', methods=['DELETE'])
 def delete_user():
-    # 1. Obter os dados (e-mail e senha para confirmação) da requisição.
+    # Pega os dados para confirmação.
     data = request.get_json()
-    # Extrai o e-mail e a senha.
-    email = data.get('email')
-    password = data.get('password')
-
-    # Verifica se e-mail e senha foram fornecidos.
+    email, password = data.get('email'), data.get('password')
     if not email or not password:
-        # Retorna um erro se estiverem faltando.
         return jsonify({"error": "E-mail e senha são obrigatórios para exclusão"}), 400
-
-    # 2. Ler os bancos de dados de usuários e dispositivos.
+    # Lê os bancos de dados.
     users_db = read_json_file(USERS_FILE, {})
     devices_db = read_json_file(DEVICES_FILE, {})
-
-    # Obtém os dados do usuário a ser excluído.
     user = users_db.get(email)
-
-    # 3. VERIFICAÇÃO DE SEGURANÇA: Checa se o usuário existe e se a senha está correta.
+    # Confirma a senha antes de excluir.
     if not user or not check_password_hash(user.get('password'), password):
-        # Usamos a mesma mensagem de erro do login para não informar qual campo estava errado.
         return jsonify({"error": "Credenciais inválidas."}), 401
-
-    # 4. Se a senha estiver correta, proceder com a exclusão.
     try:
-        # Remover a entrada do usuário do dicionário de usuários.
+        # Remove o usuário e também seus dispositivos associados.
         del users_db[email]
-        # Salvar o dicionário de usuários atualizado no arquivo.
         write_json_file(USERS_FILE, users_db)
-
-        # Verificar se o usuário tinha dispositivos associados.
         if email in devices_db:
-            # Se sim, remover a entrada de dispositivos desse usuário.
             del devices_db[email]
-            # Salvar o dicionário de dispositivos atualizado no arquivo.
             write_json_file(DEVICES_FILE, devices_db)
-
-        # Retorna uma mensagem de sucesso com o status HTTP 200 (OK).
         return jsonify({"message": "Usuário e todos os seus dados foram removidos com sucesso."}), 200
-
-    # Captura qualquer erro inesperado que possa ocorrer durante a exclusão.
     except Exception as e:
-        # Retorna uma mensagem de erro do servidor.
         return jsonify({"error": f"Ocorreu um erro ao remover o usuário: {e}"}), 500
 
-#simula a carga da bateria para o grafico e o trquinho la em cima
-bateria_simulada = random.randint(1,100)
-
+# Rota para o status da bateria (simulado).
 @app.route('/api/battery/status', methods=['GET'])
 def get_battery_status():
-    """
-    Endpoint para fornecer o status atual da bateria.
-    Em um cenário real, este valor viria de um sensor ou da API do inversor/bateria.
-    Para este exemplo, vamos simular um valor fixo.
-    """
     try:
-        # Simula a bateria
-        charged_percentage = bateria_simulada
-        
-        # Calcula a porcentagem vazia.
+        # Gera valores aleatórios para simular o estado da bateria.
+        charged_percentage = random.randint(1, 100)
         empty_percentage = 100.0 - charged_percentage
-
         now = datetime.now()
+        # Simula carregamento durante o dia e descarregamento à noite.
         is_charging = 9 <= now.hour < 16
-        
         if is_charging:
             fluxo_watts = random.randint(500, 2500)
             status_texto = "Carregando"
         else:
             fluxo_watts = random.randint(-1500, -300) 
             status_texto = "Descarregando"
-
-
-        battery_data = {
-            "charged_percentage": charged_percentage,
-            "empty_percentage": empty_percentage,
-            "labels": ["Carga", "Vazio"],
-            "fluxo_watts": fluxo_watts,
-            "status_texto": status_texto
-        }
-
-        battery_data = {
-            "charged_percentage": charged_percentage,
-            "empty_percentage": empty_percentage,
-            "labels": ["Carga", "Vazio"],
-            "fluxo_watts": fluxo_watts,
-            "status_texto": status_texto
-        }
-
+        
+        # Calcula a energia armazenada com base na capacidade total.
         capacidade_total_kwh = 13.5
         energia_armazenada_kwh = round((charged_percentage / 100) * capacidade_total_kwh, 1)
 
-        # CORREÇÃO: Adicionando a nova chave ao dicionário
-        battery_data['energia_kwh'] = energia_armazenada_kwh
-        
+        # Monta o objeto de dados da bateria.
+        battery_data = {
+            "charged_percentage": charged_percentage, "empty_percentage": empty_percentage,
+            "labels": ["Carga", "Vazio"], "fluxo_watts": fluxo_watts,
+            "status_texto": status_texto, 'energia_kwh': energia_armazenada_kwh
+        }
+        # Retorna os dados em JSON.
         return jsonify(battery_data)
     except Exception as e:
         return jsonify({"error": f"Erro ao obter dados da bateria: {e}"}), 500
+
+# Rota para o chatbot de IA, que também lida com comandos de voz.
 @app.route('/api/ask-agent', methods=['POST'])
 def ask_agent():
     try:
+        # Pega a pergunta e o email do usuário.
         data = request.get_json()
         question = data.get("question", "")
+        user_email = data.get("email", "")
 
-        if not question:
-            return jsonify({"error": "Você precisa enviar uma pergunta no campo 'question'"}), 400
+        if not question or not user_email:
+            return jsonify({"error": "Pergunta e e-mail são obrigatórios"}), 400
 
-        # Pega os dados de KPIs do endpoint
-        kpis_response = get_kpis()
-        if isinstance(kpis_response, Response):
-            kpis = json.loads(kpis_response.get_data(as_text=True))
-        else:
-            kpis = kpis_response
-
-        todayGen = kpis.get("todayGenKwh", 0)
-        totalGen = kpis.get("totalGenKwh", 0)
-        houseLoad = kpis.get("houseLoadKw", 0)
-
-        # Contexto enviado pro Gemini
-        contexto = (
-            f"Dados de energia solar e consumo:\n"
-            f"- Geração hoje: {todayGen:.2f} kWh\n"
-            f"- Geração total: {totalGen:.2f} kWh\n"
-            f"- Consumo atual da casa: {houseLoad:.2f} kW\n\n"
-            f"Pergunta do usuário: {question}"
-        )
-
+        # Pega a lista de dispositivos do usuário para dar contexto à IA.
+        devices_db = read_json_file(DEVICES_FILE, {})
+        user_devices = devices_db.get(user_email, [])
+        device_names = [d['name'] for d in user_devices]
+        
+        # Monta o prompt para o Gemini, ensinando-o a identificar comandos e responder em JSON.
         model = genai.GenerativeModel("gemini-1.5-flash")
         response = model.generate_content(
             f"""
-            Você é um assistente de energia solar e IoT.
-            Sempre responda em **Markdown bem formatado**:
-            - Use negrito para valores importantes
-            - Use listas com "•"
-            - Adicione emojis quando fizer sentido (🌞 ⚡ 📉 📈)
-            - Resuma em até 6 linhas para ficar fácil de ler
+            Você é um assistente de casa inteligente. Analise o pedido do usuário.
+            Os dispositivos disponíveis são: {', '.join(device_names)}.
 
-            {contexto}
+            - Se o pedido for um comando para ligar, desligar, acender ou apagar um dispositivo, responda APENAS com um JSON no formato:
+            {{"command": true, "device_name": "nome do dispositivo", "action": "on" ou "off"}}
+            
+            - Se for qualquer outra pergunta, responda normalmente em Markdown.
+
+            Pedido do usuário: "{question}"
             """
         )
 
-        return jsonify({"answer": response.text})
+        # Tenta interpretar a resposta da IA como um comando JSON.
+        try:
+            potential_command = json.loads(response.text)
+            # Se for um comando válido, executa a ação no dispositivo.
+            if isinstance(potential_command, dict) and potential_command.get("command"):
+                device_name = potential_command.get("device_name")
+                action = potential_command.get("action")
+                
+                # Procura o dispositivo pelo nome, ignorando maiúsculas/minúsculas.
+                target_device = next((d for d in user_devices if d['name'].lower() == device_name.lower()), None)
+
+                if not target_device:
+                    return jsonify({"answer": f"Não encontrei um dispositivo chamado '{device_name}'."})
+                
+                # Define o novo estado e atualiza o dispositivo.
+                new_state = (action == 'on')
+                target_device['on'] = new_state
+                target_device['watts'] = new_state * (200 if target_device['type'] == 'appliance' else 900 if target_device['type'] == 'climate' else 60)
+                
+                # Salva o estado atualizado dos dispositivos.
+                devices_db[user_email] = user_devices
+                write_json_file(DEVICES_FILE, devices_db)
+
+                # Retorna uma mensagem de confirmação para o usuário.
+                action_text = "ligado" if new_state else "desligado"
+                return jsonify({"answer": f"Ok, dispositivo '{target_device['name']}' foi {action_text}."})
+
+        # Se a resposta da IA não for um JSON, trata como uma resposta de texto normal.
+        except (json.JSONDecodeError, TypeError):
+            return jsonify({"answer": response.text})
 
     except Exception as e:
         return jsonify({"error": f"Erro do agente: {e}"}), 500
 
+# Rota para atualizar o nome do usuário no perfil.
+@app.route('/api/user/profile', methods=['PUT'])
+def update_user_profile():
+    # Pega os dados da requisição.
+    data = request.get_json()
+    email, new_name = data.get('email'), data.get('name')
+    if not email or not new_name:
+        return jsonify({"error": "E-mail e novo nome são obrigatórios"}), 400
+    # Lê, atualiza e salva o nome do usuário.
+    users_db = read_json_file(USERS_FILE, {})
+    if email in users_db:
+        users_db[email]['name'] = new_name
+        write_json_file(USERS_FILE, users_db)
+        updated_user = users_db[email].copy()
+        del updated_user['password']
+        return jsonify(updated_user)
+    return jsonify({"error": "Usuário não encontrado."}), 404
+
+# Rota para salvar as preferências do usuário (tarifa, meta, notificações).
+@app.route('/api/user/preferences', methods=['PUT'])
+def save_preferences():
+    # Pega os dados da requisição.
+    data = request.get_json()
+    email = data.get('email')
+    tariff = data.get('tariff')
+    savings_goal = data.get('savingsGoal')
+    notifications = data.get('notifications')
+
+    if not email: return jsonify({"error": "Email é obrigatório"}), 400
+
+    # Lê o banco de dados.
+    users_db = read_json_file(USERS_FILE, {})
+    if email in users_db:
+        try:
+            # Atualiza cada preferência se ela foi enviada na requisição.
+            if tariff is not None:
+                users_db[email]['tariff'] = float(tariff)
+            if savings_goal is not None:
+                users_db[email]['savingsGoal'] = int(savings_goal)
+            if notifications is not None:
+                users_db[email]['notifications'] = notifications
+
+            # Salva o arquivo de usuários.
+            write_json_file(USERS_FILE, users_db)
+            
+            # Retorna os dados do usuário atualizado para o frontend.
+            updated_user = users_db[email].copy()
+            del updated_user['password']
+            return jsonify(updated_user)
+        # Trata o erro caso a tarifa ou meta não sejam números válidos.
+        except (ValueError, TypeError):
+            return jsonify({"error": "Preferências devem ser válidas."}), 400
+    
+    return jsonify({"error": "Usuário não encontrado."}), 404
+
+@app.route('/api/optimizer/suggest-time', methods=['POST'])
+def suggest_optimal_time():
+    # Pega os dados enviados pelo frontend
+    data = request.get_json()
+    task_info = data.get('task') # Ex: "Lavar Roupa"
+    user_email = data.get('email')
+
+    if not task_info or not user_email:
+        return jsonify({"error": "Informações da tarefa e email são obrigatórios"}), 400
+
+    try:
+        # --- Passo 1: Buscar a Previsão do Tempo (FUTURO) ---
+        # Usaremos a API One Call da OpenWeatherMap, que fornece previsão horária
+        api_key = '2d1f3910b6139ba59b1385427c34b64e' # Sua chave
+        lat, lon = -23.5614, -46.6565
+        # Excluímos 'current', 'minutely', 'daily' para pegar apenas os dados horários ('hourly')
+        forecast_url = f"https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=current,minutely,daily,alerts&appid={api_key}&units=metric"
+        
+        # A biblioteca 'requests' é mais recomendada para chamadas de API externas
+        import requests
+        forecast_response = requests.get(forecast_url)
+        forecast_data = forecast_response.json()
+        
+        # Formata a previsão horária para as próximas 24h em um texto simples
+        hourly_forecast = ""
+        for i in range(24):
+            hour_data = forecast_data['hourly'][i]
+            dt_object = datetime.fromtimestamp(hour_data['dt'])
+            clouds = hour_data['clouds'] # Nebulosidade em %
+            hourly_forecast += f"- {dt_object.strftime('%H:%M')}: Nebulosidade de {clouds}%\n"
+
+        # --- Passo 2: Analisar Dados Históricos de Geração (PASSADO) ---
+        df = get_inverter_data()
+        df.set_index('Time', inplace=True)
+        # Calcula a média de geração de energia para cada hora do dia
+        average_generation_by_hour = df['Power(W)'].groupby(df.index.hour).mean()
+        historical_pattern = ""
+        for hour, avg_power in average_generation_by_hour.items():
+            historical_pattern += f"- {hour:02d}h: Média de {avg_power:.0f} W\n"
+
+        # --- Passo 3: Montar o Prompt e Consultar a IA ---
+        model = genai.GenerativeModel("gemini-1.5-flash")
+        prompt = f"""
+        Você é um especialista em otimização de energia. Seu objetivo é encontrar a melhor janela de 2 horas nas próximas 24 horas para executar uma tarefa de alto consumo ('{task_info}').
+
+        Use os seguintes dados para tomar sua decisão:
+
+        1. PREVISÃO DE TEMPO (próximas 24h):
+        {hourly_forecast}
+
+        2. PADRÃO DE GERAÇÃO HISTÓRICO (média de geração por hora):
+        {historical_pattern}
+
+        Analise a previsão de nebulosidade e o histórico de geração. A melhor janela de tempo é aquela com a MENOR nebulosidade prevista e que coincide com o MAIOR pico de geração histórica.
+
+        Responda APENAS com um JSON no seguinte formato:
+        {{"horario_recomendado": "HH:00", "justificativa": "Uma frase curta explicando o porquê."}}
+        """
+        
+        response = model.generate_content(prompt)
+        
+        # Tenta converter a resposta da IA em JSON
+        suggestion = json.loads(response.text)
+        
+        return jsonify(suggestion)
+
+    except Exception as e:
+        print(f"ERRO no otimizador: {e}")
+        # Retorna uma resposta padrão em caso de erro na API ou na IA
+        return jsonify({
+            "horario_recomendado": "13:00",
+            "justificativa": "O período da tarde geralmente oferece a melhor geração solar."
+        })
+
+@app.route('/api/reports/insights', methods=['GET'])
+def get_report_insights():
+    user_email = request.args.get('email')
+    if not user_email:
+        return jsonify({"error": "Email do usuário é obrigatório"}), 400
+
+    try:
+        df = get_inverter_data()
+        if df is None or df.empty:
+            return jsonify({"insights": "Não há dados suficientes para gerar uma análise."})
+
+        # --- Passo 1: Calcular as métricas do último mês ---
+        
+        # Define o período do "último mês" (últimos 30 dias a partir do último registro)
+        end_date = df['Time'].max()
+        start_date = end_date - timedelta(days=30)
+        
+        last_month_data = df[(df['Time'] >= start_date) & (df['Time'] <= end_date)]
+
+        if last_month_data.empty:
+            return jsonify({"insights": "Não há dados suficientes do último mês para gerar uma análise."})
+
+        # Métrica 1: Geração total no período
+        generation_last_month = last_month_data['Total Generation(kWh)'].max() - last_month_data['Total Generation(kWh)'].min()
+
+        # Métrica 2: Dia de pico de geração
+        daily_generation = last_month_data.set_index('Time').resample('D')['Total Generation(kWh)'].apply(lambda x: x.max() - x.min())
+        peak_day = daily_generation.idxmax().strftime('%d de %B') # Ex: "15 de Setembro"
+        peak_day_generation = daily_generation.max()
+
+        # Métrica 3: Dispositivo de maior consumo (simulado para exemplo)
+        devices_db = read_json_file(DEVICES_FILE, {})
+        user_devices = devices_db.get(user_email, [])
+        top_consumer_device = "Nenhum dispositivo cadastrado"
+        if user_devices:
+            # Simplesmente pega o primeiro dispositivo como exemplo de "maior consumidor"
+            top_consumer_device = user_devices[0]['name']
+
+        # --- Passo 2: Montar o prompt e consultar a IA ---
+        model = genai.GenerativeModel("gemini-1.5-flash")
+        prompt = f"""
+        Você é um analista de dados especialista em energia solar. Com base nas seguintes métricas de performance dos últimos 30 dias de um cliente, escreva um resumo em 3 bullets.
+        
+        Use um tom amigável e informativo. Use emojis e negrito para destacar informações.
+
+        Métricas do Cliente:
+        - Geração total nos últimos 30 dias: {generation_last_month:.2f} kWh
+        - Dia de maior geração: {peak_day}, com {peak_day_generation:.2f} kWh gerados.
+        - Dispositivo frequentemente usado: {top_consumer_device}
+
+        Estrutura da resposta:
+        - Bullet 1 (Elogio): Parabenize o cliente pela geração total, mencionando o dia de pico.
+        - Bullet 2 (Ponto de Atenção): Crie um ponto de atenção genérico sobre o consumo do dispositivo mencionado, sugerindo otimização.
+        - Bullet 3 (Recomendação): Dê uma recomendação geral para maximizar a economia, como usar aparelhos de alto consumo durante o dia.
+        """
+
+        response = model.generate_content(prompt)
+        
+        # Retorna o texto gerado pela IA
+        return jsonify({"insights": response.text})
+
+    except Exception as e:
+        print(f"ERRO ao gerar insights: {e}")
+        return jsonify({"error": "Não foi possível gerar a análise no momento."}), 500
+
+@app.route('/api/dashboard-insights', methods=['GET'])
+def get_dashboard_insights():
+    user_email = request.args.get('email')
+    if not user_email: return jsonify([]), 400
+
+    try:
+        # --- Passo 1: Coletar Métricas para a IA ---
+        kpis_response = get_kpis()
+        kpis_data = kpis_response.get_json()
+        battery_response = get_battery_status()
+        battery_data = battery_response.get_json()
+
+        # --- Passo 2: Montar o Prompt Avançado ---
+        # Instruímos a IA a gerar uma lista de insights em formato JSON
+        model = genai.GenerativeModel("gemini-1.5-flash")
+        prompt = f"""
+        Você é um analista de dados de energia. Analise os dados do usuário abaixo e gere uma lista de 3 insights curtos e úteis.
+        Os insights devem ser de tipos diferentes: um elogio, um alerta e uma dica de otimização.
+
+        Dados do Usuário:
+        - Geração de hoje: {kpis_data.get('todayGenKwh', 0):.2f} kWh
+        - Consumo atual: {kpis_data.get('houseLoadKw', 0):.2f} kW
+        - Status da bateria: {battery_data.get('charged_percentage', 0)}% e {battery_data.get('status_texto')}
+        - Economia do mês: R$ {kpis_data.get('savingsThisMonth', 0):.2f}
+
+        Sua resposta DEVE SER APENAS um array JSON válido, sem nenhum texto antes ou depois.
+        Cada objeto no array deve ter as chaves "type" e "text".
+        Tipos válidos: "elogio", "alerta", "dica".
+
+        Exemplo de resposta:
+        [
+            {{"type": "elogio", "text": "🌞 Parabéns! Sua geração hoje está excelente e você já economizou R$ {kpis_data.get('savingsThisMonth', 0):.2f} este mês!"}},
+            {{"type": "alerta", "text": "⚠️ Atenção: seu consumo atual está um pouco alto. Considere desligar aparelhos que não estão em uso."}},
+            {{"type": "dica", "text": "💡 Dica: Com a bateria em {battery_data.get('charged_percentage', 0)}%, este é um bom momento para usar aparelhos de alto consumo."}}
+        ]
+        """
+        
+        response = model.generate_content(prompt)
+        # Limpa a resposta para garantir que seja um JSON válido
+        cleaned_response = response.text.strip().replace('```json', '').replace('```', '')
+        insights = json.loads(cleaned_response)
+        
+        return jsonify(insights)
+
+    except Exception as e:
+        print(f"ERRO ao gerar insights para o stack: {e}")
+        # Retorna uma lista de sugestões padrão em caso de erro, para não quebrar o frontend
+        fallback_insights = [
+            {"type": "dica", "text": "💡 Use seus aparelhos de maior consumo durante o dia para aproveitar a energia solar gratuita."},
+            {"type": "elogio", "text": "🌞 Continue acompanhando seus dados para maximizar sua economia de energia!"},
+            {"type": "alerta", "text": "⚠️ Lembre-se de verificar a limpeza dos seus painéis solares periodicamente."}
+        ]
+        return jsonify(fallback_insights)
+    
+# Rota para BUSCAR o histórico de conversas de um usuário
+@app.route('/api/chat/history', methods=['GET'])
+def get_chat_history():
+    user_email = request.args.get('email')
+    if not user_email:
+        return jsonify({"error": "Email do usuário é obrigatório"}), 400
+
+    all_histories = read_json_file(CHAT_HISTORY_FILE, {})
+    user_history = all_histories.get(user_email, {})
+
+    return jsonify(user_history)
+
+# Rota para SALVAR o histórico de conversas de um usuário
+@app.route('/api/chat/history', methods=['POST'])
+def save_chat_history():
+    data = request.get_json()
+    user_email = data.get('email')
+    conversations = data.get('conversations')
+
+    if not user_email or conversations is None:
+        return jsonify({"error": "Email e histórico são obrigatórios"}), 400
+
+    all_histories = read_json_file(CHAT_HISTORY_FILE, {})
+    all_histories[user_email] = conversations
+    write_json_file(CHAT_HISTORY_FILE, all_histories)
+
+    return jsonify({"message": "Histórico salvo com sucesso."})
 
 # --- INICIALIZAÇÃO DO SERVIDOR ---
-
-# Este bloco de código só é executado quando o script é rodado diretamente (não quando é importado).
+# Este bloco garante que o servidor só rode quando o script for executado diretamente.
 if __name__ == '__main__':
-    # Inicia o servidor de desenvolvimento do Flask.
-    # - debug=True: ativa o modo de depuração, que mostra erros detalhados no navegador e reinicia o servidor automaticamente quando o código é alterado.
-    # - port=5000: especifica que o servidor deve rodar na porta 5000.
+    # 'debug=True' reinicia o servidor automaticamente quando você salva o arquivo.
     app.run(debug=True, port=5000)

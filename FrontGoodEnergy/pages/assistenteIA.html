@@ -11,19 +11,14 @@
     <div class="app">
         <aside class="sidebar">
             <div class="brand"><img src="/FrontGoodEnergy/assets/GoodEnergyLogo.png"><h1>GoodEnergy</h1></div>
-            <nav class="nav">
-                </nav>
+            <nav class="nav"></nav>
             <div class="foot">Olá, <span id="userName">Usuário</span></div>
         </aside>
-
         <main>
             <div class="topbar">
                 <a href="chatbot.html" class="ai-assistant-btn active" id="linkToChatPage">Assistente IA</a>
-                
-                <div class="actions">
-                    </div>
+                <div class="actions"></div>
             </div>
-            
             <div class="content">
                 <div class="hero">
                     <div class="panel">
@@ -35,7 +30,6 @@
                         <a href="chatbot.html" class="ai-assistant-btn mt18">Converse com Seu Assistente de IA Agora</a>
                     </div>
                 </div>
-
                 <div class="grid-2 mt18">
                     <div class="card">
                         <h3>Otimização de Consumo</h3>
@@ -46,37 +40,39 @@
                         <p class="muted">Tire suas dúvidas sobre instalação, manutenção ou funcionamento do seu sistema solar a qualquer momento.</p>
                     </div>
                 </div>
-
-                
-                
                 <section class="final-cta-section">
                     <h2>Maximize Sua Experiência com Energia Inteligente!</h2>
                     <p class="muted">Você já faz parte do futuro da energia. Explore todo o potencial do seu Assistente de IA, otimize seu consumo e descubra novas funcionalidades para tornar sua casa ainda mais conectada e eficiente.</p>
                     <div class="cta-actions">
-
                         <a href="#chat-widget" class="cta-button icon-link js-toggle-chat">
                             <img src="/FrontGoodEnergy/assets/suporte.png" class="icon" alt="Ícone Suporte">
                             Suporte e Manutenção
                         </a>
-
                         <a href="#home-automation" class="cta-button icon-link">
                             <img src="/FrontGoodEnergy/assets/casa.png" class="icon" alt="Ícone Casa Inteligente">
                             Casa Inteligente
                         </a>
-
                         <a href="#chat-widget" class="cta-button icon-link js-toggle-chat">
                             <img src="/FrontGoodEnergy/assets/assistente.png" class="icon" alt="Ícone Assistente">
-
                             Fale com o Assistente
                         </a>
                     </div>
                 </section>
             </div>
-            </main>
+        </main>
     </div>
-    <div id="zenModeOverlay" class="zen-mode-overlay hide"> <h2>Modo Zen Ativado</h2> <p>Clique em qualquer lugar para voltar.</p> </div>
+    <div id="confirmModal" class="modal-overlay hide">
+    <div class="modal-panel">
+        <h3 id="confirmTitle">Confirmar Ação</h3>
+        <p id="confirmMessage" class="mt12" style="color: var(--muted);"></p>
+        <div class="confirm-buttons">
+            <button id="cancelBtn" class="icon-btn secondary">Cancelar</button>
+            <button id="confirmBtn" class="icon-btn">Confirmar</button>
+        </div>
+    </div>
+</div>
     <div id="loader-overlay" class="loader-overlay hide"><div class="loader"></div></div>
     <div id="toast-container" class="toast-container"></div>
     <script src="../js/app.js"></script>
-    </body>
+</body>
 </html>
