@@ -3,4 +3,14 @@ Flask-Cors
 pandas
 Werkzeug
 
+#-------------------------------------------------
+# DEPEDENCIAS PARA RODAR O PROJETO LOCALMENTE:
+
 #pip install -r requirements.txt
+#pip install google.generativeai
+#pip install dotenv
+#python app.py
+
+#-------------------------------------------------
+
+
