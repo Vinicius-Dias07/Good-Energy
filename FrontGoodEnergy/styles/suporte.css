@@ -176,3 +176,105 @@ h2 {
         font-size: 0.9rem;
     }
 }
+
+/* Estilo para o Ícone no Cabeçalho */
+.header-icon-container {
+    margin-bottom: 20px;
+}
+
+.header-icon {
+    width: 80px; /* Ajuste o tamanho do ícone conforme necessário */
+    height: 80px;
+    border-radius: 50%; /* Se você quiser um formato circular */
+    object-fit: cover;
+    border: 3px solid var(--accent-color); /* Borda para destaque */
+    padding: 5px; /* Espaçamento interno */
+}
+
+/* Garante que o header esteja bem formatado */
+header {
+    text-align: center;
+    padding-top: 4rem;
+    padding-bottom: 2rem;
+}
+
+/* Seções com Destaque Visual */
+.faq-section, .contact-section {
+    background-color: var(--secondary-color);
+    padding: 2.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    /* NOVO: Sombra sutil para profundidade */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4); 
+    /* NOVO: Borda sutil para separar do fundo */
+    border: 1px solid var(--border-color);
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    /* A linha decorativa agora será um fundo sutil */
+    border-bottom: none; 
+    padding-bottom: 0.5rem;
+    display: block; 
+    width: fit-content;
+    margin: 0 auto 1.5rem auto; 
+    /* NOVO: Fundo gradiente sutil abaixo */
+    border-bottom: 3px solid transparent; 
+    border-image: linear-gradient(90deg, transparent 5%, var(--accent-color), transparent 95%);
+    border-image-slice: 1;
+}
+
+/* Estilo copiado/mantido de suas classes globais */
+.icon-btn {
+    /* NOVO: Fundo um pouco mais escuro para destaque */
+    background: var(--primary-color); 
+    border: 1px solid var(--border-color); 
+    color: var(--text-color);
+    padding: 10px; 
+    border-radius: 50%; /* Faz ele virar um círculo perfeito */
+    display: flex; 
+    align-items: center;
+    justify-content: center; 
+    transition: all 0.2s ease;
+    /* NOVO: Sombra para dar profundidade e destaque */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); 
+}
+
+.icon-btn:hover { 
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    transform: scale(1.0); /* Aumenta um pouco mais ao passar o mouse */
+    box-shadow: 0 6px 15px rgba(52, 152, 219, 0.3); /* Sombra colorida no hover */
+}
+
+/* Estilo copiado/mantido de suas classes globais */
+.icon-btn {
+    /* NOVO: Fundo um pouco mais escuro para destaque (mantido) */
+    background: var(--primary-color); 
+    border: 1px solid var(--border-color); 
+    color: var(--text-color);
+    /* Remove padding e border-radius aqui */
+    display: flex; 
+    align-items: center;
+    justify-content: center; 
+    transition: all 0.2s ease;
+    /* NOVO: Sombra para dar profundidade e destaque (mantida) */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); 
+    text-decoration: none; /* Garante que não tenha sublinhado no texto */
+    font-weight: bold;
+}
+
+/* NOVO: Estilo para o botão de voltar com texto */
+.icon-btn.with-text {
+    padding: 10px 15px; /* Padding ajustado para o formato retangular */
+    border-radius: 8px; /* Borda arredondada para o retângulo */
+    gap: 8px; /* Espaçamento entre o ícone e o texto */
+    width: auto; /* Permite que o botão se ajuste ao conteúdo */
+}
+
+/* Garante que o ícone tenha um tamanho fixo */
+.icon-btn.with-text svg {
+    min-width: 20px;
+}
