@@ -16,5 +16,16 @@
       "on": true,
       "watts": 200
     }
+  ],
+  "goodenergy@dev.com.br": [
+    {
+      "id": "9f3c4e96-32bd-4d85-8033-b3708265e803",
+      "name": "Alexa",
+      "room": "quarto",
+      "type": "other",
+      "on": true,
+      "watts": 60,
+      "cost_per_hour": "R$ 0.00"
+    }
   ]
 }
