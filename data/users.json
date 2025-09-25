@@ -7,21 +7,16 @@
     "theme": "padrão",
     "colorTheme": "dark"
   },
-  "davixavieerr@gmail.com": {
-    "name": "Davi Xavier",
-    "email": "davixavieerr@gmail.com",
-    "password": "scrypt:32768:8:1$TsROuTOsM5rVmuja$019143152f0e5c3f692cce081dd919f780cc11460124ca44287cee71f848e638ddb8501b87618b00fac9490822ed49f7a8c58f347c56d720bbd958356720d02b",
-    "plan": "Starter",
-    "theme": "padrão",
-    "colorTheme": "dark"
-  },
   "goodenergy@dev.com.br": {
     "name": "Fiap",
     "email": "goodenergy@dev.com.br",
     "password": "scrypt:32768:8:1$Og7Uf1FPqxMnahfa$ac1965000e37a2c902b69b26b9ef7a1668c01d4d4384318e12ba8db50791914bc3a2421fa7d9dc6f5d1906be72c942d9c7cda6e90f0dabd2c7844d9bd75b2d6d",
     "plan": "Starter",
     "theme": "padrão",
-    "colorTheme": "dark"
+    "colorTheme": "dark",
+    "tariff": 0.95,
+    "savingsGoal": 500,
+    "notifications": "enabled"
   },
   "lasanha123@gmail.com": {
     "name": "bruno",

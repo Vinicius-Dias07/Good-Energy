@@ -2,5 +2,7 @@ Flask
 Flask-Cors
 pandas
 Werkzeug
+google.generativeai
+dotenv
 
 #pip install -r requirements.txt
