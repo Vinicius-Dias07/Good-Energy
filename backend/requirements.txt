@@ -2,6 +2,8 @@ Flask
 Flask-Cors
 pandas
 Werkzeug
+python-dotenv
+google-generativeai
 
 #-------------------------------------------------
 # DEPEDENCIAS PARA RODAR O PROJETO LOCALMENTE:
