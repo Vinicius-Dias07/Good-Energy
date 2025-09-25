@@ -2,7 +2,22 @@ Flask
 Flask-Cors
 pandas
 Werkzeug
+<<<<<<< HEAD
 google.generativeai
 dotenv
+=======
+python-dotenv
+google-generativeai
+
+#-------------------------------------------------
+# DEPEDENCIAS PARA RODAR O PROJETO LOCALMENTE:
 
 #pip install -r requirements.txt
+#pip install google.generativeai
+#pip install dotenv
+#python app.py
+
+#-------------------------------------------------
+
+>>>>>>> 6d3704fcbf40c9c6486269e0c09353939064cfcf
+

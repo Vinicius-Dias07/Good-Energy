@@ -50,11 +50,45 @@ a { color: inherit; text-decoration: none; }
 button { cursor: pointer; }
 .hide { display: none !important; }
 
+<<<<<<< HEAD
 /* ... (Barra de Rolagem) ... */
 html { scrollbar-width: thin; scrollbar-color: #505d6e #374151; }
 ::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-track { background: #374151; border-radius: 10px; }
 ::-webkit-scrollbar-thumb { background: #505d6e; border-radius: 10px; }
+=======
+/* LAYOUT PRINCIPAL */
+.app { 
+  display: flex;
+  width: 100%;
+  /* ALTERAÇÃO: Garante que o app ocupe 100% da altura da tela */
+  height: 100vh; 
+}
+.sidebar {
+  width: 260px; height: 100vh;
+  overflow: auto;
+  position: fixed;
+  top: 0; left: 0;
+  background: var(--bg-soft); border-right: 1px solid var(--grid);
+  padding: 22px 14px; display: flex; flex-direction: column;
+}
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 260px;
+  /* ALTERAÇÃO: Garante que o main ocupe 100% da altura do viewport */
+  height: 100vh;
+}
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 24px;
+  gap: 18px;
+}
+>>>>>>> 6d3704fcbf40c9c6486269e0c09353939064cfcf
 
 
 /* ==========================================================================
@@ -279,6 +313,407 @@ body[data-colortheme="light"] .conversation-history ul li.active { background: #
     .kpis { grid-template-columns: repeat(2, 1fr); }
 }
 
+<<<<<<< HEAD
+=======
+/* Estilos Específicos da Página do Assistente de IA */
+.chat-widget {
+  display: flex;
+  flex-direction: column;
+  /* JÁ EXISTENTE: height: 100%; */
+  height: 100%;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--grid);
+  background: var(--bg-soft);
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+}
+.chat-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--text);
+}
+.chat-body {
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  /* ALTERAÇÃO: Começa no topo (start) para que a mensagem de boas-vindas fique em cima */
+  justify-content: flex-start; 
+}
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.message {
+  padding: 12px;
+  border-radius: 25px;
+  margin-bottom: 5px;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+.message.user {
+  align-self: flex-end;
+  background: var(--primary);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+.message.bot {
+  align-self: flex-start;
+  background: var(--bg-soft);
+  border-bottom-left-radius: 4px;
+  color: var(--text);
+}
+.chat-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  border-top: 1px solid var(--grid);
+  background: var(--bg-soft);
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+}
+.chat-input input {
+  flex-grow: 1;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  padding: 12px 14px;
+  border-radius: 12px;
+  outline: none;
+  font-size: 0.95rem;
+  order: 2;
+  min-width: 0;
+}
+.chat-input input::placeholder {
+  color: var(--muted);
+}
+.chat-input .icon-btn {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  padding: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+.chat-input .icon-btn:hover {
+  color: var(--primary);
+  transform: scale(1.1);
+}
+#chat-mic-btn { order: 1; }
+#chat-send-btn { order: 3; }
+
+/* LAYOUT DAS PÁGINAS (Hero, etc.) */
+.hero { 
+    background-image: url('../assets/ceu.png'); 
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    padding: 100px 20px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 450px;
+}
+.hero .panel {
+    width: min(700px, 95vw); 
+    padding: 28px; 
+    border-radius: 18px;
+    background: rgba(10, 15, 26, .75); 
+    border: 1px solid rgba(255, 255, 255, .12);
+    backdrop-filter: blur(8px); 
+    box-shadow: var(--shadow);
+}
+.hero h1.brand-lg {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+}
+.hero .brand-lg img {
+    width: 60px;
+    height: 60px;
+    margin-right: 10px;
+}
+.hero p.muted { 
+    max-width: 500px;
+    margin: 0 auto;
+    font-size: 1.05rem;
+    line-height: 1.5;
+}
+.hero .ai-assistant-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    font-size: 1.1rem;
+    padding: 16px 30px;
+    border-radius: 14px;
+    margin-top: 18px; 
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+    display: inline-block;
+}
+.hero .ai-assistant-btn:hover {
+    background: rgba(59, 130, 246, 0.9);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(59, 130, 246, 0.4);
+}
+.home-automation-section {
+    padding: 60px 20px;
+    background: var(--bg-soft); 
+    border-top: 1px solid var(--grid);
+    border-bottom: 1px solid var(--grid);
+    text-align: center;
+}
+.home-automation-section h3 {
+    margin: 0 0 10px 0; font-size: 1rem; color: var(--text); opacity: 0.9;
+}
+.home-automation-section p {
+    max-width: 600px;
+    margin: 0 auto;
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+.final-cta-section {
+    padding: 60px 20px;
+    background: var(--bg-soft); 
+    border-top: 1px solid var(--grid);
+    text-align: center;
+}
+.final-cta-section h2 {
+    font-size: 1.8rem;
+    color: var(--text);
+    margin-bottom: 20px;
+}
+.final-cta-section p {
+    max-width: 600px;
+    margin: 0 auto 30px auto;
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+.cta-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 24px;
+    border-radius: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: var(--shadow);
+    border: none;
+    cursor: pointer;
+}
+.cta-button .icon {
+    width: 20px;
+    height: 20px;
+    stroke-width: 1.8;
+    fill: none;
+    stroke: currentColor;
+}
+.cta-button.icon-link {
+    background: var(--bg-soft);
+    color: var(--text);
+    border: 1px solid var(--grid);
+}
+.cta-button.icon-link:hover {
+    background: var(--primary-glow);
+    color: var(--primary);
+    border-color: var(--primary);
+}
+.cta-button.icon-link:hover .icon {
+    stroke: var(--primary);
+}
+.topbar .ai-assistant-btn {
+    background: var(--bg-soft);
+    border: 1px solid rgba(255, 255, 255, .08);
+    color: var(--muted);
+    padding: 10px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+.topbar .ai-assistant-btn:hover {
+    border-color: var(--primary);
+    color: var(--text);
+}
+.topbar .ai-assistant-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* Histórico de Conversas */
+.conversation-history {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 14px;
+    margin-top: 20px;
+}
+.conversation-history h4 {
+    font-size: 14px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #2a3b55;
+    padding-bottom: 5px;
+}
+.conversation-history ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.conversation-history ul li {
+    background: #1f2e45;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    word-wrap: break-word;
+    transition: background 0.2s ease-in-out;
+}
+.conversation-history ul li:hover {
+    background: #0a9de0;
+}
+.conversation-history ul li.active {
+    background: #2a3b55;
+    border: 1px solid #080a9e;
+    color: #fff;
+}
+.new-conversation-btn {
+    width: 100%;
+    padding: 12px 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    background: #0e0469;
+    color: #f5f0f0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: left;
+    transition: background 0.2s ease-in-out;
+}
+.new-conversation-btn:hover {
+    background: #0a4ee0;
+}
+
+/* OUTROS COMPONENTES */
+.back-to-assistant-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: var(--bg-soft);
+  border: 1px solid var(--grid);
+  color: var(--muted);
+  transition: all 0.2s ease;
+}
+.back-to-assistant-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+.delete-account-container {
+  border: 1px solid var(--danger);
+  background-color: rgba(239, 68, 68, 0.05);
+  padding: 20px;
+  margin-top: 18px;
+}
+.delete-account-container h2 {
+  margin-top: 0;
+  color: var(--danger);
+}
+.delete-button-initial {
+  background-color: var(--danger);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+.delete-button-initial:hover { background-color: #cc0000; }
+.confirmation-box {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 15px;
+}
+.warning-text {
+  color: #ffb8b8;
+  font-size: 0.9em;
+  border-left: 3px solid var(--danger);
+  padding-left: 10px;
+}
+.confirmation-box label {
+  font-weight: bold;
+  color: var(--muted);
+}
+.button-group {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+.button-group button {
+  border: none;
+  padding: 10px 15px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.cancel-button {
+  background-color: var(--bg-soft);
+  color: var(--text);
+  border: 1px solid var(--grid);
+}
+.confirm-delete-button {
+  background-color: var(--danger);
+  color: white;
+}
+.confirm-delete-button:disabled {
+  background-color: #ff9999;
+  cursor: not-allowed;
+}
+.error-message {
+  color: #f87171;
+  background-color: rgba(153, 27, 27, 0.2);
+  border: 1px solid var(--danger);
+  padding: 10px;
+  border-radius: 12px;
+  text-align: center;
+}
+.grid-2-interno {
+  display: grid;
+  grid-template-columns: auto 1fr; 
+  gap: 40px;
+  align-items: center;
+}
+>>>>>>> 6d3704fcbf40c9c6486269e0c09353939064cfcf
 @media (max-width: 900px) {
     .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
     main { margin-left: 0; }
@@ -286,8 +721,174 @@ body[data-colortheme="light"] .conversation-history ul li.active { background: #
 }
 
 @media (max-width: 600px) {
+<<<<<<< HEAD
     .kpis { grid-template-columns: 1fr; }
     .weather-info { flex-direction: column; align-items: flex-start; }
     .weather-location, .weather-forecast { text-align: left; margin-top: 10px; margin-left: 0; }
     .weather-extra-details { border-left: none; padding-left: 0; }
+=======
+  .weather-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .weather-location {
+    text-align: left;
+    margin-top: 10px;
+  }
+}
+.bateria-fluxo {
+  background-color: var(--bg-soft);
+  padding: 10px 15px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+}
+.weather-info {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.weather-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.weather-main img {
+  width: 50px;
+  height: 50px;
+}
+.weather-details h3 {
+  margin: 0;
+  font-size: 2rem;
+}
+.weather-details span {
+  text-transform: capitalize;
+  color: var(--muted);
+}
+.weather-extra-details {
+  display: flex;
+  gap: 20px;
+  border-left: 1px solid var(--grid);
+  padding-left: 20px;
+}
+.weather-extra-details div {
+  display: flex;
+  flex-direction: column;
+}
+.weather-extra-details span {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+.weather-extra-details strong {
+  font-size: 1.1rem;
+}
+.weather-location {
+  margin-left: auto;
+  text-align: right;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.weather-location strong {
+    color: var(--text);
+}
+.chat-input .icon-btn .icon {
+  width: 30px; /* Reduz o tamanho do ícone */
+  height: 30px;
+}
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--grid);
+  background: var(--bg-soft);
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+  /* Adicione a linha abaixo */
+  gap: 20px;
+}
+
+/* Estilização da barra de rolagem para navegadores WebKit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+    width: 10px; /* Largura da barra de rolagem */
+}
+
+::-webkit-scrollbar-track {
+    background: #374151; /* Cor do trilho da barra de rolagem */
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #505d6e; /* Cor da barra de rolagem que você move */
+    border-radius: 10px;
+}
+
+/* Opcional: Estilização para o Firefox */
+/* Esta é uma forma mais simples, apenas muda a largura e a cor */
+html {
+    scrollbar-width: thin; /* 'auto' ou 'thin' */
+    scrollbar-color: #505d6e #374151; /* 'thumb' 'track' */
+}
+/* Estilo específico para o botão de exclusão */
+.delete-conversation-btn {
+  /* Garante que o botão fique no lado direito, se for o único elemento no topbar */
+  margin-left: auto;
+  
+  /* Cor do ícone - use a cor de perigo (danger) */
+  color: var(--danger); 
+  border-color: var(--danger);
+  transition: all 0.2s ease;
+}
+
+.delete-conversation-btn:hover {
+  background: var(--danger);
+  color: white; /* Ícone branco no hover */
+  transform: scale(1.05);
+}
+/* Estilo para o botão de exclusão individual na sidebar */
+.delete-current-btn {
+    /* Posicionamento: Empurra o botão para a parte inferior */
+    margin-top: auto; 
+    margin-bottom: 10px; /* Espaço entre o botão e o foot/olá usuário */
+    
+    /* Estilo visual */
+    width: 100%;
+    padding: 12px 10px;
+    
+    background: rgba(239, 68, 68, 0.1); /* Um fundo sutil de perigo */
+    color: var(--danger);
+    border: 1px solid var(--danger);
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    transition: background 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.delete-current-btn:hover {
+    background: var(--danger);
+    color: white;
+}
+
+/* Garante que o .sidebar se comporte como um flex container vertical para o 'margin-top: auto' funcionar */
+.sidebar {
+    /* Seu código já tem: */
+    /* display: flex; 
+    flex-direction: column; */
+    /* Garante que o botão seja empurrado para baixo */
+}
+
+/* Garante que o histórico preencha o espaço corretamente, empurrando o botão de exclusão e o foot */
+.conversation-history {
+    flex-grow: 1; 
+>>>>>>> 6d3704fcbf40c9c6486269e0c09353939064cfcf
 }
