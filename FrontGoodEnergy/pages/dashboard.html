@@ -15,34 +15,38 @@
             <nav class="nav"></nav>
             <div class="foot">Olá, <span id="userName">Usuário</span></div>
         </aside>
-
         <main>
             <div class="topbar">
                 <a href="assistenteIA.html" class="ai-assistant-btn">Assistente IA</a>
                 <div class="actions">
                     <div style="position: relative;">
                         <button id="notificationsBtn" class="icon-btn">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                            <img src="/FrontGoodEnergy/assets/notificacoes.png" alt="Notificações" class="icon-img">
                             <span id="notificationBadge" class="badge hide"></span>
                         </button>
                         <div id="notificationsPopup" class="notifications-popup hide">
                             <div id="popupAlerts" class="list"></div>
                         </div>
                     </div>
-                    <button id="zenModeBtn" class="icon-btn" title="Modo Zen">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    </button>
                 </div>
             </div>
-
             <div class="content">
                 <div class="kpis">
                     <div class="card kpi"> <h3>Geração Hoje</h3> <div id="kpiGen" class="value">-- kWh</div> </div>
                     <div class="card kpi"> <h3>Consumo da Casa</h3> <div id="kpiUse" class="value">-- kW</div> <div class="sub">Consumo em tempo real</div> </div>
                     <div class="card kpi"> <h3>Economia Estimada Hoje</h3> <div id="kpiSaving" class="value">R$ --</div> </div>
+                    
+                    <div id="aiSmartStackContainer" class="smart-stack-container card kpi">
+                        <div class="smart-stack-slides" id="aiSmartStackSlides">
+                            </div>
+                        <div class="stack-nav">
+                            <button id="stackPrevBtn">▲</button>
+                            <button id="stackNextBtn">▼</button>
+                        </div>
+                        <div class="stack-pagination" id="stackPagination"></div>
+                    </div>
                 </div>
-
-               <div class="card">
+                <div class="card">
                     <div class="weather-info">
                         <div class="weather-main">
                             <img id="weather-icon" src="" alt="Ícone do tempo">
@@ -51,26 +55,33 @@
                                 <span id="weather-desc">--</span>
                             </div>
                         </div>
-                        
                         <div class="weather-extra-details">
-                            <div>
-                                <span>Umidade</span>
-                                <strong id="weather-humidity">-- %</strong>
-                            </div>
-                            <div>
-                                <span>Vento</span>
-                                <strong id="weather-wind">-- km/h</strong>
-                            </div>
-                            <div>
-                                <span>Nuvens</span>
-                                <strong id="weather-clouds">-- %</strong>
-                            </div>
+                            <div><span>Umidade</span><strong id="weather-humidity">-- %</strong></div>
+                            <div><span>Vento</span><strong id="weather-wind">-- km/h</strong></div>
+                            <div><span>Nuvens</span><strong id="weather-clouds">-- %</strong></div>
                         </div>
-
                         <div class="weather-location">
                             <span>Previsão para:</span>
                             <strong id="weather-location-name">--</strong>
                         </div>
+
+                        <div class="weather-forecast">
+                            <span>Previsão de Geração (Amanhã):</span>
+                            <strong id="generationForecast">Calculando...</strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>🤖 Recomendações de Tarefas com IA</h3>
+                    <div class="task-optimizer">
+                        <select id="taskSelect">
+                            </select>
+                        <button id="optimizeTaskBtn" class="icon-btn">Encontrar Melhor Horário</button>
+                    </div>
+                    <div id="optimizerResult" class="optimizer-result hide">
+                        <h4>Horário Recomendado:</h4>
+                        <p id="recommendedTime">--</p>
+                        <small id="recommendationReason">--</small>
                     </div>
                 </div>
 
@@ -82,52 +93,83 @@
                         </div>
                     </div>
                 </div>
+                <div class="grid-2">
 
-                <div class="grid-destaque">
-                    <div class="card">
-                        <div class="grid-2-interno">
-                            <div class="chart-container" style="position: relative; width:100%;">
-                                <canvas id="batteryPieChart"></canvas>
-                            </div>
+    <div class="card">
+        <div class="grid-2-interno">
+            <div class="chart-container" style="position: relative; width:100%;">
+                <canvas id="batteryPieChart"></canvas>
+            </div>
+            <div>
+                <div class="bateria-status">
+                    <span>Status da Bateria:</span>
+                    <span class="tag success">Saudável</span>
+                </div>
+                <div class="bateria-fluxo">
+                    <span id="battery-status-text">--</span>
+                    <strong id="battery-flow-watts">-- W</strong>
+                </div>
+                <h3>Horários para Geração</h3>
+                <table>
+                    <thead>
+                        <tr><th>Período</th><th>Potencial</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>10:00 - 11:00</td><td><span class="tag success">Alto</span></td></tr>
+                        <tr><td>11:00 - 14:00</td><td><span class="tag success">Máximo</span></td></tr>
+                        <tr><td>14:00 - 15:00</td><td><span class="tag success">Alto</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-                            <div>
-                                <div class="bateria-status">
-                                    <span>Status da Bateria:</span>
-                                    <span class="tag success">Saudável</span>
-                                </div>
-                                <div class="bateria-fluxo">
-                                    <span id="battery-status-text">--</span>
-                                    <strong id="battery-flow-watts">-- W</strong>
-                                </div>
-                                <h3>Horários para Geração</h3>
-                                <table>
-                                    <thead>
-                                        <tr><th>Período</th><th>Potencial</th></tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr><td>10:00 - 11:00</td><td><span class="tag success">Alto</span></td></tr>
-                                        <tr><td>11:00 - 14:00</td><td><span class="tag success">Máximo</span></td></tr>
-                                        <tr><td>14:00 - 15:00</td><td><span class="tag success">Alto</span></td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                    </div>
-                </div>
+    <div class="card">
+    <div class="grid-2-interno">
+        <div class="chart-container" style="position: relative; width:100%;">
+            <canvas id="savingsGoalChart"></canvas>
+        </div>
+        <div>
+            <div class="bateria-status">
+                <span>Meta de Economia:</span>
+                <strong id="goalValueText" style="color: var(--text);">R$ --</strong>
+            </div>
+            <div class="bateria-fluxo">
+                <span>Progresso Atual:</span>
+                <strong id="currentSavingsText">R$ --</strong>
+            </div>
+            <h3>Resumo da Meta</h3>
+            <table>
+                <thead>
+                    <tr><th>Item</th><th>Valor</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Alcançado</td><td id="goalAchieved">-- %</td></tr>
+                    <tr><td>Restante</td><td id="goalRemaining">R$ --</td></tr>
+                    <tr><td>Projeção</td><td id="goalProjection">R$ --</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</div>
             </div>
         </main>
     </div>
-
-
-    
-    <div id="zenModeOverlay" class="zen-mode-overlay hide"> <h2>Modo Zen Ativado</h2> <p>Clique em qualquer lugar para voltar.</p> </div>
+    <div id="confirmModal" class="modal-overlay hide">
+    <div class="modal-panel">
+        <h3 id="confirmTitle">Confirmar Ação</h3>
+        <p id="confirmMessage" class="mt12" style="color: var(--muted);"></p>
+        <div class="confirm-buttons">
+            <button id="cancelBtn" class="icon-btn secondary">Cancelar</button>
+            <button id="confirmBtn" class="icon-btn">Confirmar</button>
+        </div>
+    </div>
+</div>
     <div id="loader-overlay" class="loader-overlay hide"><div class="loader"></div></div>
     <div id="toast-container" class="toast-container"></div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
-
-<script src="../js/app.js"></script>
+    <script src="../js/app.js"></script>
 </body>
 </html>

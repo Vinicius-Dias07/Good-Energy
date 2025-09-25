@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="shortcut icon" href="/FrontGoodEnergy/assets/GoodEnergyLogo.png" type="image/x-icon">
   <title>Configurações — GoodEnergy</title>
-  
   <link rel="stylesheet" href="../styles/styles.css" />
-
   <meta name="theme-color" content="#ffffff">
 </head>
 <body data-active="settings">
@@ -17,42 +15,66 @@
       <nav class="nav"></nav>
       <div class="foot">Olá, <span id="userName">Usuário</span></div>
     </aside>
-
     <main>
       <div class="topbar">
         <a href="assistenteIA.html" class="ai-assistant-btn">Assistente IA</a>
+        <div class="actions">
+                     <div style="position: relative;">
+                        <button id="notificationsBtn" class="icon-btn">
+                            <img src="/FrontGoodEnergy/assets/notificacoes.png" alt="Notificações" class="icon-img">
+                            <span id="notificationBadge" class="badge hide"></span>
+                        </button>
+                        <div id="notificationsPopup" class="notifications-popup hide">
+                            <div id="popupAlerts" class="list"></div>
+                        </div>
+                    </div>
+                </div>
       </div>
       <div class="content">
         <div class="card">
           <h3>Preferências</h3>
           <label>Tarifa de energia (R$/kWh)</label>
-          <input value="0.95">
+          <input value="0.95" id="tariffInput">
           <label class="mt12">Fuso horário</label>
           <select><option>GMT-2 (Fernando de Noronha)</option><option selected>GMT-3 (Brasília)</option><option>GMT-4 (Mato Grosso, Mato Grosso do Sul, Roraima, Rondônia e parte do Amazonas)</option></select>
+          <label class="mt12">Meta de Economia Mensal (R$)</label>
+          <input type="number" placeholder="Ex: 500" id="savingsGoalInput">
           <label class="mt12">Notificações</label>
-          <select><option>Ativadas</option><option>Silenciadas</option></select>
-          
+          <select id="notificationsSelect">
+              <option value="enabled">Ativadas</option>
+              <option value="disabled">Silenciadas</option>
+          </select>
           <label class="mt18">Aparência</label>
-          <div class="theme-switcher" id="colorThemeSwitcher">
-            <button data-colortheme="dark" title="Tema Escuro"></button>
-            <button data-colortheme="light" title="Tema Claro"></button>
-          </div>
+            <div class="theme-switcher" id="colorThemeSwitcher"> <button type="button" data-colortheme="dark" title="Tema Escuro"></button>
+              <button type="button" data-colortheme="light" title="Tema Claro"></button>
+            </div>
 
-          <label class="mt18">Tema da Interface</label>
-          <div class="theme-switcher" id="themeSwitcher">
-            <button data-theme="padrão" class="padrão" title="Padrão"></button>
-            <button data-theme="solar" class="solar" title="Solar"></button>
-            <button data-theme="aqua" class="aqua" title="Aqua"></button>
-            <button data-theme="forest" class="forest" title="Forest"></button>
+            <label class="mt18">Tema da Interface</label>
+            <div class="theme-switcher" id="themeSwitcher">
+              <button type="button" data-theme="padrão" class="padrão" title="Padrão"></button>
+              <button type="button" data-theme="solar" class="solar" title="Solar"></button>
+              <button type="button" data-theme="aqua" class="aqua" title="Aqua"></button>
+              <button type="button" data-theme="forest" class="forest" title="Forest"></button>
+              <button type="button" data-theme="violet" class="violet" title="Violeta"></button>
+              <button type="button" data-theme="rose" class="rose" title="Rosa"></button>
+            </div>
           </div>
-
           </div>
         </div>
     </main>
   </div>
-  <div id="zenModeOverlay" class="zen-mode-overlay hide"> <h2>Modo Zen Ativado</h2> <p>Clique em qualquer lugar para voltar.</p> </div>
-    <div id="loader-overlay" class="loader-overlay hide"><div class="loader"></div></div>
-    <div id="toast-container" class="toast-container"></div>
+  <div id="confirmModal" class="modal-overlay hide">
+    <div class="modal-panel">
+        <h3 id="confirmTitle">Confirmar Ação</h3>
+        <p id="confirmMessage" class="mt12" style="color: var(--muted);"></p>
+        <div class="confirm-buttons">
+            <button id="cancelBtn" class="icon-btn secondary">Cancelar</button>
+            <button id="confirmBtn" class="icon-btn">Confirmar</button>
+        </div>
+    </div>
+</div>
+  <div id="loader-overlay" class="loader-overlay hide"><div class="loader"></div></div>
+  <div id="toast-container" class="toast-container"></div>
   <script src="../js/app.js"></script>
 </body>
 </html>

@@ -15,39 +15,22 @@
             <nav class="nav"></nav>
             <div class="foot">Olá, <span id="userName">Usuário</span></div>
         </aside>
-
         <main>
             <div class="topbar">
                 <a href="assistenteIA.html" class="ai-assistant-btn">Assistente IA</a>
-            </div>
-            <div class="content">
-                <div class="card delete-account-container" id="delete-container">
-                    <h2>Gerenciamento da Conta</h2>
-
-                    <button id="deleteAccountBtn" class="delete-button-initial">
-                        Excluir Minha Conta
-                    </button>
-
-                    <div id="deleteConfirmBox" class="confirmation-box hide">
-                        <h4>Confirmar Exclusão de Conta</h4>
-                        <p class="warning-text">
-                            <strong>AVISO:</strong> Esta ação é permanente e irreversível. Todos os seus dados, incluindo seus dispositivos cadastrados, serão removidos.
-                        </p>
-                        <label for="deletePasswordInput">Para confirmar, digite sua senha:</label>
-                        <input id="deletePasswordInput" type="password" placeholder="Sua senha" />
-
-                        <p id="deleteErrorMsg" class="error-message hide"></p>
-                        
-                        <div class="button-group">
-                            <button id="deleteCancelBtn" class="cancel-button">
-                                Cancelar
-                            </button>
-                            <button id="deleteConfirmBtn" class="confirm-delete-button">
-                                Confirmar Exclusão
-                            </button>
+                <div class="actions">
+                     <div style="position: relative;">
+                        <button id="notificationsBtn" class="icon-btn">
+                            <img src="/FrontGoodEnergy/assets/notificacoes.png" alt="Notificações" class="icon-img">
+                            <span id="notificationBadge" class="badge hide"></span>
+                        </button>
+                        <div id="notificationsPopup" class="notifications-popup hide">
+                            <div id="popupAlerts" class="list"></div>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="content">
                 <div class="grid-2">
                     <div class="card">
                         <h3>Meu Perfil</h3>
@@ -65,11 +48,42 @@
                         <p class="sub">O plano Starter lhe dá acesso a todos os recursos básicos de monitoramento e controle da sua geração de energia.</p>
                     </div>
                 </div>
+                <div class="card delete-account-container" id="delete-container">
+                    <h2>Gerenciamento da Conta</h2>
+                    <button id="deleteAccountBtn" class="delete-button-initial">
+                        Excluir Minha Conta
+                    </button>
+                    <div id="deleteConfirmBox" class="confirmation-box hide">
+                        <h4>Confirmar Exclusão de Conta</h4>
+                        <p class="warning-text">
+                            <strong>AVISO:</strong> Esta ação é permanente e irreversível. Todos os seus dados, incluindo seus dispositivos cadastrados, serão removidos.
+                        </p>
+                        <label for="deletePasswordInput">Para confirmar, digite sua senha:</label>
+                        <input id="deletePasswordInput" type="password" placeholder="Sua senha" />
+                        <p id="deleteErrorMsg" class="error-message hide"></p>
+                        <div class="button-group">
+                            <button id="deleteCancelBtn" class="cancel-button">
+                                Cancelar
+                            </button>
+                            <button id="deleteConfirmBtn" class="confirm-delete-button">
+                                Confirmar Exclusão
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
-    
-    <div id="zenModeOverlay" class="zen-mode-overlay hide"> <h2>Modo Zen Ativado</h2> <p>Clique em qualquer lugar para voltar.</p> </div>
+    <div id="confirmModal" class="modal-overlay hide">
+    <div class="modal-panel">
+        <h3 id="confirmTitle">Confirmar Ação</h3>
+        <p id="confirmMessage" class="mt12" style="color: var(--muted);"></p>
+        <div class="confirm-buttons">
+            <button id="cancelBtn" class="icon-btn secondary">Cancelar</button>
+            <button id="confirmBtn" class="icon-btn">Confirmar</button>
+        </div>
+    </div>
+</div>
     <div id="loader-overlay" class="loader-overlay hide"><div class="loader"></div></div>
     <div id="toast-container" class="toast-container"></div>
     <script src="../js/app.js"></script>

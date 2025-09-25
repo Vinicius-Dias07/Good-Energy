@@ -15,35 +15,44 @@
             <nav class="nav"></nav>
             <div class="foot">Olá, <span id="userName">Usuário</span></div>
         </aside>
-
         <main>
             <div class="topbar">
-            <a href="assistenteIA.html" class="ai-assistant-btn">Assistente IA</a>
+                <a href="assistenteIA.html" class="ai-assistant-btn">Assistente IA</a>
+                <div class="actions">
+                     <div style="position: relative;">
+                        <button id="notificationsBtn" class="icon-btn">
+                            <img src="/FrontGoodEnergy/assets/notificacoes.png" alt="Notificações" class="icon-img">
+                            <span id="notificationBadge" class="badge hide"></span>
+                        </button>
+                        <div id="notificationsPopup" class="notifications-popup hide">
+                            <div id="popupAlerts" class="list"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="content">
                 <div class="card">
-                    <div class="row" style="border-bottom: none; padding-bottom: 0;">
-                        <h3>Controle de dispositivos</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                        <h3>Meus Dispositivos</h3>
                         <button id="addDeviceBtn" class="icon-btn">Adicionar Dispositivo</button>
                     </div>
-                    <table id="deviceTable" class="mt18">
+                    <table>
                         <thead>
                             <tr>
                                 <th>Nome</th>
-                                <th>Tipo</th>
-                                <th>Status</th>
-                                <th>Gasto</th>
-                                <th class="right">Ações</th>
+                                <th>Cômodo</th>
+                                <th>Gasto (Watts)</th>
+                                <th>Custo/h (Est.)</th> <th>Status</th>
+                                <th>Ações</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="deviceTableBody">
                             </tbody>
                     </table>
                 </div>
             </div>
         </main>
     </div>
-    
     <div id="addDeviceModal" class="modal-overlay hide">
         <div class="modal-panel">
             <button id="closeModalBtn" class="modal-close-btn">&times;</button>
@@ -51,10 +60,8 @@
             <form id="addDeviceForm" class="mt18">
                 <label>Nome do Dispositivo</label>
                 <input name="name" placeholder="Ex: Lâmpada do Escritório" required>
-                
                 <label class="mt12">Cômodo</label>
                 <input name="room" placeholder="Ex: Escritório" required>
-                
                 <label class="mt12">Tipo</label>
                 <select name="type" required>
                     <option value="light">Iluminação</option>
@@ -64,15 +71,22 @@
                     <option value="water">Aquecimento de Água</option>
                     <option value="other">Outro</option>
                 </select>
-                
                 <div class="form-actions">
                     <button class="icon-btn" type="submit">Adicionar</button>
                 </div>
             </form>
         </div>
     </div>
-    
-    <div id="zenModeOverlay" class="zen-mode-overlay hide"> <h2>Modo Zen Ativado</h2> <p>Clique em qualquer lugar para voltar.</p> </div>
+    <div id="confirmModal" class="modal-overlay hide">
+    <div class="modal-panel">
+        <h3 id="confirmTitle">Confirmar Ação</h3>
+        <p id="confirmMessage" class="mt12" style="color: var(--muted);"></p>
+        <div class="confirm-buttons">
+            <button id="cancelBtn" class="icon-btn secondary">Cancelar</button>
+            <button id="confirmBtn" class="icon-btn">Confirmar</button>
+        </div>
+    </div>
+</div>
     <div id="loader-overlay" class="loader-overlay hide"><div class="loader"></div></div>
     <div id="toast-container" class="toast-container"></div>
     <script src="../js/app.js"></script>

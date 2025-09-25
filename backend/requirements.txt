@@ -2,6 +2,10 @@ Flask
 Flask-Cors
 pandas
 Werkzeug
+<<<<<<< HEAD
+google.generativeai
+dotenv
+=======
 python-dotenv
 google-generativeai
 
@@ -15,4 +19,5 @@ google-generativeai
 
 #-------------------------------------------------
 
+>>>>>>> 6d3704fcbf40c9c6486269e0c09353939064cfcf
 
