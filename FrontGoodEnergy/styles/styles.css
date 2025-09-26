@@ -206,7 +206,7 @@ th { font-weight: 700; color: var(--muted); }
 /* --- Página do Chatbot --- */
 .chat-widget { display: flex; flex-direction: column; height: 100%; border-radius: var(--radius); overflow: hidden; }
 .chat-header { display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--grid); background: var(--bg-soft); }
-.chat-header img { width: 32px; height: 32px; }
+.chat-header img { width: 50px; height: 50px; }
 .chat-header h3 { margin: 0; font-size: 1.1rem; }
 .chat-body { flex-grow: 1; padding: 20px; overflow-y: auto; }
 .chat-messages { display: flex; flex-direction: column; gap: 10px; }
@@ -273,7 +273,7 @@ th { font-weight: 700; color: var(--muted); }
 
 body[data-colortheme="light"] .sidebar, 
 body[data-colortheme="light"] .icon-btn { background: #fff; }
-body[data-colortheme="light"] .topbar { background: rgba(249, 250, 251, 0.6); }
+body[data-colortheme="light"] .topbar { background: rgba(251, 249, 249, 0.6); }
 body[data-colortheme="light"] .nav a { color: var(--nav-link-color); }
 body[data-colortheme="light"] .nav a:hover { background: var(--bg-soft); }
 body[data-colortheme="light"] input,
@@ -284,7 +284,7 @@ body[data-colortheme="light"] .message.bot { background: #e5e7eb; }
 body[data-colortheme="light"] .chat-input { background: #f3f4f6; }
 body[data-colortheme="light"] .new-conversation-btn { background: #e5e7eb; color: #374151; }
 body[data-colortheme="light"] .conversation-history ul li { background: #f3f4f6; }
-body[data-colortheme="light"] .conversation-history ul li.active { background: #d1d5db; color: #111827; border: none; }
+body[data-colortheme="light"] .conversation-history ul li.active { background: #dbd1d2; color: #111827; border: none; }
 
 
 /* ==========================================================================
@@ -305,4 +305,95 @@ body[data-colortheme="light"] .conversation-history ul li.active { background: #
     .weather-info { flex-direction: column; align-items: flex-start; }
     .weather-location, .weather-forecast { text-align: left; margin-top: 10px; margin-left: 0; }
     .weather-extra-details { border-left: none; padding-left: 0; }
+}
+/* AJUSTE DEFINITIVO: Redução dos Ícones de Input (Microfone e Enviar) */
+/* Alvo: Imagens dentro do botão de input. */
+.chat-input button .icon {
+    /* Estas são as regras que controlam o tamanho dos seus ícones IMG */
+    width: 20px; 
+    height: 20px;
+    transition: transform 0.2s ease;
+}
+
+/* Opcional: Garante o padding correto para o botão em si */
+.chat-input button {
+    padding: 10px; 
+    border-radius: 50%;
+}
+
+
+/* ==========================================================================
+   6. RESPONSIVIDADE (MEDIA QUERIES)
+   ========================================================================== */
+@media (max-width: 1200px) {
+    /* ... (seu media query) ... */
+}
+
+/* NOVO: REGRAS CORRIGIDAS DE LAYOUT E CHAT (CONSOLIDADAS) */
+
+/* 1. Layout Principal e Fundo Escuro */
+.app { 
+    height: 100vh; /* Garante altura total */
+}
+main { 
+    height: 100vh; /* Garante altura total */
+    background-color: var(--bg); /* Garante que o fundo do chat seja o BG principal */
+}
+.content {
+    flex-grow: 1; /* Permite que o conteúdo ocupe a altura do main */
+    padding: 0; /* Remove o padding do content para que o chat ocupe a borda */
+}
+.chat-widget { 
+    height: 100%; /* Permite que o widget ocupe a altura do content */
+    flex-grow: 1;
+}
+.chat-body {
+    background: var(--bg); /* Garante que a área de mensagens seja escura */
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; 
+}
+
+
+/* 2. Botão de Excluir Conversa Individual */
+.delete-current-btn {
+    width: 100%;
+    background-color: transparent;
+    color: var(--danger); 
+    border: 1px solid var(--danger);
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 15px; 
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+.delete-current-btn:hover {
+    background-color: rgba(239, 68, 68, 0.1); /* Fundo avermelhado sutil no hover */
+    transform: translateY(-1px);
+}
+.delete-current-btn svg {
+    stroke: var(--danger);
+}
+.delete-current-btn.hide {
+    display: none;
+}
+
+
+/* 3. Redução de Ícones de Input (IMAGENS) */
+.chat-input button {
+    padding: 10px;
+    border-radius: 50%;
+}
+
+.chat-input button .icon {
+    /* ESTA É A CORREÇÃO DE SELETOR */
+    width: 28px; 
+    height: 28px;
+    transition: transform 0.2s ease;
 }
