@@ -210,6 +210,7 @@ def save_theme():
         # Salva as alterações.
         write_json_file(USERS_FILE, users_db)
         return jsonify({"message": "Tema salvo com sucesso!"})
+        
     # Retorna erro se o usuário não for encontrado.
     return jsonify({"error": "Usuário não encontrado."}), 404
 
