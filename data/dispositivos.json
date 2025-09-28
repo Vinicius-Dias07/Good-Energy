@@ -26,6 +26,15 @@
       "on": true,
       "watts": 60,
       "cost_per_hour": "R$ 0.00"
+    },
+    {
+      "id": "6b6b108b-ab24-4859-9f86-c0d7053886b0",
+      "name": "geladeira",
+      "room": "cozinha",
+      "type": "appliance",
+      "on": true,
+      "watts": 200,
+      "cost_per_hour": "R$ 0.00"
     }
   ]
 }
