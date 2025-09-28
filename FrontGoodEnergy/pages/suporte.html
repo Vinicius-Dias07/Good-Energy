@@ -3,63 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/FrontGoodEnergy/assets/GoodEnergyLogo.png" type="image/x-icon">
     <title>Suporte e Manutenção - GoodEnergy</title>
+    <link rel="stylesheet" href="../styles/styles.css">
     <link rel="stylesheet" href="../styles/suporte.css">
 </head>
 <body>
-   <main>
-      <div class="topbar-page">
-        <a href="assistenteIA.html" class="icon-btn back-to-assistant-btn with-text">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-            <span>Voltar</span>
+    <div class="topbar">
+        <a href="assistenteIA.html" class="ai-assistant-btn highlighted-ai-btn">
+            <img src="/FrontGoodEnergy/assets/2890566_ai_artificial intelligence_automaton_brain_electronics_icon.png" alt="Ícone Assistente IA" class="ai-image-icon">
+            Assistente IA
         </a>
     </div>
-    <header>
-        <div class="header-icon-container">
-            <img src="/FrontGoodEnergy/assets/suporte.png" alt="Ícone de Suporte" class="header-icon">
-        </div>
-        <h1>Suporte e Manutenção</h1>
-        <p>Soluções inteligentes para sua casa, com suporte profissional.</p>
-    </header>
 
-    <main>
-        <section class="faq-section">
-            <h2>Perguntas Frequentes</h2>
-            <div class="faq-container">
-                <div class="faq-item">
-                    <button class="faq-question">
-                        <span>Como faço para instalar uma tomada inteligente?</span>
-                        <span class="plus-icon">+</span>
-                    </button>
-                    <div class="faq-answer">
-                        <p>A instalação de tomadas inteligentes geralmente exige a substituição de uma tomada comum. Certifique-se de que a energia esteja desligada no disjuntor antes de começar. Siga as instruções do manual do fabricante para uma instalação segura. *Recomendamos sempre a contratação de um de nossos instaladores profissionais.*</p>
+    <div class="support-page-container">
+        <header>
+            <div class="header-icon-container">
+                <img src="/FrontGoodEnergy/assets/suporte.png" alt="Ícone de Suporte" class="header-icon">
+            </div>
+            <h1>Suporte e Manutenção</h1>
+            <p>Soluções inteligentes para sua casa, com suporte profissional.</p>
+        </header>
+
+        <main class="grid-2">
+            <section class="faq-section card">
+                <h2>Perguntas Frequentes</h2>
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>Como faço para instalar uma tomada inteligente?</span>
+                            <span class="plus-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>A instalação exige a substituição de uma tomada comum. Desligue sempre o disjuntor antes de começar e siga o manual. Para sua segurança, recomendamos fortemente a contratação de um de nossos instaladores profissionais.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>Minha Alexa não está respondendo, o que devo fazer?</span>
+                            <span class="plus-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Primeiro, reinicie o dispositivo tirando-o da tomada por 30 segundos. Verifique também sua conexão Wi-Fi. Se o problema persistir, nossos técnicos podem diagnosticar e resolver a falha rapidamente.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>O sistema é compatível com Google Home?</span>
+                            <span class="plus-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Sim! Nossos dispositivos são totalmente compatíveis com Google Home, Amazon Alexa e podem ser integrados via Smart Life. Você pode controlar tudo por voz ou pelo nosso aplicativo.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>Como posso economizar mais com meus painéis solares?</span>
+                            <span class="plus-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>A melhor forma é concentrar o uso de aparelhos de alto consumo (como máquinas de lavar e ar-condicionado) durante o pico de geração solar, geralmente entre 11h e 15h. Use nosso "Otimizador de Tarefas com IA" no dashboard para recomendações personalizadas.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>Um dispositivo está offline. O que fazer?</span>
+                            <span class="plus-icon">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Verifique se o dispositivo está ligado e se o seu roteador Wi-Fi está funcionando. Tente reiniciar o dispositivo e o roteador. Se o problema continuar, entre em contato com nosso suporte técnico para uma análise mais detalhada.</p>
+                        </div>
                     </div>
                 </div>
-                 <div class="faq-item">
-                    <button class="faq-question">
-                        <span>Minha Alexa não está respondendo, o que devo fazer?</span>
-                        <span class="plus-icon">+</span>
-                    </button>
-                    <div class="faq-answer">
-                        <p>Primeiro, verifique se o dispositivo está conectado à tomada e se a luz indicadora está acesa. Tente desconectar e reconectar o cabo de energia. Se o problema persistir, pode ser um problema de conexão Wi-Fi. *Nossos profissionais podem diagnosticar e resolver o problema rapidamente.*</p>
+            </section>
+
+            <section class="support-options-section card">
+                <h2>Nossos Serviços</h2>
+                <div class="support-card">
+                    <div class="support-card-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924-1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0 3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    </div>
+                    <div class="support-card-content">
+                        <h3>Agendar Instalação</h3>
+                        <p>Nossos técnicos certificados garantem uma instalação segura e otimizada do seu sistema.</p>
                     </div>
                 </div>
-            </div>
-        </section>
-        <section class="contact-section">
-            <h2>Contato</h2>
-            <p>Para agendar um serviço ou tirar dúvidas, entre em contato conosco.</p>
-            <div class="contact-info">
-                <p>E-mail: <a href="mailto:suporte@goodenergy.com.br">suporte@goodenergy.com.br</a></p>
-                <p>Telefone: <a href="tel:+5511234567684">(11) 23456-7684</a></p>
-            </div>
-            <a href="mailto:suporte@goodenergy.com.br" class="contact-button">Contate-nos</a>
-        </section>
-    </main>
-   </main>
+                <div class="support-card">
+                    <div class="support-card-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div class="support-card-content">
+                        <h3>Suporte Técnico</h3>
+                        <p>Problemas com algum dispositivo? Fale com nossa equipe e resolva rapidamente.</p>
+                    </div>
+                </div>
+                <div class="contact-info">
+                    <p><a href="mailto:suporte@goodenergy.com.br">suporte@goodenergy.com.br</a></p>
+                    <p><a href="tel:+5511234567684">(11) 23456-7684</a></p>
+                </div>
+                <a href="mailto:suporte@goodenergy.com.br" class="contact-button">Contate-nos por E-mail</a>
+            </section>
+        </main>
+    </div>
     <script src="../js/suporte.js"></script>
 </body>
 </html>

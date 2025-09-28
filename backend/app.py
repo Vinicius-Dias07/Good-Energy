@@ -1,6 +1,5 @@
 # --- IMPORTAÇÃO DAS BIBLIOTECAS NECESSÁRIAS ---
 # Importa as classes e funções principais do Flask para criar e gerenciar a aplicação web.
-import google.generativeai as genai
 from flask import Response
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
@@ -21,10 +20,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 # Importa a biblioteca 'uuid' para gerar IDs únicos para os dispositivos.
 import uuid
 
+from groq import Groq
+
 # Carrega as variáveis de ambiente do arquivo .env (como a chave da API do Gemini).
 load_dotenv()
 # Configura a biblioteca do Google AI com a chave da API carregada do .env.
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 # --- CONFIGURAÇÃO INICIAL DA APLICAÇÃO ---
 # Cria a instância principal da aplicação Flask.
@@ -458,11 +459,10 @@ def get_battery_status():
     except Exception as e:
         return jsonify({"error": f"Erro ao obter dados da bateria: {e}"}), 500
 
-# Rota para o chatbot de IA, que também lida com comandos de voz.
+# Rota para o chatbot de IA (Groq)
 @app.route('/api/ask-agent', methods=['POST'])
 def ask_agent():
     try:
-        # Pega a pergunta e o email do usuário.
         data = request.get_json()
         question = data.get("question", "")
         user_email = data.get("email", "")
@@ -470,59 +470,55 @@ def ask_agent():
         if not question or not user_email:
             return jsonify({"error": "Pergunta e e-mail são obrigatórios"}), 400
 
-        # Pega a lista de dispositivos do usuário para dar contexto à IA.
         devices_db = read_json_file(DEVICES_FILE, {})
         user_devices = devices_db.get(user_email, [])
         device_names = [d['name'] for d in user_devices]
         
-        # Monta o prompt para o Gemini, ensinando-o a identificar comandos e responder em JSON.
-        model = genai.GenerativeModel("gemini-1.5-flash")
-        response = model.generate_content(
-            f"""
-            Você é um assistente de casa inteligente. Analise o pedido do usuário.
-            Os dispositivos disponíveis são: {', '.join(device_names)}.
-
-            - Se o pedido for um comando para ligar, desligar, acender ou apagar um dispositivo, responda APENAS com um JSON no formato:
-            {{"command": true, "device_name": "nome do dispositivo", "action": "on" ou "off"}}
-            
-            - Se for qualquer outra pergunta, responda normalmente em Markdown.
-
-            Pedido do usuário: "{question}"
-            """
+        # --- ALTERADO PARA GROQ ---
+        chat_completion = client.chat.completions.create(
+            messages=[
+                {
+                    "role": "system",
+                    "content": f"""Você é um assistente de casa inteligente. Analise o pedido do usuário. Os dispositivos disponíveis são: {', '.join(device_names)}.
+- Se o pedido for um comando para ligar, desligar, acender ou apagar um dispositivo, responda APENAS com um JSON no formato: {{"command": true, "device_name": "nome do dispositivo", "action": "on" ou "off"}}
+- Se for qualquer outra pergunta, responda normalmente em Markdown."""
+                },
+                {
+                    "role": "user",
+                    "content": question,
+                }
+            ],
+            model="llama-3.1-8b-instant",
         )
+        response_text = chat_completion.choices[0].message.content
+        # --- FIM DA ALTERAÇÃO ---
 
-        # Tenta interpretar a resposta da IA como um comando JSON.
         try:
-            potential_command = json.loads(response.text)
-            # Se for um comando válido, executa a ação no dispositivo.
+            potential_command = json.loads(response_text)
             if isinstance(potential_command, dict) and potential_command.get("command"):
                 device_name = potential_command.get("device_name")
                 action = potential_command.get("action")
                 
-                # Procura o dispositivo pelo nome, ignorando maiúsculas/minúsculas.
                 target_device = next((d for d in user_devices if d['name'].lower() == device_name.lower()), None)
 
                 if not target_device:
                     return jsonify({"answer": f"Não encontrei um dispositivo chamado '{device_name}'."})
                 
-                # Define o novo estado e atualiza o dispositivo.
                 new_state = (action == 'on')
                 target_device['on'] = new_state
                 target_device['watts'] = new_state * (200 if target_device['type'] == 'appliance' else 900 if target_device['type'] == 'climate' else 60)
                 
-                # Salva o estado atualizado dos dispositivos.
                 devices_db[user_email] = user_devices
                 write_json_file(DEVICES_FILE, devices_db)
 
-                # Retorna uma mensagem de confirmação para o usuário.
                 action_text = "ligado" if new_state else "desligado"
                 return jsonify({"answer": f"Ok, dispositivo '{target_device['name']}' foi {action_text}."})
 
-        # Se a resposta da IA não for um JSON, trata como uma resposta de texto normal.
         except (json.JSONDecodeError, TypeError):
-            return jsonify({"answer": response.text})
+            return jsonify({"answer": response_text})
 
     except Exception as e:
+        print(f"\n--- ERRO DETALHADO DA API (GROQ) --- \n{e}\n----------------------------------\n")
         return jsonify({"error": f"Erro do agente: {e}"}), 500
 
 # Rota para atualizar o nome do usuário no perfil.
@@ -580,192 +576,121 @@ def save_preferences():
     
     return jsonify({"error": "Usuário não encontrado."}), 404
 
+
 @app.route('/api/optimizer/suggest-time', methods=['POST'])
 def suggest_optimal_time():
-    # Pega os dados enviados pelo frontend
     data = request.get_json()
-    task_info = data.get('task') # Ex: "Lavar Roupa"
-    user_email = data.get('email')
-
+    task_info, user_email = data.get('task'), data.get('email')
     if not task_info or not user_email:
         return jsonify({"error": "Informações da tarefa e email são obrigatórios"}), 400
-
     try:
-        # --- Passo 1: Buscar a Previsão do Tempo (FUTURO) ---
-        # Usaremos a API One Call da OpenWeatherMap, que fornece previsão horária
-        api_key = '2d1f3910b6139ba59b1385427c34b64e' # Sua chave
-        lat, lon = -23.5614, -46.6565
-        # Excluímos 'current', 'minutely', 'daily' para pegar apenas os dados horários ('hourly')
-        forecast_url = f"https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=current,minutely,daily,alerts&appid={api_key}&units=metric"
-        
-        # A biblioteca 'requests' é mais recomendada para chamadas de API externas
         import requests
-        forecast_response = requests.get(forecast_url)
-        forecast_data = forecast_response.json()
+        api_key, lat, lon = '2d1f3910b6139ba59b1385427c34b64e', -23.5614, -46.6565
+        forecast_url = f"https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=current,minutely,daily,alerts&appid={api_key}&units=metric"
+        forecast_data = requests.get(forecast_url).json()
         
-        # Formata a previsão horária para as próximas 24h em um texto simples
-        hourly_forecast = ""
-        for i in range(24):
-            hour_data = forecast_data['hourly'][i]
-            dt_object = datetime.fromtimestamp(hour_data['dt'])
-            clouds = hour_data['clouds'] # Nebulosidade em %
-            hourly_forecast += f"- {dt_object.strftime('%H:%M')}: Nebulosidade de {clouds}%\n"
+        hourly_forecast = "".join([f"- {datetime.fromtimestamp(h['dt']).strftime('%H:%M')}: Nebulosidade de {h['clouds']}%\n" for h in forecast_data['hourly'][:24]])
 
-        # --- Passo 2: Analisar Dados Históricos de Geração (PASSADO) ---
         df = get_inverter_data()
         df.set_index('Time', inplace=True)
-        # Calcula a média de geração de energia para cada hora do dia
         average_generation_by_hour = df['Power(W)'].groupby(df.index.hour).mean()
-        historical_pattern = ""
-        for hour, avg_power in average_generation_by_hour.items():
-            historical_pattern += f"- {hour:02d}h: Média de {avg_power:.0f} W\n"
+        historical_pattern = "".join([f"- {hour:02d}h: Média de {avg_power:.0f} W\n" for hour, avg_power in average_generation_by_hour.items()])
 
-        # --- Passo 3: Montar o Prompt e Consultar a IA ---
-        model = genai.GenerativeModel("gemini-1.5-flash")
-        prompt = f"""
-        Você é um especialista em otimização de energia. Seu objetivo é encontrar a melhor janela de 2 horas nas próximas 24 horas para executar uma tarefa de alto consumo ('{task_info}').
+        prompt = f"""Você é um especialista em otimização de energia. Seu objetivo é encontrar a melhor janela de 2 horas nas próximas 24 horas para executar uma tarefa de alto consumo ('{task_info}').
+Use os seguintes dados para tomar sua decisão:
+1. PREVISÃO DE TEMPO (próximas 24h):
+{hourly_forecast}
+2. PADRÃO DE GERAÇÃO HISTÓRICO (média de geração por hora):
+{historical_pattern}
+Analise a previsão de nebulosidade e o histórico de geração. A melhor janela de tempo é aquela com a MENOR nebulosidade prevista e que coincide com o MAIOR pico de geração histórica.
+Responda APENAS com um JSON no seguinte formato:
+{{"horario_recomendado": "HH:00", "justificativa": "Uma frase curta explicando o porquê."}}"""
 
-        Use os seguintes dados para tomar sua decisão:
-
-        1. PREVISÃO DE TEMPO (próximas 24h):
-        {hourly_forecast}
-
-        2. PADRÃO DE GERAÇÃO HISTÓRICO (média de geração por hora):
-        {historical_pattern}
-
-        Analise a previsão de nebulosidade e o histórico de geração. A melhor janela de tempo é aquela com a MENOR nebulosidade prevista e que coincide com o MAIOR pico de geração histórica.
-
-        Responda APENAS com um JSON no seguinte formato:
-        {{"horario_recomendado": "HH:00", "justificativa": "Uma frase curta explicando o porquê."}}
-        """
-        
-        response = model.generate_content(prompt)
-        
-        # Tenta converter a resposta da IA em JSON
-        suggestion = json.loads(response.text)
-        
+        chat_completion = client.chat.completions.create(messages=[{"role": "user", "content": prompt}], model="llama-3.1-8b-instant")
+        response_text = chat_completion.choices[0].message.content
+        suggestion = json.loads(response_text)
         return jsonify(suggestion)
+        # --- FIM DA ALTERAÇÃO ---
 
     except Exception as e:
         print(f"ERRO no otimizador: {e}")
-        # Retorna uma resposta padrão em caso de erro na API ou na IA
-        return jsonify({
-            "horario_recomendado": "13:00",
-            "justificativa": "O período da tarde geralmente oferece a melhor geração solar."
-        })
+        return jsonify({"horario_recomendado": "13:00", "justificativa": "O período da tarde geralmente oferece a melhor geração solar."})
 
 @app.route('/api/reports/insights', methods=['GET'])
 def get_report_insights():
     user_email = request.args.get('email')
-    if not user_email:
-        return jsonify({"error": "Email do usuário é obrigatório"}), 400
-
+    if not user_email: return jsonify({"error": "Email do usuário é obrigatório"}), 400
     try:
         df = get_inverter_data()
-        if df is None or df.empty:
-            return jsonify({"insights": "Não há dados suficientes para gerar uma análise."})
+        if df is None or df.empty: return jsonify({"insights": "Não há dados suficientes para gerar uma análise."})
 
-        # --- Passo 1: Calcular as métricas do último mês ---
-        
-        # Define o período do "último mês" (últimos 30 dias a partir do último registro)
         end_date = df['Time'].max()
         start_date = end_date - timedelta(days=30)
-        
         last_month_data = df[(df['Time'] >= start_date) & (df['Time'] <= end_date)]
+        if last_month_data.empty: return jsonify({"insights": "Não há dados do último mês para gerar uma análise."})
 
-        if last_month_data.empty:
-            return jsonify({"insights": "Não há dados suficientes do último mês para gerar uma análise."})
-
-        # Métrica 1: Geração total no período
         generation_last_month = last_month_data['Total Generation(kWh)'].max() - last_month_data['Total Generation(kWh)'].min()
-
-        # Métrica 2: Dia de pico de geração
         daily_generation = last_month_data.set_index('Time').resample('D')['Total Generation(kWh)'].apply(lambda x: x.max() - x.min())
-        peak_day = daily_generation.idxmax().strftime('%d de %B') # Ex: "15 de Setembro"
+        peak_day = daily_generation.idxmax().strftime('%d de %B')
         peak_day_generation = daily_generation.max()
 
-        # Métrica 3: Dispositivo de maior consumo (simulado para exemplo)
         devices_db = read_json_file(DEVICES_FILE, {})
         user_devices = devices_db.get(user_email, [])
-        top_consumer_device = "Nenhum dispositivo cadastrado"
-        if user_devices:
-            # Simplesmente pega o primeiro dispositivo como exemplo de "maior consumidor"
-            top_consumer_device = user_devices[0]['name']
+        top_consumer_device = user_devices[0]['name'] if user_devices else "Nenhum dispositivo"
 
-        # --- Passo 2: Montar o prompt e consultar a IA ---
-        model = genai.GenerativeModel("gemini-1.5-flash")
-        prompt = f"""
-        Você é um analista de dados especialista em energia solar. Com base nas seguintes métricas de performance dos últimos 30 dias de um cliente, escreva um resumo em 3 bullets.
-        
-        Use um tom amigável e informativo. Use emojis e negrito para destacar informações.
+        # --- ALTERADO PARA GROQ ---
+        prompt = f"""Você é um analista de dados especialista em energia solar. Com base nas seguintes métricas dos últimos 30 dias de um cliente, escreva um resumo em 3 bullets. Use tom amigável, emojis e negrito.
+Métricas:
+- Geração total: {generation_last_month:.2f} kWh
+- Dia de pico: {peak_day}, com {peak_day_generation:.2f} kWh.
+- Dispositivo usado: {top_consumer_device}
+Estrutura:
+- Bullet 1 (Elogio): Parabenize pela geração total e dia de pico.
+- Bullet 2 (Atenção): Dê uma dica sobre o consumo do dispositivo.
+- Bullet 3 (Recomendação): Recomendação geral para maximizar economia."""
 
-        Métricas do Cliente:
-        - Geração total nos últimos 30 dias: {generation_last_month:.2f} kWh
-        - Dia de maior geração: {peak_day}, com {peak_day_generation:.2f} kWh gerados.
-        - Dispositivo frequentemente usado: {top_consumer_device}
-
-        Estrutura da resposta:
-        - Bullet 1 (Elogio): Parabenize o cliente pela geração total, mencionando o dia de pico.
-        - Bullet 2 (Ponto de Atenção): Crie um ponto de atenção genérico sobre o consumo do dispositivo mencionado, sugerindo otimização.
-        - Bullet 3 (Recomendação): Dê uma recomendação geral para maximizar a economia, como usar aparelhos de alto consumo durante o dia.
-        """
-
-        response = model.generate_content(prompt)
-        
-        # Retorna o texto gerado pela IA
-        return jsonify({"insights": response.text})
+        chat_completion = client.chat.completions.create(messages=[{"role": "user", "content": prompt}], model="llama-3.1-8b-instant")
+        response_text = chat_completion.choices[0].message.content
+        return jsonify({"insights": response_text})
+        # --- FIM DA ALTERAÇÃO ---
 
     except Exception as e:
         print(f"ERRO ao gerar insights: {e}")
         return jsonify({"error": "Não foi possível gerar a análise no momento."}), 500
 
+
+# app.py
 @app.route('/api/dashboard-insights', methods=['GET'])
 def get_dashboard_insights():
     user_email = request.args.get('email')
     if not user_email: return jsonify([]), 400
-
     try:
-        # --- Passo 1: Coletar Métricas para a IA ---
-        kpis_response = get_kpis()
-        kpis_data = kpis_response.get_json()
-        battery_response = get_battery_status()
-        battery_data = battery_response.get_json()
+        kpis_data = get_kpis().get_json()
+        battery_data = get_battery_status().get_json()
 
-        # --- Passo 2: Montar o Prompt Avançado ---
-        # Instruímos a IA a gerar uma lista de insights em formato JSON
-        model = genai.GenerativeModel("gemini-1.5-flash")
-        prompt = f"""
-        Você é um analista de dados de energia. Analise os dados do usuário abaixo e gere uma lista de 3 insights curtos e úteis.
-        Os insights devem ser de tipos diferentes: um elogio, um alerta e uma dica de otimização.
-
-        Dados do Usuário:
-        - Geração de hoje: {kpis_data.get('todayGenKwh', 0):.2f} kWh
-        - Consumo atual: {kpis_data.get('houseLoadKw', 0):.2f} kW
-        - Status da bateria: {battery_data.get('charged_percentage', 0)}% e {battery_data.get('status_texto')}
-        - Economia do mês: R$ {kpis_data.get('savingsThisMonth', 0):.2f}
-
-        Sua resposta DEVE SER APENAS um array JSON válido, sem nenhum texto antes ou depois.
-        Cada objeto no array deve ter as chaves "type" e "text".
-        Tipos válidos: "elogio", "alerta", "dica".
-
-        Exemplo de resposta:
-        [
-            {{"type": "elogio", "text": "🌞 Parabéns! Sua geração hoje está excelente e você já economizou R$ {kpis_data.get('savingsThisMonth', 0):.2f} este mês!"}},
-            {{"type": "alerta", "text": "⚠️ Atenção: seu consumo atual está um pouco alto. Considere desligar aparelhos que não estão em uso."}},
-            {{"type": "dica", "text": "💡 Dica: Com a bateria em {battery_data.get('charged_percentage', 0)}%, este é um bom momento para usar aparelhos de alto consumo."}}
-        ]
-        """
-        
-        response = model.generate_content(prompt)
-        # Limpa a resposta para garantir que seja um JSON válido
-        cleaned_response = response.text.strip().replace('```json', '').replace('```', '')
+        # --- ALTERADO PARA GROQ ---
+        prompt = f"""Você é um analista de dados de energia. Analise os dados do usuário e gere uma lista de 3 insights (elogio, alerta, dica).
+Dados:
+- Geração hoje: {kpis_data.get('todayGenKwh', 0):.2f} kWh
+- Consumo atual: {kpis_data.get('houseLoadKw', 0):.2f} kW
+- Bateria: {battery_data.get('charged_percentage', 0)}% e {battery_data.get('status_texto')}
+- Economia do mês: R$ {kpis_data.get('savingsThisMonth', 0):.2f}
+Sua resposta DEVE SER APENAS um array JSON válido. Cada objeto deve ter as chaves "type" ("elogio", "alerta", "dica") e "text".
+Exemplo de Resposta:
+[
+    {{"type": "elogio", "text": "🌞 Parabéns! Sua geração hoje está excelente!"}},
+    {{"type": "alerta", "text": "⚠️ Atenção: seu consumo atual está um pouco alto."}},
+    {{"type": "dica", "text": "💡 Dica: Com a bateria em {battery_data.get('charged_percentage', 0)}%, é um bom momento para usar aparelhos de alto consumo."}}
+]"""
+        chat_completion = client.chat.completions.create(messages=[{"role": "user", "content": prompt}], model="llama-3.1-8b-instant")
+        response_text = chat_completion.choices[0].message.content
+        cleaned_response = response_text.strip().replace('```json', '').replace('```', '')
         insights = json.loads(cleaned_response)
-        
         return jsonify(insights)
+        # --- FIM DA ALTERAÇÃO ---
 
     except Exception as e:
         print(f"ERRO ao gerar insights para o stack: {e}")
-        # Retorna uma lista de sugestões padrão em caso de erro, para não quebrar o frontend
         fallback_insights = [
             {"type": "dica", "text": "💡 Use seus aparelhos de maior consumo durante o dia para aproveitar a energia solar gratuita."},
             {"type": "elogio", "text": "🌞 Continue acompanhando seus dados para maximizar sua economia de energia!"},

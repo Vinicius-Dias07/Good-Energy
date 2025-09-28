@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
+  // ADICIONADO: Pega o usuário logado do localStorage para usar o email na chamada da API
+  const user = JSON.parse(localStorage.getItem('ge_user'));
+
   const chatMessagesContainer = document.getElementById("chat-messages");
   const chatInputText = document.getElementById("chat-input-text");
   const chatSendBtn = document.getElementById("chat-send-btn");
@@ -9,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
   let conversations = JSON.parse(localStorage.getItem('conversations')) || {};
   let currentConversationId = localStorage.getItem('currentConversationId');
 
-  // NOVO: Botão de Excluir Conversa Atual
+  // Botão de Excluir Conversa Atual
   const deleteCurrentBtn = document.createElement('button');
   deleteCurrentBtn.classList.add('delete-current-btn', 'hide'); 
   deleteCurrentBtn.innerHTML = `
@@ -26,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function() {
   
   deleteCurrentBtn.addEventListener('click', deleteCurrentConversation);
 
-  // NOVO: Constante para a mensagem inicial do bot
+  // Constante para a mensagem inicial do bot
   const WELCOME_MESSAGE = "Olá! Eu sou o Assistente IA da GoodEnergy. Como posso te ajudar a economizar energia hoje?";
 
   // --- Botão de Nova Conversa ---
@@ -37,7 +40,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
   const historyContainer = document.getElementById('conversation-history');
   const historyTitle = historyContainer.querySelector('h4');
-  // Insere o botão de Nova Conversa logo após o título H4
   historyContainer.insertBefore(newConversationBtn, historyTitle.nextSibling);
 
   // --- Funções Auxiliares ---
@@ -50,9 +52,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
-  // NOVO: Função para controlar a visibilidade do botão de exclusão
   function checkDeleteButtonVisibility() {
-      // Oculta o botão se houver 1 ou 0 conversas
       const convCount = Object.keys(conversations).length;
       if (convCount > 1 && currentConversationId) {
           deleteCurrentBtn.classList.remove('hide');
@@ -61,7 +61,6 @@ document.addEventListener("DOMContentLoaded", function() {
       }
   }
   
-  // NOVO: Função para excluir a conversa ativa
   function deleteCurrentConversation() {
     if (!currentConversationId || !conversations[currentConversationId]) return;
 
@@ -70,7 +69,6 @@ document.addEventListener("DOMContentLoaded", function() {
       delete conversations[idToDelete]; 
       saveConversations(); 
 
-      // Inicia a conversa mais recente restante
       const remainingIds = Object.keys(conversations).sort((a, b) => b - a);
       if (remainingIds.length > 0) {
         loadConversation(remainingIds[0]);
@@ -83,16 +81,13 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
   
-  // MODIFICADO: Agora inclui a mensagem de boas-vindas
   function startNewConversation() {
     const convId = Date.now().toString();
-    
-    // MUDANÇA PRINCIPAL: Inicializa a nova conversa com a mensagem de boas-vindas do bot
     const initialBotMessage = { sender: 'bot', text: WELCOME_MESSAGE };
     
     conversations[convId] = { 
-        messages: [initialBotMessage], // Adiciona a mensagem inicial
-        title: "Nova conversa" // Título inicial
+        messages: [initialBotMessage],
+        title: "Nova conversa"
     };
     
     currentConversationId = convId;
@@ -100,23 +95,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
     saveConversations();
     renderHistory();
-    
-    // Chama loadConversation para garantir que o chatMessagesContainer seja preenchido 
-    // com a nova conversa (e a mensagem de boas-vindas)
     loadConversation(convId); 
 
-    // O restante do código de UI que você tinha no startNewConversation
-  const newItem = document.querySelector(`li[data-id="${convId}"]`);
+    const newItem = document.querySelector(`li[data-id="${convId}"]`);
     if (newItem) {
       document.querySelectorAll('#history-list li').forEach(li => li.classList.remove('active'));
       newItem.classList.add('active');
     }
     
-    // Atualiza a visibilidade do botão de exclusão
     checkDeleteButtonVisibility();
   }
 
-  // MODIFICADO: Atualiza a visibilidade do botão de exclusão
   function loadConversation(convId) {
     currentConversationId = convId;
     chatMessagesContainer.innerHTML = "";
@@ -128,7 +117,6 @@ document.addEventListener("DOMContentLoaded", function() {
         msgElement.classList.add("message", msg.sender);
         
         if (msg.sender === "bot") {
-            // marked.js precisa ser incluído no HTML para esta linha funcionar
             msgElement.innerHTML = marked.parse(msg.text); 
         } else {
             msgElement.textContent = msg.text;
@@ -140,24 +128,18 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     document.querySelectorAll('#history-list li').forEach(li => li.classList.remove('active'));
-    // Se não houver elemento (pode acontecer após exclusão e recarregamento), pula
     const activeItem = document.querySelector(`li[data-id="${convId}"]`);
     if (activeItem) {
         activeItem.classList.add('active');
     }
     
-    // NOVO: Verifica se deve mostrar ou ocultar o botão ao carregar uma conversa
     checkDeleteButtonVisibility(); 
   }
 
-  // CORRIGIDO: Agora usa o título salvo em conv.title
   function renderHistory() {
     historyList.innerHTML = "";
     Object.entries(conversations).reverse().forEach(([id, conv]) => {
       const historyItem = document.createElement("li");
-      
-      // CORREÇÃO: Usar a propriedade 'title' atualizada pela primeira mensagem do usuário.
-      // Se não tiver sido atualizado, usa "Nova conversa" como fallback.
       const title = conv.title.length > 0 && conv.title !== "Nova conversa"
           ? conv.title
           : "Nova conversa";
@@ -167,52 +149,90 @@ document.addEventListener("DOMContentLoaded", function() {
       historyItem.addEventListener("click", () => loadConversation(id));
       historyList.appendChild(historyItem);
     });
-    // NOVO: Atualiza a visibilidade após renderizar o histórico
     checkDeleteButtonVisibility(); 
   }
   
-  // Função que simula o processamento da mensagem e resposta do bot
-  function processUserInput(text) {
+  // --- FUNÇÃO MODIFICADA PARA USAR A API ---
+  async function processUserInput(text) {
     if (!currentConversationId) {
-        startNewConversation();
+      startNewConversation();
     }
+    // Garante que o usuário está logado para obter o email
+    if (!user || !user.email) {
+      alert("Erro: Usuário não identificado. Por favor, faça o login novamente.");
+      return;
+    }
+  
     const conversation = conversations[currentConversationId];
-    
-    // 1. Adiciona a mensagem do usuário
+  
+    // 1. Adiciona e renderiza a mensagem do usuário
     const userMessage = { sender: 'user', text: text };
     conversation.messages.push(userMessage);
-    
-    // Renderiza a mensagem do usuário
     const userMsgElement = document.createElement("div");
     userMsgElement.classList.add("message", "user");
     userMsgElement.textContent = text;
     chatMessagesContainer.appendChild(userMsgElement);
-
-    // 2. Simulação de resposta do Bot
-    // Em um ambiente real, esta seria a chamada à API do modelo de IA
-  const botResponseText = `Entendido! Sua pergunta sobre "${text.substring(0, 15)}..." está sendo processada. Como Assistente IA, posso te oferecer dicas de economia ou monitoramento de consumo.`;
-    const botMessage = { sender: 'bot', text: botResponseText };
-    conversation.messages.push(botMessage);
-
-    // Renderiza a mensagem do bot
-    const botMsgElement = document.createElement("div");
-    botMsgElement.classList.add("message", "bot");
-    botMsgElement.innerHTML = marked.parse(botResponseText); // Assumindo marked.js para markdown
-    chatMessagesContainer.appendChild(botMsgElement);
-    
-    // 3. Atualiza o título da conversa (se ainda for "Nova conversa")
-    // Esta parte garante que a PRIMEIRA mensagem do usuário defina o título.
-    if (conversation.title === "Nova conversa") {
-        conversation.title = text.substring(0, 25) + (text.length > 25 ? '...' : '');
-        renderHistory();
+    chatInputText.value = ""; // Limpa o input
+  
+    // 2. Renderiza um indicador de "digitando..."
+    const botTypingElement = document.createElement("div");
+    botTypingElement.classList.add("message", "bot", "typing");
+    botTypingElement.innerHTML = "<span></span><span></span><span></span>"; // Animação de "digitando"
+    chatMessagesContainer.appendChild(botTypingElement);
+    chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+  
+    try {
+      // 3. Faz a chamada real à API do backend
+      const response = await fetch('http://localhost:5000/api/ask-agent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          question: text,
+          email: user.email // Envia o email do usuário logado
+        }),
+      });
+  
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Ocorreu um erro ao contatar o assistente.');
+      }
+  
+      const botResponseText = data.answer; // Pega a resposta da API
+  
+      // 4. Salva e renderiza a resposta do bot
+      const botMessage = { sender: 'bot', text: botResponseText };
+      conversation.messages.push(botMessage);
+  
+      // Remove o indicador de "digitando"
+      botTypingElement.remove();
+  
+      const botMsgElement = document.createElement("div");
+      botMsgElement.classList.add("message", "bot");
+      botMsgElement.innerHTML = marked.parse(botResponseText); // Usa a biblioteca marked para formatar
+      chatMessagesContainer.appendChild(botMsgElement);
+  
+    } catch (error) {
+      // Em caso de erro, exibe uma mensagem de falha
+      botTypingElement.remove();
+      const errorMsgElement = document.createElement("div");
+      errorMsgElement.classList.add("message", "bot");
+      errorMsgElement.textContent = `Desculpe, ocorreu um erro: ${error.message}`;
+      chatMessagesContainer.appendChild(errorMsgElement);
     }
-    
-    // 4. Salva e rola para baixo
+  
+    // 5. Atualiza o título e salva o histórico
+    if (conversation.title === "Nova conversa") {
+      conversation.title = text.substring(0, 25) + (text.length > 25 ? '...' : '');
+      renderHistory();
+    }
+  
     saveConversations();
     chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
   }
   
-  // --- Event Listeners ---
+  // --- Event Listeners (Sem alterações) ---
   chatSendBtn.addEventListener("click", function() {
     const text = chatInputText.value.trim();
     if (text) {
@@ -231,20 +251,16 @@ document.addEventListener("DOMContentLoaded", function() {
     alert("Função de entrada de voz não implementada.");
   });
   
-  // --- Inicialização ---
+  // --- Inicialização (Sem alterações) ---
   renderHistory();
   if (Object.keys(conversations).length > 0 && currentConversationId) {
-    // Se há histórico e uma conversa ativa, carrega ela
     loadConversation(currentConversationId);
   } else if (Object.keys(conversations).length > 0) {
-     // Se há histórico mas não há ativa, carrega a mais recente
     const latestConvId = Object.keys(conversations).sort((a, b) => b - a)[0];
     loadConversation(latestConvId);
   } else {
-    // Se não há histórico, inicia uma nova (agora com a mensagem de boas-vindas)
     startNewConversation();
   }
 
-  // NOVO: Verificação inicial
   checkDeleteButtonVisibility();
 });

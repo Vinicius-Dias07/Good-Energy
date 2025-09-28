@@ -1,29 +1,13 @@
-/* Paleta de Cores */
-:root {
-    --primary-color: #0b1a2b; /* Azul Escuro */
-    --secondary-color: #2c3e50; /* Cinza Chumbo */
-    --accent-color: #3498db; /* Azul Vívido */
-    --text-color: #ecf0f1; /* Cinza Claro */
-    --border-color: #34495e; /* Cinza Escuro para bordas */
-}
+/* Paleta de cores e estilos básicos são herdados do styles.css */
 
 /* Estilos Gerais */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
 body {
-    font-family: Arial, sans-serif;
-    background-color: var(--primary-color);
-    color: var(--text-color);
     line-height: 1.6;
 }
 
-/* Layout */
-header, main {
-    max-width: 900px;
+/* Container principal da página para centralizar e dar espaçamento */
+.support-page-container {
+    max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
 }
@@ -31,49 +15,33 @@ header, main {
 header {
     text-align: center;
     padding-top: 4rem;
-    padding-bottom: 2rem;
+    padding-bottom: 4rem;
 }
 
-h1 {
+header h1 {
     font-size: 2.5rem;
     margin-bottom: 0.5rem;
+    color: var(--text);
 }
 
-h2 {
-    font-size: 2rem;
+header p {
+    color: var(--muted);
+    font-size: 1.1rem;
+}
+
+.header-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 15px var(--primary-glow)); /* Adiciona brilho */
+}
+
+/* Seções (agora usam a classe .card do styles.css) */
+.faq-section h2, .support-options-section h2 {
+    text-align: left;
     margin-bottom: 1.5rem;
-    text-align: center;
-    border-bottom: 2px solid var(--accent-color);
     padding-bottom: 0.5rem;
-    display: inline-block;
-}
-
-/* Botão de voltar */
-.back-button {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    background-color: var(--secondary-color);
-    color: var(--text-color);
-    border: none;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    cursor: pointer;
-    border-radius: 50px;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.back-button:hover {
-    background-color: var(--border-color);
-    transform: scale(1.05);
-}
-
-/* Seções */
-.faq-section, .contact-section {
-    background-color: var(--secondary-color);
-    padding: 2rem;
-    border-radius: 10px;
-    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--grid);
 }
 
 /* FAQ Accordion */
@@ -82,199 +50,138 @@ h2 {
 }
 
 .faq-item {
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--grid);
+}
+.faq-item:last-child {
+    border-bottom: none;
 }
 
 .faq-question {
-    background-color: var(--secondary-color);
-    color: var(--text-color);
+    background: none;
+    color: var(--text);
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding: 1.25rem 0;
+    padding: 1.25rem 0.5rem;
     font-size: 1.1rem;
     text-align: left;
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: color 0.3s ease;
 }
 
 .faq-question:hover {
-    background-color: var(--border-color);
+    color: var(--primary);
 }
 
 .plus-icon {
     font-size: 1.5rem;
+    color: var(--muted);
     transition: transform 0.3s ease;
 }
 
 .faq-question[aria-expanded="true"] .plus-icon {
     transform: rotate(45deg);
+    color: var(--primary);
 }
 
 .faq-answer {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+    transition: max-height 0.3s ease-out;
 }
 
 .faq-answer p {
-    padding: 1rem 0 1.5rem;
-    color: #bdc3c7;
+    padding: 0 0.5rem 1.5rem;
+    color: var(--muted);
 }
 
-/* Seção de Contato */
-.contact-section h2, .contact-section p {
-    text-align: center;
+/* Seção de Opções de Suporte (Nova) */
+.support-options-section .card {
+    position: sticky; /* Efeito "grudento" ao rolar a página */
+    top: 100px;
+}
+
+.support-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border-radius: var(--radius);
+    background-color: var(--bg-soft);
+    margin-bottom: 16px;
+}
+
+.support-card-icon {
+    color: var(--primary);
+}
+
+.support-card-icon svg {
+    width: 28px;
+    height: 28px;
+}
+
+.support-card-content h3 {
+    margin: 0 0 4px;
+    color: var(--text);
+    font-size: 1.1rem;
+}
+
+.support-card-content p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.9rem;
 }
 
 .contact-info {
     margin: 1.5rem 0;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .contact-info a {
-    color: var(--accent-color);
+    color: var(--muted);
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .contact-info a:hover {
-    color: var(--text-color);
+    color: var(--primary);
 }
 
 .contact-button {
     display: block;
-    width: fit-content;
-    margin: 0 auto;
-    background-color: var(--accent-color);
-    color: var(--primary-color);
-    font-size: 1.25rem;
+    width: 100%;
+    background-color: var(--primary);
+    color: white;
+    font-size: 1.1rem;
     font-weight: bold;
+    text-align: center;
     text-decoration: none;
     padding: 1rem 2rem;
-    border-radius: 5px;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    border-radius: 12px;
+    transition: all 0.3s ease;
 }
 
 .contact-button:hover {
-    background-color: #2980b9;
-    transform: translateY(-3px);
+    background-color: var(--primary);
+    filter: brightness(1.2);
+    transform: translateY(-2px);
 }
 
 /* Media Queries para Responsividade */
-@media (max-width: 768px) {
-    h1 {
-        font-size: 2rem;
+@media (max-width: 900px) {
+    .grid-2 {
+        grid-template-columns: 1fr; /* Coloca as seções uma embaixo da outra */
     }
-    h2 {
-        font-size: 1.75rem;
-    }
-    .back-button {
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
+    .support-options-section .card {
+        position: static; /* Desativa o efeito "grudento" em telas menores */
     }
 }
 
-/* Estilo para o Ícone no Cabeçalho */
-.header-icon-container {
-    margin-bottom: 20px;
-}
-
-.header-icon {
-    width: 80px; /* Ajuste o tamanho do ícone conforme necessário */
-    height: 80px;
-    border-radius: 50%; /* Se você quiser um formato circular */
-    object-fit: cover;
-    border: 3px solid var(--accent-color); /* Borda para destaque */
-    padding: 5px; /* Espaçamento interno */
-}
-
-/* Garante que o header esteja bem formatado */
-header {
-    text-align: center;
-    padding-top: 4rem;
-    padding-bottom: 2rem;
-}
-
-/* Seções com Destaque Visual */
-.faq-section, .contact-section {
-    background-color: var(--secondary-color);
-    padding: 2.5rem;
-    border-radius: 12px;
-    margin-bottom: 2rem;
-    /* NOVO: Sombra sutil para profundidade */
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4); 
-    /* NOVO: Borda sutil para separar do fundo */
-    border: 1px solid var(--border-color);
-}
-
-h2 {
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-    text-align: center;
-    /* A linha decorativa agora será um fundo sutil */
-    border-bottom: none; 
-    padding-bottom: 0.5rem;
-    display: block; 
-    width: fit-content;
-    margin: 0 auto 1.5rem auto; 
-    /* NOVO: Fundo gradiente sutil abaixo */
-    border-bottom: 3px solid transparent; 
-    border-image: linear-gradient(90deg, transparent 5%, var(--accent-color), transparent 95%);
-    border-image-slice: 1;
-}
-
-/* Estilo copiado/mantido de suas classes globais */
-.icon-btn {
-    /* NOVO: Fundo um pouco mais escuro para destaque */
-    background: var(--primary-color); 
-    border: 1px solid var(--border-color); 
-    color: var(--text-color);
-    padding: 10px; 
-    border-radius: 50%; /* Faz ele virar um círculo perfeito */
-    display: flex; 
-    align-items: center;
-    justify-content: center; 
-    transition: all 0.2s ease;
-    /* NOVO: Sombra para dar profundidade e destaque */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); 
-}
-
-.icon-btn:hover { 
-    border-color: var(--accent-color);
-    color: var(--accent-color);
-    transform: scale(1.0); /* Aumenta um pouco mais ao passar o mouse */
-    box-shadow: 0 6px 15px rgba(52, 152, 219, 0.3); /* Sombra colorida no hover */
-}
-
-/* Estilo copiado/mantido de suas classes globais */
-.icon-btn {
-    /* NOVO: Fundo um pouco mais escuro para destaque (mantido) */
-    background: var(--primary-color); 
-    border: 1px solid var(--border-color); 
-    color: var(--text-color);
-    /* Remove padding e border-radius aqui */
-    display: flex; 
-    align-items: center;
-    justify-content: center; 
-    transition: all 0.2s ease;
-    /* NOVO: Sombra para dar profundidade e destaque (mantida) */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); 
-    text-decoration: none; /* Garante que não tenha sublinhado no texto */
-    font-weight: bold;
-}
-
-/* NOVO: Estilo para o botão de voltar com texto */
-.icon-btn.with-text {
-    padding: 10px 15px; /* Padding ajustado para o formato retangular */
-    border-radius: 8px; /* Borda arredondada para o retângulo */
-    gap: 8px; /* Espaçamento entre o ícone e o texto */
-    width: auto; /* Permite que o botão se ajuste ao conteúdo */
-}
-
-/* Garante que o ícone tenha um tamanho fixo */
-.icon-btn.with-text svg {
-    min-width: 20px;
+main.grid-2 {
+    margin-left: 0;
 }
