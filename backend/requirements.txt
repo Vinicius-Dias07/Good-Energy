@@ -2,19 +2,20 @@ Flask
 Flask-Cors
 pandas
 Werkzeug
-google.generativeai
-dotenv
 python-dotenv
-google-generativeai
+groq
+requests
 
 #-------------------------------------------------
-# DEPEDENCIAS PARA RODAR O PROJETO LOCALMENTE:
+# COMANDOS PARA RODAR O PROJETO LOCALMENTE:
 
-#pip install -r requirements.txt
-#pip install google.generativeai
-#pip install dotenv
-#python app.py
+# 1. Navegue para a pasta do backend
+# cd backend
+
+# 2. Instale as dependências corretas
+# pip install -r requirements.txt
+
+# 3. Rode o servidor
+# python app.py
 
 #-------------------------------------------------
-
-
