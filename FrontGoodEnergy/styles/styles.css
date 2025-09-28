@@ -339,7 +339,7 @@ main {
     height: 100vh; /* Garante altura total */
     background-color: var(--bg); /* Garante que o fundo do chat seja o BG principal */
 }
-.content {
+body[data-active="assistenteIA"] .content {
     flex-grow: 1; /* Permite que o conteúdo ocupe a altura do main */
     padding: 0; /* Remove o padding do content para que o chat ocupe a borda */
 }
