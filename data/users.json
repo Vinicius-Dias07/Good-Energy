@@ -12,7 +12,7 @@
     "email": "goodenergy@dev.com.br",
     "password": "scrypt:32768:8:1$Og7Uf1FPqxMnahfa$ac1965000e37a2c902b69b26b9ef7a1668c01d4d4384318e12ba8db50791914bc3a2421fa7d9dc6f5d1906be72c942d9c7cda6e90f0dabd2c7844d9bd75b2d6d",
     "plan": "Starter",
-    "theme": "forest",
+    "theme": "padrão",
     "colorTheme": "dark",
     "tariff": 0.95,
     "savingsGoal": 500,
