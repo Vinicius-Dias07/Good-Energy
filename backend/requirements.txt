@@ -19,3 +19,6 @@ requests
 # python app.py
 
 #-------------------------------------------------
+
+
+# NOTA: Certifique-se de ter o Python e o pip instalados no seu sistema.
