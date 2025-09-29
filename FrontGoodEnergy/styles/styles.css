@@ -442,34 +442,34 @@ body[data-colortheme="light"] .btn-assistente-ia:hover {
 .highlighted-ai-btn {
     display: flex; /* CHAVE: Habilita o alinhamento flexível */
     align-items: center; /* Alinha verticalmente (imagem e texto ficam rentes) */
-    gap: 10px; /* Espaçamento maior entre o ícone e o texto */
+    gap: 13px; /* Espaçamento maior entre o ícone e o texto */
     
     padding: 10px 20px;
     border-radius: 25px;
     
     /* Mantenha o seu estilo de cores e brilho */
-    background-color: var(--ai-primary, #0f52da);
+    background-color: var(--ai-primary, #292828);
     color: var(--text-color, #fff);
     font-weight: 700;
     text-transform: uppercase;
     text-decoration: none;
     
     /* Efeito de Brilho Atual */
-    box-shadow: 0 0 15px var(--ai-glow, rgba(0, 123, 255, 0.7)), 0 0 5px var(--ai-primary, #007bff);
+    box-shadow: 0 0 15px var(--ai-glow, #2b2f38), 0 0 5px var(--ai-primary, #faefef);
     transition: all 0.3s ease-in-out;
     cursor: pointer;
 }
 /* 2. TAMANHO DO ÍCONE (Aumentando para 28px) */
 .ai-image-icon {
-    width: 28px; /* Ícone maior */
-    height: 28px; /* Ícone maior */
+    width: 35px; /* Ícone maior */
+    height: 35px; /* Ícone maior */
     /* Garante que a imagem se ajuste bem dentro do tamanho */
     object-fit: contain; 
 }
 
 /* 3. EFEITO HOVER */
 .highlighted-ai-btn:hover {
-    background-color: var(--ai-secondary, #0056b3);
+    background-color: var(--ai-secondary, #013770);
     
     /* O destaque: Aumenta o brilho (Glow) */
     box-shadow: 0 0 30px var(--ai-glow, rgba(0, 123, 255, 1)), 0 0 15px var(--ai-primary, #007bff);
@@ -477,3 +477,16 @@ body[data-colortheme="light"] .btn-assistente-ia:hover {
     /* Move um pouco para cima e aumenta levemente o tamanho */
     transform: scale(1.02) translateY(-2px); 
 }
+/* --- Página do Assistente de IA (Seção de CTAs) --- */
+.final-cta-section { 
+    padding: 40px 0; 
+    text-align: center; 
+}
+
+
+/* 2. Ícone dentro do Botão (Aumentando o Ícone) */
+.cta-button .icon { 
+    width: 40px; /* Ícone visivelmente maior */
+    height: 40px; 
+}
+
