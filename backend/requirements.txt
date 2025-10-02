@@ -3,9 +3,8 @@ Flask-Cors
 pandas
 Werkzeug
 python-dotenv
-groq
 requests
-
+google-generativeai
 #-------------------------------------------------
 # COMANDOS PARA RODAR O PROJETO LOCALMENTE:
 
