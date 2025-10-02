@@ -18,8 +18,8 @@
     "theme": "padrão",
     "colorTheme": "dark",
     "tariff": 0.95,
-    "savingsGoal": 500,
-    "notifications": "disabled"
+    "savingsGoal": 100,
+    "notifications": "enabled"
   },
   "lasanha123@gmail.com": {
     "name": "bruno",

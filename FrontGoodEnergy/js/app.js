@@ -135,7 +135,7 @@ function initializeTopbarButtons() {
     const notifBtn = el('notificationsBtn'), notifPopup = el('notificationsPopup');
     if (notifBtn && notifPopup) {
         const alertsContainer = el('popupAlerts'), badge = el('notificationBadge');
-        const allPossibleAlerts = [{ type: 'warn', text: 'Detecção de consumo anômalo na madrugada.' }, { type: 'success', text: 'Produção solar 20% acima da média hoje!' }, { type: 'info', text: 'Lembrete: Limpeza dos painéis recomendada.' }];
+        const allPossibleAlerts = [{ type: 'warn', text: 'Detecção de consumo anômalo.' }, { type: 'success', text: 'Produção solar 20% acima da média hoje!' }, { type: 'info', text: 'Lembrete: Limpeza dos painéis recomendada.' }];
         
         const updateNotifications = () => {
             if (user?.notifications === 'disabled') {

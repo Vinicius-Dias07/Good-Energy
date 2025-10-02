@@ -270,7 +270,7 @@ def get_kpis():
     # Geração total (acumulada desde o início)
     total_generation = df['Total Generation(kWh)'].max()
     # Consumo da casa é simulado com um valor aleatório para fins de demonstração
-    house_load_kw = random.uniform(0.3, 2.5)
+    house_load_kwh = 0.53
 
     # Calcula a economia do mês atual
     savings_this_month = 0
@@ -283,7 +283,7 @@ def get_kpis():
     return jsonify({
         "todayGenKwh": generation_today, 
         "totalGenKwh": total_generation,
-        "houseLoadKw": house_load_kw,
+        "houseLoadKwh": house_load_kwh,
         "savingsThisMonth": savings_this_month
     })
 
