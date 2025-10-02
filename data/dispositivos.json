@@ -35,6 +35,15 @@
       "on": true,
       "watts": 200,
       "cost_per_hour": "R$ 0.00"
+    },
+    {
+      "id": "11132018-ad5a-4d05-8517-b286e0388050",
+      "name": "carro eletrico",
+      "room": "garagem",
+      "type": "ev",
+      "on": true,
+      "watts": 60,
+      "cost_per_hour": "R$ 0.00"
     }
   ]
 }

@@ -369,7 +369,7 @@ async function dashboardInit() {
     updateDashboardData().finally(() => hideLoader());
     
     // Configura o intervalo para a atualização dos dados
-    setInterval(updateDashboardData, 15000);
+    setInterval(updateDashboardData, 30000);
 
     // --- LÓGICA DO OTIMIZADOR DE TAREFAS (AGORA NO LUGAR CORRETO) ---
     const optimizeBtn = el('optimizeTaskBtn');

@@ -19,7 +19,7 @@
     "colorTheme": "dark",
     "tariff": 0.95,
     "savingsGoal": 500,
-    "notifications": "enabled"
+    "notifications": "disabled"
   },
   "lasanha123@gmail.com": {
     "name": "bruno",

@@ -242,7 +242,7 @@ def get_kpis():
     
     # Lógica existente
     total_generation = df['Total Generation(kWh)'].max()
-    house_load_kw = random.uniform(0.3, 2.5)
+    house_load_kw = 0.53
     
     savings_this_month = 0
     now = datetime.now()
@@ -431,28 +431,24 @@ def delete_user():
 @app.route('/api/battery/status', methods=['GET'])
 def get_battery_status():
     try:
-        # Gera valores aleatórios para simular o estado da bateria.
-        charged_percentage = random.randint(1, 100)
+        # Define valores fixos para o estado da bateria.
+        charged_percentage = 37  # Porcentagem de carga fixa
         empty_percentage = 100.0 - charged_percentage
-        now = datetime.now()
-        # Simula carregamento durante o dia e descarregamento à noite.
-        is_charging = 9 <= now.hour < 16
-        if is_charging:
-            fluxo_watts = random.randint(500, 2500)
-            status_texto = "Carregando"
-        else:
-            fluxo_watts = random.randint(-1500, -300) 
-            status_texto = "Descarregando"
-        
+        fluxo_watts = 1250  # Fluxo de energia fixo em Watts (positivo = carregando)
+        status_texto = "Carregando"  # Status fixo
+
         # Calcula a energia armazenada com base na capacidade total.
         capacidade_total_kwh = 13.5
         energia_armazenada_kwh = round((charged_percentage / 100) * capacidade_total_kwh, 1)
 
-        # Monta o objeto de dados da bateria.
+        # Monta o objeto de dados da bateria com os valores fixos.
         battery_data = {
-            "charged_percentage": charged_percentage, "empty_percentage": empty_percentage,
-            "labels": ["Carga", "Vazio"], "fluxo_watts": fluxo_watts,
-            "status_texto": status_texto, 'energia_kwh': energia_armazenada_kwh
+            "charged_percentage": charged_percentage,
+            "empty_percentage": empty_percentage,
+            "labels": ["Carga", "Vazio"],
+            "fluxo_watts": fluxo_watts,
+            "status_texto": status_texto,
+            'energia_kwh': energia_armazenada_kwh
         }
         # Retorna os dados em JSON.
         return jsonify(battery_data)
