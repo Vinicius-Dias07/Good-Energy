@@ -17,6 +17,7 @@ google-generativeai
 # 3. Rode o servidor
 # python app.py
 
+
 #-------------------------------------------------
 
 
